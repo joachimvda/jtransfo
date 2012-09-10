@@ -1,0 +1,2 @@
+Geomajas API definition project
+Copyright 2008-2012 Geosparc nv, http://www.geosparc.com/, Belgium.
