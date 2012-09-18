@@ -1,18 +1,23 @@
-package be.progs.jtransfo.internal;
+package org.jtransfo.internal;
 
-import be.progs.jtransfo.JTransfoException;
-import be.progs.jtransfo.object.NoDomain;
-import be.progs.jtransfo.object.SimpleClassDomain;
-import be.progs.jtransfo.object.SimpleClassNameTo;
-import be.progs.jtransfo.object.SimpleClassTypeTo;
+import org.jtransfo.JTransfoException;
+import org.jtransfo.object.NoDomain;
+import org.jtransfo.object.SimpleClassDomain;
+import org.jtransfo.object.SimpleClassNameTo;
+import org.jtransfo.object.SimpleClassTypeTo;
+import org.jtransfo.object.NoDomain;
+import org.jtransfo.object.SimpleClassDomain;
+import org.jtransfo.object.SimpleClassNameTo;
+import org.jtransfo.object.SimpleClassTypeTo;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.jtransfo.internal.ToHelper;
 
 import static org.fest.assertions.Assertions.assertThat;
 
 /**
- * Test for {@link ToHelper}.
+ * Test for {@link org.jtransfo.internal.ToHelper}.
  *
  * @author Joachim Van der Auwera
  */

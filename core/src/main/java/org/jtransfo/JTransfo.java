@@ -8,11 +8,9 @@
  * details, see LICENSE.txt in the project root.
  */
 
-package be.progs.jtransfo;
+package org.jtransfo;
 
-import be.progs.jtransfo.internal.ToHelper;
-
-import java.lang.annotation.Annotation;
+import org.jtransfo.internal.ToHelper;
 
 /**
  * Class for converting to and from target objects.

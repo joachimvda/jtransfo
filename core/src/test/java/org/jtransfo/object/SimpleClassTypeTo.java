@@ -1,6 +1,6 @@
-package be.progs.jtransfo.object;
+package org.jtransfo.object;
 
-import be.progs.jtransfo.DomainClass;
+import org.jtransfo.DomainClass;
 
 /**
  * Simple TO class which uses the type reference to the domain object.

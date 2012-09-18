@@ -1,4 +1,4 @@
-package be.progs.jtransfo.object;
+package org.jtransfo.object;
 
 /**
  * Domain object for {@link SimpleClassNameTo}.

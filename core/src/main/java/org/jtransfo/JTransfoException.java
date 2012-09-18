@@ -8,7 +8,7 @@
  * details, see LICENSE.txt in the project root.
  */
 
-package be.progs.jtransfo;
+package org.jtransfo;
 
 /**
  * Exception during jTransfo processing.

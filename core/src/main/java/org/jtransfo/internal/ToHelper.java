@@ -1,7 +1,7 @@
-package be.progs.jtransfo.internal;
+package org.jtransfo.internal;
 
-import be.progs.jtransfo.DomainClass;
-import be.progs.jtransfo.JTransfoException;
+import org.jtransfo.DomainClass;
+import org.jtransfo.JTransfoException;
 
 /**
  * Helper for handling transfer objects.
