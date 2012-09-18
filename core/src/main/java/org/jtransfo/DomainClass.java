@@ -1,6 +1,6 @@
-/**
+/*
  * This file is part of jTransfo, a library for converting to and from transfer objects.
- * (c) PROGS bvba, Belgium
+ * Copyright (c) PROGS bvba, Belgium
  *
  * The program is available in open source according to the Apache
  * License, Version 2.0. All contributions in this program are covered
@@ -17,31 +17,37 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation which should be used on the transfer object to indicate the domain object.
- *
- * @author Joachim Van der Auwera
+ * Annotation to specify the domain class on the transfer object.
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.TYPE })
+@Target(ElementType.TYPE)
 @Documented
 public @interface DomainClass {
 
-	/**
-	 * Fully qualified class name for the domain object.
-	 * <p/>
-	 * Using this allows you to avoid a compile dependency on the class name but makes the connection more brittle
-	 * when refactoring. The value is ignored if {@link #domainClass()} is set.
-	 */
-	String value() default DEFAULT_NAME;
+    /**
+     * Fully qualified class name for the domain object.
+     * <p/>
+     * Using this allows you to avoid a compile dependency on the class name but makes the connection more brittle
+     * when refactoring. The value is ignored if {@link #domainClass()} is set.
+     */
+    String value() default DEFAULT_NAME;
 
-	/**
-	 * Class for te domain object.
-	 * <p/>
-	 * This requires a compile dependency on the domain class. The value has precedence over the {@link #value()}
-	 * field.
-	 */
-	Class domainClass() default DEFAULT_CLASS.class;
+    /**
+     * Class for te domain object.
+     * <p/>
+     * This requires a compile dependency on the domain class. The value has precedence over the {@link #value()}
+     * field.
+     */
+    Class domainClass() default DefaultClass.class;
 
-	static final String DEFAULT_NAME = "?";
-	static final class DEFAULT_CLASS {}
+    /**
+     * Default value for {@link #value} indicating that {@link #domainClass} should be set.
+     */
+    String DEFAULT_NAME = "?";
+
+    /**
+     * Default value for {@link #domainClass} indicating that {@link #value} should be set.
+     */
+    class DefaultClass {
+    }
 }

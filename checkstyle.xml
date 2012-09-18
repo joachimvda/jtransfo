@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ This file is part of jTransfo, a library for converting to and from transfer objects.
+  ~ Copyright (c) PROGS bvba, Belgium
+  ~
+  ~ The program is available in open source according to the Apache
+  ~ License, Version 2.0. All contributions in this program are covered
+  ~ by the Geomajas Contributors License Agreement. For full licensing
+  ~ details, see LICENSE.txt in the project root.
+  -->
+
+<!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.1//EN"
+        "http://www.puppycrawl.com/dtds/configuration_1_1.dtd">
+
+<module name="Checker">
+
+    <property name="charset" value="UTF-8"/>
+
+    <!-- Checks that a package.html file exists for each package. -->
+    <!-- See http://checkstyle.sf.net/config_javadoc.html#PackageHtml -->
+    <!--<module name="PackageHtml"/>-->
+
+    <!-- Checks whether files end with a new line. -->
+    <!-- See http://checkstyle.sf.net/config_misc.html#NewlineAtEndOfFile -->
+    <!--
+     <module name="NewlineAtEndOfFile">
+         <property name="severity" value="info"/>
+     </module>
+     -->
+
+    <!-- Checks that property files contain the same keys. -->
+    <!-- See http://checkstyle.sf.net/config_misc.html#Translation -->
+    <!--<module name="Translation"/>-->
+
+
+    <!-- header, see http://checkstyle.sourceforge.net/config_header.html -->
+
+    <module name="Header">
+        <!-- The follow property value demonstrates the ability -->
+        <!-- to have access to ANT properties. In this case it uses -->
+        <!-- the ${basedir} property to allow Checkstyle to be run -->
+        <!-- from any directory within a project. -->
+        <!--<property name="headerFile" value="config/equanda-header.txt"/>-->
+        <property name="header"
+                  value="/*\n * This file is part of jTransfo, a library for converting to and from transfer objects.\n * Copyright (c) PROGS bvba, Belgium\n *\n * The program is available in open source according to the Apache\n * License, Version 2.0. All contributions in this program are covered\n * by the Geomajas Contributors License Agreement. For full licensing\n * details, see LICENSE.txt in the project root.\n */\n"/>
+    </module>
+
+    <module name="FileTabCharacter"/>
+
+    <module name="RegexpSingleline">
+        <!-- \s matches whitespace character, $ matches end of line. -->
+        <property name="format" value="\s+$"/>
+        <property name="message" value="Line has trailing spaces."/>
+        <property name="severity" value="info"/>
+    </module>
+
+    <module name="SuppressionCommentFilter">
+        <property name="offCommentFormat" value="CHECKSTYLE VISIBILITY MODIFIER\: OFF"/>
+        <property name="onCommentFormat" value="CHECKSTYLE VISIBILITY MODIFIER\: ON"/>
+        <property name="checkFormat" value="VisibilityModifierCheck"/>
+    </module>
+
+    <module name="SuppressionCommentFilter">
+        <property name="offCommentFormat" value="CHECKSTYLE THROWS_THROWABLE\: OFF"/>
+        <property name="onCommentFormat" value="CHECKSTYLE THROWS_THROWABLE\: ON"/>
+        <property name="checkFormat" value="IllegalThrowsCheck"/>
+    </module>
+
+    <module name="TreeWalker">
+
+        <property name="cacheFile" value="./checkstyle.cache"/>
+        <property name="tabWidth" value="4"/>
+
+        <!-- needed for SuppressionCommentFilter -->
+        <module name="FileContentsHolder"/>
+
+
+        <!-- annotation checks, see http://checkstyle.sourceforge.net/config_annotation.html -->
+
+        <!-- This check controls the style with the usage of annotations. -->
+        <module name="AnnotationUseStyle"/>
+        <!--  Verifies that both the java.lang.Deprecated annotation is present and the @deprecated Javadoc tag is
+              present when either is present. -->
+        <module name="MissingDeprecated"/>
+        <!-- Verifies that the java.lang.Override annotation is present when {@inheritDoc} javadoc tag is present. -->
+        <module name="MissingOverride"/>
+        <!-- This check makes sure that all package annotations are in the package-info.java file. -->
+        <!--<module name="PackageAnnotation"/>-->
+        <!-- This check allows you to specify what warnings you can suppress.  -->
+        <!--<module name="SuppressWarnings"/>-->
+
+
+        <!-- Block checks, see http://checkstyle.sourceforge.net/config_blocks.html -->
+
+        <!-- Checks for empty blocks. -->
+        <module name="EmptyBlock"/>
+        <!-- Checks the placement of left curly braces on types, methods and other blocks:  -->
+        <module name="LeftCurly">
+            <property name="maxLineLength" value="120"/>
+        </module>
+        <!-- Checks for braces around code blocks. -->
+        <module name="NeedBraces"/>
+        <!-- Checks the placement of right curly braces. -->
+        <module name="RightCurly"/>
+        <!-- Finds nested blocks. -->
+        <module name="AvoidNestedBlocks"/>
+
+
+        <!-- Class Design, see http://checkstyle.sourceforge.net/config_design.html -->
+
+        <!-- Checks visibility of class members. -->
+        <module name="VisibilityModifier"/>
+        <!-- Checks that class which has only private ctors is declared as final. -->
+        <module name="FinalClass"/>
+        <!-- Implements Bloch, Effective Java, Item 17 - Use Interfaces only to define types. -->
+        <!--<module name="InterfaceIsType"/>-->
+        <!-- Make sure that utility classes (classes that contain only static methods) do not have a public constructor. -->
+        <module name="HideUtilityClassConstructor"/>
+        <!-- Checks that classes are designed for inheritance. -->
+        <!--<module name="DesignForExtension"/>-->
+        <!-- Ensures that exceptions (defined as any class name conforming to some regular expression) are immutable. -->
+        <module name="MutableException"/>
+        <!-- Restricts throws statements to a specified count (default = 1). -->
+        <!--<module name="ThrowsCount"/>-->
+        <!-- Check nested (internal) classes/interfaces are declared at the bottom of the class after all method and field declarations. -->
+        <module name="InnerTypeLast"/>
+
+
+        <!-- Coding , see http://checkstyle.sourceforge.net/config_coding.html -->
+
+        <!-- Checks if array initialization contains optional trailing comma. -->
+        <!--<module name="ArrayTrailingComma"/>-->
+        <!-- Detects inline conditionals. -->
+        <!--<module name="AvoidInlineConditionals"/>-->
+        <!-- Checks that if a class defines a covariant method equals, then it defines method equals(java.lang.Object).  -->
+        <module name="CovariantEquals"/>
+        <!-- Detect the double-checked locking idiom, a technique that tries to avoid synchronization overhead but is incorrect because of subtle artifacts of the java memory model.  -->
+        <module name="DoubleCheckedLocking"/>
+        <!-- Detects empty statements (standalone ';'). -->
+        <module name="EmptyStatement"/>
+        <!-- Checks that any combination of String literals with optional assignment is on the left side of an equals() comparison. -->
+        <module name="EqualsAvoidNull"/>
+        <!-- Checks that classes that override equals() also override hashCode(). -->
+        <module name="EqualsHashCode"/>
+        <!-- Ensures that local variables that never get their values changed, must be declared final. -->
+        <!--<module name="FinalLocalVariable"/>-->
+        <!-- Checks that a local variable or a parameter does not shadow a field that is defined in the same class. -->
+        <module name="HiddenField">
+            <property name="ignoreConstructorParameter" value="true"/>
+            <property name="ignoreSetter" value="true"/>
+            <property name="severity" value="info"/>
+        </module>
+        <!-- Checks for illegal instantiations where a factory method is preferred. -->
+        <module name="IllegalInstantiation">
+            <property name="classes" value="java.lang.Boolean"/>
+        </module>
+        <!-- Checks for illegal tokens. -->
+        <module name="IllegalToken">
+            <property name="tokens" value="LITERAL_NATIVE"/>
+        </module>
+        <!-- Checks for illegal token text. -->
+        <!--<module name="IllegalTokenText"/>-->
+        <!-- Checks for assignments in subexpressions, such as in String s = Integer.toString(i = 2);. -->
+        <module name="InnerAssignment"/>
+        <!-- Checks for magic numbers. -->
+        <module name="MagicNumber">
+            <property name="severity" value="warning"/>
+        </module>
+        <!-- "Checks that switch statement has ""default"" clause." -->
+        <module name="MissingSwitchDefault"/>
+        <!-- Check for ensuring that for loop control variables are not modified inside the for block. -->
+        <module name="ModifiedControlVariable"/>
+        <!-- Checks for redundant exceptions declared in throws clause such as duplicates, unchecked exceptions or subclasses of another declared exception. -->
+        <!--<module name="RedundantThrows"/>-->
+        <!-- Checks for overly complicated boolean expressions. -->
+        <module name="SimplifyBooleanExpression"/>
+        <!-- Checks for overly complicated boolean return statements. -->
+        <module name="SimplifyBooleanReturn"/>
+        <!-- Checks that string literals are not used with == or !=. -->
+        <module name="StringLiteralEquality"/>
+        <!-- Restricts nested for blocks to a specified depth (default = 1). -->
+        <!--<module name="NestedForDepth"/>-->
+        <!-- Restricts nested if-else blocks to a specified depth (default = 1). -->
+        <!--<module name="NestedIfDepth"/>-->
+        <!-- Restricts nested try-catch-finally blocks to a specified depth (default = 1). -->
+        <!--<module name="NestedTryDepth"/>-->
+        <!-- Checks that the clone method is not overridden from the Object class. -->
+        <module name="NoClone"/>
+        <!-- Checks that no method having zero parameters is defined using the name finalize. -->
+        <module name="NoFinalizer"/>
+        <!-- Checks that an overriding clone() method invokes super.clone(). -->
+        <module name="SuperClone"/>
+        <!-- Checks that an overriding finalize() method invokes super.finalize(). -->
+        <module name="SuperFinalize"/>
+        <!-- Catching java.lang.Exception, java.lang.Error or java.lang.RuntimeException is almost never acceptable. -->
+        <module name="IllegalCatch">
+            <property name="severity" value="warning"/> <!-- @todo error -->
+        </module>
+        <!-- Throwing java.lang.Error or java.lang.RuntimeException is almost never acceptable. -->
+        <module name="IllegalThrows"/>
+        <!-- Ensures there is a package declaration and (optionally) in the correct directory. -->
+        <module name="PackageDeclaration"/>
+        <!-- Ensures that the setUp(), tearDown()methods are named correctly, have no arguments, return void and are either public or protected. -->
+        <module name="JUnitTestCase"/>
+        <!-- Restricts return statements to a specified count (default = 2). -->
+        <!--<module name="ReturnCount"/>-->
+        <!-- Checks that particular class are never used as types in variable declarations, return values or parameters. -->
+        <!--<module name="IllegalType"/>-->
+        <!-- Checks that the parts of a class or interface declaration appear in the order suggested by the Code Conventions for the Java Programming Language.  -->
+        <!--<module name="DeclarationOrder"/>-->
+        <!-- Disallow assignment of parameters. -->
+        <module name="ParameterAssignment">
+            <property name="severity" value="info"/>
+        </module>
+        <!-- Checks if any class or object member explicitly initialized to default for its type value (null for object references, zero for numeric types and char and false for boolean.  -->
+        <module name="ExplicitInitialization"/>
+        <!-- Check that the default is after all the cases in a switch statement.  -->
+        <module name="DefaultComesLast"/>
+        <!-- Checks that classes (except abstract one) define a ctor and don't rely on the default one. -->
+        <!--<module name="MissingCtor"/>-->
+        <!-- Checks for fall through in switch statements Finds locations where a case contains Java code - but lacks a break, return, throw or continue statement. -->
+        <module name="FallThrough"/>
+        <!-- Checks for multiple occurrences of the same string literal within a single file. -->
+        <module name="MultipleStringLiterals">
+            <property name="severity" value="info"/>
+            <property name="ignoreStringsRegexp" value='^(("")|(" ")|(", "))$'/>
+        </module>
+        <!-- Checks that each variable declaration is in its own statement and on its own line. -->
+        <module name="MultipleVariableDeclarations"/>
+        <!-- "Checks that code doesn't rely on the ""this"" default." -->
+        <!--<module name="RequireThis"/>-->
+        <!-- Checks if unnecessary parentheses are used in a statement or expression. -->
+        <!--<module name="UnnecessaryParentheses"/>-->
+        <!-- Checks there is only one statement per line. -->
+        <module name="OneStatementPerLine"/>
+
+
+        <!-- Duplicate Code, see http://checkstyle.sourceforge.net/config_duplicates.html -->
+
+        <!-- does not work as this marks the copyright headers as duplicate -->
+        <!--<module name="StrictDuplicateCode"/>-->
+
+
+        <!-- Imports, see http://checkstyle.sourceforge.net/config_imports.html -->
+
+        <!-- Check that finds import statements that use the * notation. -->
+        <module name="AvoidStarImport"/>
+        <!-- Check that finds static imports. -->
+        <module name="AvoidStaticImport"/>
+        <!-- Checks for imports from a set of illegal packages. -->
+        <module name="IllegalImport"/>
+        <!-- Checks for imports that are redundant. -->
+        <module name="RedundantImport"/>
+        <!-- Checks for unused import statements. -->
+        <module name="UnusedImports"/>
+        <!-- Ensures that groups of imports come in a specific order. -->
+        <module name="ImportOrder">
+            <property name="groups" value="/^(?!javax?\.)/,/^javax?\./"/>
+            <!-- java and javax last -->
+            <property name="ordered" value="true"/>
+            <property name="separated" value="true"/>
+            <property name="severity" value="info"/>
+        </module>
+        <!-- Check that controls what packages can be imported in each package. -->
+        <!--<module name="ImportControl"/>-->
+
+
+        <!-- Javadoc comments checks, see http://checkstyle.sourceforge.net/config_javadoc.html -->
+
+        <!-- Checks that all packages have a package documentation. -->
+        <!--<module name="JavadocPackage"/>-->
+        <!-- Checks the Javadoc of a type. -->
+        <module name="JavadocType">
+            <!--<property name="authorFormat" value="\S"/> do not force author - use history instead-->
+            <property name="severity" value="error"/>
+        </module>
+        <!-- Checks the Javadoc of a method or constructor. -->
+        <module name="JavadocMethod">
+            <property name="scope" value="package"/>
+            <property name="severity" value="error"/>
+        </module>
+        <!-- Checks that a variable has Javadoc comment. -->
+        <module name="JavadocVariable">
+            <property name="scope" value="package"/>
+        </module>
+        <!-- Custom Checkstyle Check to validate Javadoc. -->
+        <module name="JavadocStyle">
+            <property name="scope" value="package"/>
+            <property name="checkEmptyJavadoc" value="true"/>
+        </module>
+        <!-- Outputs a JavaDoc tag as information. -->
+        <!--<module name="WriteTag"/>-->
+
+
+        <!-- Metrics, see http://checkstyle.sourceforge.net/config_metrics.html -->
+
+        <!-- Restricts nested boolean operators (&&, ||, &, | and ^) to a specified depth (default = 3).  -->
+        <!--<module name="BooleanExpressionComplexity"/>-->
+        <!-- This metric measures the number of instantiations of other classes within the given class. -->
+        <!--<module name="ClassDataAbstractionCoupling"/>-->
+        <!-- The number of other classes a given class relies on. -->
+        <!--<module name="ClassFanOutComplexity"/>-->
+        <!-- Checks cyclomatic complexity against a specified limit. -->
+        <!--<module name="CyclomaticComplexity"/>-->
+        <!-- Checks the npath complexity against a specified limit (default = 200). -->
+        <!--<module name="NPathComplexity"/>-->
+        <!-- This check calculates the Non Commenting Source Statements (NCSS) metric for java source files and methods. -->
+        <!--<module name="JavaNCSS"/>-->
+
+
+        <!-- Miscellaneous, see http://checkstyle.sourceforge.net/config_misc.html -->
+
+        <!-- A check for TODO comments. -->
+        <module name="TodoComment">
+            <property name="severity" value="warning"/>
+        </module>
+        <!-- The TranslationCheck class helps to ensure the correct translation of code by checking property files for consistency regarding their keys. -->
+        <!--<module name="Translation"/>-->
+        <!-- Detects uncommented main methods. -->
+        <module name="UncommentedMain">
+            <property name="excludedClasses" value="Runner$"/>
+        </module>
+        <!-- Checks that long constants are defined with an upper ell. -->
+        <module name="UpperEll"/>
+        <!-- Checks the style of array type definitions. -->
+        <module name="ArrayTypeStyle"/>
+        <!-- Check that method/constructor/catch/foreach parameters are final. -->
+        <!--<module name="FinalParameters"/>-->
+        <!-- Checks for restricted tokens beneath other tokens. -->
+        <!--<module name="DescendantToken"/>-->
+        <!-- Checks correct indentation of Java Code. -->
+        <!--<module name="Indentation"/>-->
+        <!-- The check to ensure that requires that comments be the only thing on a line. -->
+        <!--<module name="TrailingComment"/>-->
+        <!-- A check that makes sure that a specified pattern exists (or not) in the file. -->
+        <module name="Regexp"/>
+        <!-- Checks that the outer type name and the file name match. -->
+        <module name="OuterTypeFilename"/>
+
+
+        <!-- Modifiers, see http://checkstyle.sourceforge.net/config_modifier.html -->
+
+        <!-- Checks that the order of modifiers conforms to the suggestions in the Java Language specification, sections 8.1.1, 8.3.1 and 8.4.3. -->
+        <module name="ModifierOrder"/>
+        <!-- Checks for redundant modifiers in interface and annotation definitions. -->
+        <module name="RedundantModifier"/>
+
+
+        <!-- Naming conventions, see http://checkstyle.sourceforge.net/config_naming.html -->
+
+        <!-- Ensures that the names of abstract classes conforming to some regular expression.  -->
+        <module name="AbstractClassName">
+            <property name="format" value="^Abstract.*$" />
+        </module>
+        <!-- Checks that class type parameter names conform to a format specified by the format property.  -->
+        <module name="ClassTypeParameterName"/>
+        <!-- Checks that constant names conform to a format specified by the format property. -->
+        <module name="ConstantName"/>
+        <!-- Checks that local final variable names conform to a format specified by the format property. -->
+        <module name="LocalFinalVariableName"/>
+        <!-- Checks that local, non-final variable names conform to a format specified by the format property. -->
+        <module name="LocalVariableName"/>
+        <!-- Checks that instance variable names conform to a format specified by the format property. -->
+        <module name="MemberName"/>
+        <!-- Checks that method names conform to a format specified by the format property. -->
+        <module name="MethodName"/>
+        <!-- Checks that class type parameter names conform to a format specified by the format property. -->
+        <module name="MethodTypeParameterName"/>
+        <!-- Checks that package names conform to a format specified by the format property. -->
+        <module name="PackageName"/>
+        <!-- Checks that parameter names conform to a format specified by the format property. -->
+        <module name="ParameterName"/>
+        <!-- Checks that static, non-final variable names conform to a format specified by the format property. -->
+        <module name="StaticVariableName"/>
+        <!-- Checks that type names conform to a format specified by the format property. -->
+        <module name="TypeName"/>
+
+
+        <!-- Regexp, see http://checkstyle.sourceforge.net/config_regexp.html -->
+
+        <!-- Implementation of a check that looks that matches across multiple lines in any file type. -->
+        <!--<module name="RegexpMultiline"/>-->
+        <!-- Implementation of a check that looks for a single line in Java files. -->
+        <!--<module name="RegexpSinglelineJava"/>-->
+        <!--<module name="RegexpSingleline"/>-->
+
+
+        <!-- Size Violations, see http://checkstyle.sourceforge.net/config_sizes.html -->
+
+        <!-- Restricts the number of executable statements to a specified limit (default = 30).  -->
+        <!--<module name="ExecutableStatementCount"/>-->
+        <!-- Checks for long source files. -->
+        <!--<module name="FileLength"/>-->
+        <!-- Checks for long lines. -->
+        <module name="LineLength">
+            <property name="max" value="120"/>
+        </module>
+        <!-- Checks for long methods. -->
+        <module name="MethodLength"/>
+        <!-- Checks for long anonymous inner classes. -->
+        <!--<module name="AnonInnerLength"/>-->
+        <!-- Checks the number of parameters that a method or constructor has. -->
+        <!--<module name="ParameterNumber"/>-->
+        <!-- "Checks for the number of defined types at the ""outer"" level." -->
+        <!--<module name="OuterTypeNumber"/>-->
+        <!-- Checks the number of methods declared in each type. -->
+        <!--<module name="MethodCount"/>-->
+
+
+        <!-- Whitespace, see http://checkstyle.sourceforge.net/config_whitespace.html -->
+
+        <!-- Checks that the whitespace around the Generic tokens < and > are correct to the typical convention. -->
+        <module name="GenericWhitespace"/>
+        <!-- Checks the padding of an empty for initializer; that is whether a space is required at an empty for initializer, or such spaces are forbidden. -->
+        <module name="EmptyForInitializerPad"/>
+        <!-- Checks the padding of an empty for iterator; that is whether a space is required at an empty for iterator, or such spaces are forbidden. -->
+        <module name="EmptyForIteratorPad"/>
+        <!-- Checks the padding between the identifier of a method definition, constructor definition, method call, or constructor invocation; and the left parenthesis of the parameter list. -->
+        <module name="MethodParamPad"/>
+        <!-- Checks that there is no whitespace after a token. -->
+        <module name="NoWhitespaceAfter"/>
+        <!-- Checks that there is no whitespace before a token. -->
+        <module name="NoWhitespaceBefore"/>
+        <!-- Checks line wrapping for operators. -->
+        <!--<module name="OperatorWrap"/>-->
+        <!-- Checks the padding of parentheses; that is whether a space is required after a left parenthesis and before a right parenthesis, or such spaces are forbidden, with the exception that it does not check for padding of the right parenthesis at an empty for iterator. -->
+        <module name="ParenPad"/>
+        <!-- Checks the padding of parentheses for typecasts. -->
+        <module name="TypecastParenPad"/>
+        <!-- Checks that a token is followed by whitespace, with the exception that it does not check for whitespace after the semicolon of an empty for iterator. -->
+        <module name="WhitespaceAfter"/>
+        <!-- Checks that a token is surrounded by whitespace. -->
+        <module name="WhitespaceAround"/>
+
+    </module>
+
+</module>
