@@ -1,6 +1,10 @@
 .idea
+*.iml
 .target
+core/target
 *.class
 *.jar
 *.war
 *.ear
+*~
+checkstyle.cache
