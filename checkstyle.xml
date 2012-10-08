@@ -53,6 +53,10 @@
         <property name="message" value="Line has trailing spaces."/>
         <property name="severity" value="info"/>
     </module>
+    <module name="RegexpSingleline">
+        <property name="format" value="(\@author)"/>
+        <property name="message" value="Author tags are not allowed - consult SCM instead."/>
+    </module>
 
     <module name="SuppressionCommentFilter">
         <property name="offCommentFormat" value="CHECKSTYLE VISIBILITY MODIFIER\: OFF"/>

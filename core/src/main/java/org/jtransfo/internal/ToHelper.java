@@ -18,6 +18,12 @@ import org.jtransfo.JTransfoException;
  */
 public class ToHelper {
 
+    public boolean isTo(Object object) {
+        Class<?> toClass = object.getClass();
+        DomainClass domainClass = toClass.getAnnotation(DomainClass.class);
+        return null != domainClass;
+    }
+
     /**
      * Get domain class for transfer object.
      *

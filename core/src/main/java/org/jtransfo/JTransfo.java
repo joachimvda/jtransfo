@@ -10,14 +10,10 @@
 
 package org.jtransfo;
 
-import org.jtransfo.internal.ToHelper;
-
 /**
  * jTransfo main access point.
  */
-public class JTransfo {
-
-    private ToHelper toHelper = new ToHelper();
+public interface JTransfo {
 
     /**
      * Fill the target object with the values from the source object.
@@ -27,9 +23,7 @@ public class JTransfo {
      * @param source source object
      * @param target target object
      */
-    public void convert(Object source, Object target) {
-        // @todo
-    }
+    public <T> T convert(Object source, T target);
 
     /**
      * Create a new domain object from the source transfer object.
@@ -39,16 +33,6 @@ public class JTransfo {
      * @param source source transfer object
      * @return domain object
      */
-    public Object convert(Object source) {
-        Class domainClass = toHelper.getDomainClass(source);
-        try {
-            // @todo allow creation to be pluggable, could need domain lookup based on a field in the source
-            return domainClass.newInstance();
-        } catch (InstantiationException ie) {
-            throw new JTransfoException("Cannot create instance for domain class " + domainClass.getName(), ie);
-        } catch (IllegalAccessException ie) {
-            throw new JTransfoException("Cannot create instance for domain class " + domainClass.getName(), ie);
-        }
-    }
+    Object convert(Object source);
 
 }

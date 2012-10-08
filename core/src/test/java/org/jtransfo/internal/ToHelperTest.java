@@ -29,6 +29,13 @@ public class ToHelperTest {
     private ToHelper toHelper = new ToHelper();
 
     @Test
+    public void isToTest() throws Exception {
+        assertThat(toHelper.isTo(new SimpleClassNameTo())).isTrue();
+        assertThat(toHelper.isTo(new SimpleClassTypeTo())).isTrue();
+        assertThat(toHelper.isTo(new SimpleClassDomain())).isFalse();
+    }
+
+    @Test
     public void testGetDomainClass() throws Exception {
         assertThat(toHelper.getDomainClass(new SimpleClassNameTo())).isEqualTo(SimpleClassDomain.class);
         assertThat(toHelper.getDomainClass(new SimpleClassTypeTo())).isEqualTo(SimpleClassDomain.class);
