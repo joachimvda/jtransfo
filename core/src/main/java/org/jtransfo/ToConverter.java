@@ -36,6 +36,7 @@ public class ToConverter {
     /**
      * Add a converters to convert domain to transfer object.
      *
+     * @param converter converter to add
      * @return list of converters
      */
     public List<Converter> addToTo(Converter converter) {
@@ -55,6 +56,7 @@ public class ToConverter {
     /**
      * Add a converter to convert transfer to domain object.
      *
+     * @param converter converter to add
      * @return list of converters
      */
     public List<Converter> addToDomain(Converter converter) {
@@ -70,6 +72,11 @@ public class ToConverter {
         toDomain.setReadOnly();
     }
 
+    /**
+     * List which allows updates to be prevented.
+     *
+     * @param <T> type for list entries
+     */
     private class LockableList<T> extends ArrayList<T> {
 
         private static final String READ_ONLY = "Collection is read-only.";

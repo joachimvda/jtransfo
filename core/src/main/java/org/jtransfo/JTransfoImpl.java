@@ -26,14 +26,7 @@ public class JTransfoImpl implements JTransfo {
     private ConverterHelper converterHelper = new ConverterHelper();
     private Map<Class, ToConverter> converters = new ConcurrentHashMap<Class, ToConverter>();
 
-    /**
-     * Fill the target object with the values from the source object.
-     * <p/>
-     * This will write all values from the transfer object, other fields are not touched.
-     *
-     * @param source source object
-     * @param target target object
-     */
+    @Override
     public <T> T convert(Object source, T target) {
         if (null == source || null == target) {
             throw new JTransfoException("Source and target are required to be not-null.");
@@ -56,14 +49,7 @@ public class JTransfoImpl implements JTransfo {
         return target;
     }
 
-    /**
-     * Create a new domain object from the source transfer object.
-     * <p/>
-     * This only works if the domain object has a no-arguments constructor.
-     *
-     * @param source source transfer object
-     * @return domain object
-     */
+    @Override
     public Object convert(Object source) {
         Class domainClass = toHelper.getDomainClass(source);
         try {

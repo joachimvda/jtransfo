@@ -22,8 +22,10 @@ public interface JTransfo {
      *
      * @param source source object
      * @param target target object
+     * @param <T> type of object for target
+     * @return target object
      */
-    public <T> T convert(Object source, T target);
+    <T> T convert(Object source, T target);
 
     /**
      * Create a new domain object from the source transfer object.

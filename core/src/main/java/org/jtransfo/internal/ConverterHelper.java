@@ -17,6 +17,13 @@ import org.jtransfo.ToConverter;
  */
 public class ConverterHelper {
 
+    /**
+     * Build the descriptor for conversion between given object types.
+     *
+     * @param to transfer object class, contains the annotations for the conversion @todo should be Class
+     * @param domain domain class as other side of conversion @todo should be class
+     * @return conversion descriptor
+     */
     public ToConverter getToConverter(Object to, Object domain) {
         ToConverter converter = new ToConverter();
 

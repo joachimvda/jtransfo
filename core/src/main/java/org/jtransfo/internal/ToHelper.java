@@ -18,6 +18,14 @@ import org.jtransfo.JTransfoException;
  */
 public class ToHelper {
 
+    /**
+     * Is the given object a transfer object?
+     * <p/>
+     * True when there is a {@link DomainClass} annotation on the class.
+     *
+     * @param object object to test
+     * @return true when object is a transfer object
+     */
     public boolean isTo(Object object) {
         Class<?> toClass = object.getClass();
         DomainClass domainClass = toClass.getAnnotation(DomainClass.class);
