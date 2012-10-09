@@ -50,7 +50,6 @@ public class ToConverterTest {
         toConverter.lock();
 
         toConverter.addToDomain(new DummyConverter());
-
     }
 
     private class DummyConverter implements Converter {

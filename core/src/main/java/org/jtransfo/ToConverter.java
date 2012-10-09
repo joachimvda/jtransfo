@@ -10,8 +10,8 @@
 
 package org.jtransfo;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import org.jtransfo.internal.LockableList;
+
 import java.util.List;
 
 /**
@@ -68,95 +68,8 @@ public class ToConverter {
      * Assure that the object can not be modified any more.
      */
     public void lock() {
-        toTo.setReadOnly();
-        toDomain.setReadOnly();
+        toTo.lock();
+        toDomain.lock();
     }
 
-    /**
-     * List which allows updates to be prevented.
-     *
-     * @param <T> type for list entries
-     */
-    private class LockableList<T> extends ArrayList<T> {
-
-        private static final String READ_ONLY = "Collection is read-only.";
-
-        private boolean readOnly;
-
-        public void setReadOnly() {
-            readOnly = true;
-        }
-
-        @Override
-        public T set(int i, T t) {
-            if (readOnly) {
-                throw new JTransfoException(READ_ONLY);
-            }
-            return super.set(i, t);
-        }
-
-        @Override
-        public boolean add(T t) {
-            if (readOnly) {
-                throw new JTransfoException(READ_ONLY);
-            }
-            return super.add(t);
-        }
-
-        @Override
-        public void add(int i, T t) {
-            if (readOnly) {
-                throw new JTransfoException(READ_ONLY);
-            }
-            super.add(i, t);
-        }
-
-        @Override
-        public T remove(int i) {
-            if (readOnly) {
-                throw new JTransfoException(READ_ONLY);
-            }
-            return super.remove(i);
-        }
-
-        @Override
-        public boolean remove(Object o) {
-            if (readOnly) {
-                throw new JTransfoException(READ_ONLY);
-            }
-            return super.remove(o);
-        }
-
-        @Override
-        public void clear() {
-            if (readOnly) {
-                throw new JTransfoException(READ_ONLY);
-            }
-            super.clear();
-        }
-
-        @Override
-        public boolean addAll(Collection<? extends T> ts) {
-            if (readOnly) {
-                throw new JTransfoException(READ_ONLY);
-            }
-            return super.addAll(ts);    // @todo implement
-        }
-
-        @Override
-        public boolean addAll(int i, Collection<? extends T> ts) {
-            if (readOnly) {
-                throw new JTransfoException(READ_ONLY);
-            }
-            return super.addAll(i, ts);
-        }
-
-        @Override
-        protected void removeRange(int i, int i1) {
-            if (readOnly) {
-                throw new JTransfoException(READ_ONLY);
-            }
-            super.removeRange(i, i1);
-        }
-    }
 }

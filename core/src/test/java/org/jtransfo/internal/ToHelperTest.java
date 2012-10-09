@@ -10,6 +10,7 @@
 
 package org.jtransfo.internal;
 
+import org.jtransfo.DomainClass;
 import org.jtransfo.JTransfoException;
 import org.jtransfo.object.NoDomain;
 import org.jtransfo.object.SimpleClassDomain;
@@ -47,4 +48,27 @@ public class ToHelperTest {
         exception.expectMessage(" not annotated with DomainClass.");
         assertThat(toHelper.getDomainClass(new NoDomain())).isNull();
     }
+
+    @Test
+    public void noClassDomainClassAnnotationTest() throws Exception {
+        exception.expect(JTransfoException.class);
+        exception.expectMessage(" DomainClass annotation does not specify class.");
+        assertThat(toHelper.getDomainClass(new NoClassTo())).isNull();
+    }
+
+    @Test
+    public void unknownClassDomainClassAnnotationTest() throws Exception {
+        exception.expect(JTransfoException.class);
+        exception.expectMessage(" DomainClass org.jtransfo.UnknownClass not found.");
+        assertThat(toHelper.getDomainClass(new UnknownClassTo())).isNull();
+    }
+
+    @DomainClass
+    private class NoClassTo {
+    }
+
+    @DomainClass(value = "org.jtransfo.UnknownClass")
+    private class UnknownClassTo {
+    }
 }
+
