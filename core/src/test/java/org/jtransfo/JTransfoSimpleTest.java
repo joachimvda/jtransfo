@@ -14,7 +14,9 @@ import org.jtransfo.internal.ConverterHelper;
 import org.jtransfo.object.SimpleClassDomain;
 import org.jtransfo.object.SimpleClassNameTo;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.fest.assertions.Assertions.assertThat;
@@ -22,6 +24,9 @@ import static org.fest.assertions.Assertions.assertThat;
 public class JTransfoSimpleTest {
 
     private static final String BLA = "something";
+
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
 
     private JTransfo jTransfo;
 
@@ -76,6 +81,28 @@ public class JTransfoSimpleTest {
         Object result = jTransfo.convert(source);
         assertThat(result).isInstanceOf(SimpleClassDomain.class);
         assertThat(((SimpleClassDomain) result).getBla()).isEqualTo(BLA);
+    }
+
+    @Test
+    public void testConvertNullLeft() throws Exception {
+        exception.expect(JTransfoException.class);
+        exception.expectMessage("Source and target are required to be not-null.");
+        jTransfo.convert(null, new SimpleClassNameTo());
+    }
+
+    @Test
+    public void testConvertNullRight() throws Exception {
+        exception.expect(JTransfoException.class);
+        exception.expectMessage("Source and target are required to be not-null.");
+        jTransfo.convert(new SimpleClassDomain(), null);
+    }
+
+    @Test
+    public void testConvertNeedsTo() throws Exception {
+        exception.expect(JTransfoException.class);
+        exception.expectMessage("Neither source nor target are annotated with DomainClass on classes " +
+                "java.lang.Integer and java.lang.Double.");
+        jTransfo.convert(1, 1.0);
     }
 
 }
