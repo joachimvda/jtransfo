@@ -36,7 +36,7 @@ public class JTransfoSimpleTest {
 
         ConverterHelper converterHelper = new ConverterHelper() {
             @Override
-            public ToConverter getToConverter(Object to, Object domain) {
+            public ToConverter getToConverter(Class toClass, Class domainClass) {
                 ToConverter converter = new ToConverter();
                 converter.addToTo(new Converter() {
                     @Override

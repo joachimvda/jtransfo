@@ -86,7 +86,7 @@ public class LockableList<T> extends ArrayList<T> {
         if (readOnly) {
             throw new JTransfoException(READ_ONLY);
         }
-        return super.addAll(ts);    // @todo implement
+        return super.addAll(ts);
     }
 
     @Override

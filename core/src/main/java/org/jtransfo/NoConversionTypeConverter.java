@@ -11,16 +11,17 @@
 package org.jtransfo;
 
 /**
- * Converter, typically converts one field from the source object to a target object.
+ * Fallback type converter which does no conversion at all.
  */
-public interface Converter {
+public class NoConversionTypeConverter implements TypeConverter<Object, Object> {
 
-    /**
-     * Conversion from (part of) the source object to the target object.
-     *
-     * @param source source to read from
-     * @param target  target to write into
-     * @throws JTransfoException problem during conversion
-     */
-    void convert(Object source, Object target) throws JTransfoException;
+    @Override
+    public Object convert(Object object) throws JTransfoException {
+        return object;
+    }
+
+    @Override
+    public Object reverse(Object object) throws JTransfoException {
+        return object;
+    }
 }

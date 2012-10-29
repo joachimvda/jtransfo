@@ -36,12 +36,12 @@ public class JTransfoImpl implements JTransfo {
             targetIsTo = true;
             if (!toHelper.isTo(target)) {
                 throw new JTransfoException("Neither source nor target are annotated with DomainClass on classes " +
-                        source.getClass().getName() + " and " + target.getClass().getName());
+                        source.getClass().getName() + " and " + target.getClass().getName() + ".");
             }
         }
 
-        List<Converter> converters = targetIsTo ? getToToConverters(target, source) :
-                getToDomainConverters(source, target);
+        List<Converter> converters = targetIsTo ? getToToConverters(target.getClass(), source.getClass()) :
+                getToDomainConverters(source.getClass(), target.getClass());
         for (Converter converter : converters) {
             converter.convert(source, target);
         }
@@ -63,19 +63,19 @@ public class JTransfoImpl implements JTransfo {
         }
     }
 
-    private List<Converter> getToToConverters(Object to, Object domain) {
-        return getToConverter(to, domain).getToTo();
+    private List<Converter> getToToConverters(Class toClass, Class domainClass) {
+        return getToConverter(toClass, domainClass).getToTo();
     }
 
-    private List<Converter> getToDomainConverters(Object to, Object domain) {
-        return getToConverter(to, domain).getToDomain();
+    private List<Converter> getToDomainConverters(Class toClass, Class domainClass) {
+        return getToConverter(toClass, domainClass).getToDomain();
     }
 
-    private ToConverter getToConverter(Object to, Object domain) {
-        Class clazz = to.getClass();
+    private ToConverter getToConverter(Class toClass, Class domainClass) {
+        Class clazz = toClass.getClass();
         ToConverter toConverter = converters.get(clazz);
         if (null == toConverter) {
-            toConverter = converterHelper.getToConverter(to, domain);
+            toConverter = converterHelper.getToConverter(toClass, domainClass);
             converters.put(clazz, toConverter);
         }
         return toConverter;
