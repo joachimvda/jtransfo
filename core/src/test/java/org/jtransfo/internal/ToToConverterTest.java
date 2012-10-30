@@ -10,5 +10,21 @@
 
 package org.jtransfo.internal;
 
+import org.junit.Before;
+import org.junit.Test;
+
 public class ToToConverterTest {
+
+    private ToDomainConverter toToConverter;
+
+    @Before
+    public void setUp() throws Exception {
+        // @todo toToConverter = new ToToConverter();
+    }
+
+    @Test
+    public void testConvert() throws Exception {
+        // @todo
+    }
+
 }

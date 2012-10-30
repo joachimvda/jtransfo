@@ -14,13 +14,16 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class ToDomainConverterTest {
+
+    private ToDomainConverter toDomainConverter;
+
     @Before
     public void setUp() throws Exception {
-
+        // @todo toDomainConverter = new ToDomainConverter();
     }
 
     @Test
     public void testConvert() throws Exception {
-
+        // @todo
     }
 }

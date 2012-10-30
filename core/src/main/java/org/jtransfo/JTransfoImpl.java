@@ -11,6 +11,7 @@
 package org.jtransfo;
 
 import org.jtransfo.internal.ConverterHelper;
+import org.jtransfo.internal.ReflectionHelper;
 import org.jtransfo.internal.ToHelper;
 
 import java.util.List;
@@ -23,6 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class JTransfoImpl implements JTransfo {
 
     private ToHelper toHelper = new ToHelper();
+    private ReflectionHelper reflectionHelper = new ReflectionHelper();
     private ConverterHelper converterHelper = new ConverterHelper();
     private Map<Class, ToConverter> converters = new ConcurrentHashMap<Class, ToConverter>();
 
@@ -54,7 +56,7 @@ public class JTransfoImpl implements JTransfo {
         Class domainClass = toHelper.getDomainClass(source);
         try {
             // @todo allow creation to be pluggable, could need domain lookup based on a field in the source
-            Object target = domainClass.newInstance();
+            Object target = reflectionHelper.newInstance(domainClass);
             return convert(source, target);
         } catch (InstantiationException ie) {
             throw new JTransfoException("Cannot create instance for domain class " + domainClass.getName(), ie);

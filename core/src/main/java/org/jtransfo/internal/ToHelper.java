@@ -18,6 +18,8 @@ import org.jtransfo.JTransfoException;
  */
 public class ToHelper {
 
+    private ReflectionHelper reflectionHelper = new ReflectionHelper();
+
     /**
      * Is the given object a transfer object?
      * <p/>
@@ -52,12 +54,8 @@ public class ToHelper {
             throw new JTransfoException("Transfer object of type " + toClass.getName() +
                     " DomainClass annotation does not specify class.");
         }
-        ClassLoader cl = Thread.currentThread().getContextClassLoader();
-        if (null == cl) {
-            cl = ToHelper.class.getClassLoader();
-        }
         try {
-            return cl.loadClass(domainClass.value());
+            return reflectionHelper.loadClass(domainClass.value());
         } catch (ClassNotFoundException cnfe) {
             throw new JTransfoException("Transfer object of type " + toClass.getName() +
                     " DomainClass " + domainClass.value() + " not found.", cnfe);

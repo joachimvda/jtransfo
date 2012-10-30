@@ -19,10 +19,7 @@ import org.jtransfo.TypeConverter;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -30,6 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class ConverterHelper {
 
+    private ReflectionHelper reflectionHelper = new ReflectionHelper();
     private ConcurrentHashMap<String, TypeConverter> typeConverters = new ConcurrentHashMap<String, TypeConverter>();
 
     /**
@@ -43,8 +41,8 @@ public class ConverterHelper {
     public ToConverter getToConverter(Class toClass, Class domainClass) throws JTransfoException {
         ToConverter converter = new ToConverter();
 
-        List<Field> domainFields = getFields(domainClass);
-        for (Field field : getFields(toClass)) {
+        List<Field> domainFields = reflectionHelper.getFields(domainClass);
+        for (Field field : reflectionHelper.getFields(toClass)) {
             if (!Modifier.isTransient(field.getModifiers()) && (null != field.getAnnotation(NotMapped.class))) {
                 MappedBy mappedBy = field.getAnnotation(MappedBy.class);
 
@@ -106,12 +104,8 @@ public class ConverterHelper {
         if (!MappedBy.DEFAULT_TYPE_CONVERTER.equals(typeConverterClass)) {
             TypeConverter typeConverter = typeConverters.get(typeConverterClass);
             if (null == typeConverter) {
-                ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-                if (null == classLoader) {
-                    classLoader = getClass().getClassLoader();
-                }
                 try {
-                    typeConverter = (TypeConverter) classLoader.loadClass(typeConverterClass).newInstance();
+                    typeConverter = reflectionHelper.<TypeConverter>newInstance(typeConverterClass);
                 } catch (ClassNotFoundException cnfe) {
                     throw new JTransfoException("Declared TypeConverter class " + typeConverterClass +
                             " cannot be found.", cnfe);
@@ -140,47 +134,6 @@ public class ConverterHelper {
      */
     protected TypeConverter getDefaultTypeConverter(Class<?> toField, Class<?> domainField) {
         return new NoConversionTypeConverter(); // @todo no type conversion for now
-    }
-
-    /**
-     * Find all declared fields of a class. Fields which are hidden by a child class are not included.
-     *
-     * @param clazz class to find fields for
-     * @return list of fields
-     */
-    protected List<Field> getFields(Class<?> clazz) {
-        List<Field> result = new ArrayList<Field>();
-        Set<String> fieldNames = new HashSet<String>();
-        Class<?> searchType = clazz;
-        while (!Object.class.equals(searchType) && searchType != null) {
-            Field[] fields = searchType.getDeclaredFields();
-            for (Field field : fields) {
-                if (!fieldNames.contains(field.getName())) {
-                    fieldNames.add(field.getName());
-                    makeAccessible(field);
-                    result.add(field);
-                }
-            }
-            searchType = searchType.getSuperclass();
-        }
-        return result;
-    }
-
-    /**
-     * Make the given field accessible, explicitly setting it accessible if necessary.
-     * The <code>setAccessible(true)</code> method is only called when actually necessary, to avoid unnecessary
-     * conflicts with a JVM SecurityManager (if active).
-     * <p/>
-     * This method is borrowed from Spring's ReflectionUtil class.
-     *
-     * @param field the field to make accessible
-     * @see java.lang.reflect.Field#setAccessible
-     */
-    protected static void makeAccessible(Field field) {
-        if ((!Modifier.isPublic(field.getModifiers()) || !Modifier.isPublic(field.getDeclaringClass().getModifiers()) ||
-                Modifier.isFinal(field.getModifiers())) && !field.isAccessible()) {
-            field.setAccessible(true);
-        }
     }
 
 }
