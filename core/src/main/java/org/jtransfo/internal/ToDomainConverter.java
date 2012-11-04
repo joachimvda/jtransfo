@@ -41,8 +41,8 @@ public final class ToDomainConverter implements Converter {
     @Override
     public void convert(Object source, Object target) throws JTransfoException {
         try {
-            Object value = domainField.get(source);
-            toField.set(target, typeConverter.convert(value));
+            Object value = toField.get(source);
+            domainField.set(target, typeConverter.convert(value));
         } catch (IllegalAccessException iae) {
             throw new JTransfoException("Cannot convert field " + toField.getName() + " to field " +
                     domainField.getName(), iae);

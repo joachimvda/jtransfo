@@ -10,21 +10,41 @@
 
 package org.jtransfo.internal;
 
+import org.jtransfo.NoConversionTypeConverter;
+import org.jtransfo.object.SimpleBaseDomain;
+import org.jtransfo.object.SimpleExtendedDomain;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.lang.reflect.Field;
+
+import static org.fest.assertions.Assertions.assertThat;
+
 public class ToToConverterTest {
 
-    private ToDomainConverter toToConverter;
+    private static final String C_VALUE = "c value";
+
+    private ToToConverter toToConverter;
+    private ReflectionHelper reflectionHelper;
 
     @Before
     public void setUp() throws Exception {
-        // @todo toToConverter = new ToToConverter();
+        reflectionHelper = new ReflectionHelper();
+        Field a = SimpleBaseDomain.class.getDeclaredField("a");
+        Field c = SimpleExtendedDomain.class.getDeclaredField("c");
+        reflectionHelper.makeAccessible(a);
+        reflectionHelper.makeAccessible(c);
+
+        toToConverter = new ToToConverter(a, c, new NoConversionTypeConverter());
     }
 
     @Test
     public void testConvert() throws Exception {
-        // @todo
+        SimpleExtendedDomain sed = new SimpleExtendedDomain();
+
+        sed.setC(C_VALUE);
+        toToConverter.convert(sed, sed);
+        assertThat(sed.getA()).isEqualTo(C_VALUE);
     }
 
 }

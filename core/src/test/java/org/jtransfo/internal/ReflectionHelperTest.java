@@ -11,10 +11,12 @@
 package org.jtransfo.internal;
 
 import org.jtransfo.object.SimpleClassDomain;
+import org.jtransfo.object.SimpleExtendedDomain;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.lang.reflect.Field;
+import java.util.List;
 
 import static org.fest.assertions.Assertions.assertThat;
 
@@ -47,7 +49,9 @@ public class ReflectionHelperTest {
 
     @Test
     public void testGetFields() throws Exception {
-        // @todo
+        List<Field> fields = reflectionHelper.getFields(SimpleExtendedDomain.class);
+        assertThat(fields).hasSize(3).
+                onProperty("name").contains("a", "b", "c");
     }
 
     @Test

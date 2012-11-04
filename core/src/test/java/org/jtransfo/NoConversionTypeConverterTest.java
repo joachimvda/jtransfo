@@ -33,6 +33,6 @@ public class NoConversionTypeConverterTest {
     @Test
     public void testReverse() throws Exception {
         Object obj = new Object();
-        assertThat(typeConverter.convert(obj)).isEqualTo(obj);
+        assertThat(typeConverter.reverse(obj)).isEqualTo(obj);
     }
 }
