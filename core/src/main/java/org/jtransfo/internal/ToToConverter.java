@@ -45,10 +45,10 @@ public final class ToToConverter implements Converter {
             toField.set(target, typeConverter.reverse(value));
         } catch (IllegalAccessException iae) {
             throw new JTransfoException("Cannot convert field " + domainField.getName() + " to field " +
-                    toField.getName(), iae);
+                    toField.getName() + ", field cannot be accessed.", iae);
         } catch (IllegalArgumentException iae) {
             throw new JTransfoException("Cannot convert field " + domainField.getName() + " to field " +
-                    toField.getName(), iae);
+                    toField.getName() + ", field needs type conversion.", iae);
         }
     }
 }

@@ -45,10 +45,10 @@ public final class ToDomainConverter implements Converter {
             domainField.set(target, typeConverter.convert(value));
         } catch (IllegalAccessException iae) {
             throw new JTransfoException("Cannot convert field " + toField.getName() + " to field " +
-                    domainField.getName(), iae);
+                    domainField.getName() + ", field cannot be accessed.", iae);
         } catch (IllegalArgumentException iae) {
             throw new JTransfoException("Cannot convert field " + toField.getName() + " to field " +
-                    domainField.getName(), iae);
+                    domainField.getName() + ", field needs type conversion.", iae);
         }
     }
 }

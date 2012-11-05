@@ -14,6 +14,7 @@ public class SimpleExtendedDomain extends SimpleBaseDomain {
 
     private String b;
     private String c;
+    private int i;
 
     public String getB() {
         return b;
@@ -29,5 +30,13 @@ public class SimpleExtendedDomain extends SimpleBaseDomain {
 
     public void setC(String c) {
         this.c = c;
+    }
+
+    public int getI() {
+        return i;
+    }
+
+    public void setI(int i) {
+        this.i = i;
     }
 }

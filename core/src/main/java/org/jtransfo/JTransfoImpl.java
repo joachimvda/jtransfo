@@ -59,9 +59,9 @@ public class JTransfoImpl implements JTransfo {
             Object target = reflectionHelper.newInstance(domainClass);
             return convert(source, target);
         } catch (InstantiationException ie) {
-            throw new JTransfoException("Cannot create instance for domain class " + domainClass.getName(), ie);
+            throw new JTransfoException("Cannot create instance for domain class " + domainClass.getName() + ".", ie);
         } catch (IllegalAccessException ie) {
-            throw new JTransfoException("Cannot create instance for domain class " + domainClass.getName(), ie);
+            throw new JTransfoException("Cannot create instance for domain class " + domainClass.getName() + ".", ie);
         }
     }
 

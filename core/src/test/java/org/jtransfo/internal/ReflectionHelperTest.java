@@ -50,8 +50,8 @@ public class ReflectionHelperTest {
     @Test
     public void testGetFields() throws Exception {
         List<Field> fields = reflectionHelper.getFields(SimpleExtendedDomain.class);
-        assertThat(fields).hasSize(3).
-                onProperty("name").contains("a", "b", "c");
+        assertThat(fields).hasSize(4).
+                onProperty("name").contains("a", "b", "c", "i");
     }
 
     @Test
