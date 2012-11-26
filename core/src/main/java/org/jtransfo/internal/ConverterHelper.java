@@ -106,6 +106,7 @@ public class ConverterHelper {
             if (null == typeConverter) {
                 try {
                     typeConverter = reflectionHelper.<TypeConverter>newInstance(typeConverterClass);
+                    typeConverters.put(typeConverterClass, typeConverter);
                 } catch (ClassNotFoundException cnfe) {
                     throw new JTransfoException("Declared TypeConverter class " + typeConverterClass +
                             " cannot be found.", cnfe);
@@ -126,7 +127,7 @@ public class ConverterHelper {
     }
 
     /**
-     * Get the default type converter given the field types to cnvert between.
+     * Get the default type converter given the field types to convert between.
      *
      * @param toField transfer object field class
      * @param domainField domain object field class
