@@ -25,12 +25,12 @@ public class SimpleExtendedTo extends SimpleBaseTo {
 
     @MappedBy(readOnly = true)
     private String c;
-    private String i;
+    private int i;
 
     @NotMapped
-    private String j;
+    private int j;
 
-    private transient String k;
+    private transient int k;
 
     public String getString() {
         return string;
@@ -48,27 +48,27 @@ public class SimpleExtendedTo extends SimpleBaseTo {
         this.c = c;
     }
 
-    public String getI() {
+    public int getI() {
         return i;
     }
 
-    public void setI(String i) {
+    public void setI(int i) {
         this.i = i;
     }
 
-    public String getJ() {
+    public int getJ() {
         return j;
     }
 
-    public void setJ(String j) {
+    public void setJ(int j) {
         this.j = j;
     }
 
-    public String getK() {
+    public int getK() {
         return k;
     }
 
-    public void setK(String k) {
+    public void setK(int k) {
         this.k = k;
     }
 }
