@@ -43,7 +43,9 @@ public class ConverterHelper {
 
         List<Field> domainFields = reflectionHelper.getFields(domainClass);
         for (Field field : reflectionHelper.getFields(toClass)) {
-            if (!Modifier.isTransient(field.getModifiers()) && (null != field.getAnnotation(NotMapped.class))) {
+            boolean isTransient = Modifier.isTransient(field.getModifiers());
+            NotMapped notMapped = field.getAnnotation(NotMapped.class);
+            if (!isTransient && (null == notMapped)) {
                 MappedBy mappedBy = field.getAnnotation(MappedBy.class);
 
                 String domainFieldName = field.getName();

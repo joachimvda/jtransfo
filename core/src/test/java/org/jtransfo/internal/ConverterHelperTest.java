@@ -13,8 +13,11 @@ package org.jtransfo.internal;
 import org.jtransfo.JTransfoException;
 import org.jtransfo.MappedBy;
 import org.jtransfo.NoConversionTypeConverter;
+import org.jtransfo.ToConverter;
 import org.jtransfo.TypeConverter;
+import org.jtransfo.object.FaultyExtendedTo;
 import org.jtransfo.object.SimpleExtendedDomain;
+import org.jtransfo.object.SimpleExtendedTo;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -29,7 +32,6 @@ import java.util.Date;
 import java.util.List;
 
 import static org.fest.assertions.Assertions.assertThat;
-import static org.mockito.Matchers.isNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -187,7 +189,25 @@ public class ConverterHelperTest {
 
     @Test
     public void testGetToConverter() throws Exception {
-        // @todo
+        ReflectionTestUtils.setField(converterHelper, "reflectionHelper", new ReflectionHelper()); // echte gebruiken
+
+        ToConverter res = converterHelper.getToConverter(SimpleExtendedTo.class, SimpleExtendedDomain.class);
+
+        assertThat(res).isNotNull();
+        assertThat(res.getToTo()).hasSize(4);
+        assertThat(res.getToDomain()).hasSize(3);
+    }
+
+    @Test
+    public void testGetToConverterInvalidMapping() throws Exception {
+        ReflectionTestUtils.setField(converterHelper, "reflectionHelper", new ReflectionHelper()); // echte gebruiken
+
+        exception.expect(JTransfoException.class);
+        exception.expectMessage("Cannot determine mapping for field string in class " +
+                "org.jtransfo.object.FaultyExtendedTo. The field zzz in class " +
+                "org.jtransfo.object.SimpleExtendedDomain cannot be found.");
+
+        converterHelper.getToConverter(FaultyExtendedTo.class, SimpleExtendedDomain.class);
     }
 
 }
