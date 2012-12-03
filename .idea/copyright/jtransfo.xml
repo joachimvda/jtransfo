@@ -1,6 +1,6 @@
 <component name="CopyrightManager">
   <copyright>
-    <option name="notice" value="This file is part of jTransfo, a library for converting to and from transfer objects.&#10;Copyright (c) PROGS bvba, Belgium&#10;&#10;The program is available in open source according to the Apache&#10;License, Version 2.0. All contributions in this program are covered&#10;by the Geomajas Contributors License Agreement. For full licensing&#10;details, see LICENSE.txt in the project root." />
+    <option name="notice" value="This file is part of jTransfo, a library for converting to and from transfer objects.&#10;Copyright (c) PROGS bvba, Belgium&#10;&#10;The program is available in open source according to the Apache License, Version 2.0.&#10;For full licensing details, see LICENSE.txt in the project root." />
     <option name="keyword" value="(c)" />
     <option name="allowReplaceKeyword" value="" />
     <option name="myName" value="jtransfo" />
