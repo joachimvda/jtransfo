@@ -6,9 +6,10 @@
  * For full licensing details, see LICENSE.txt in the project root.
  */
 
-package org.jtransfo;
+package org.jtransfo.internal;
 
-import org.jtransfo.internal.ReflectionHelper;
+import org.jtransfo.JTransfoException;
+import org.jtransfo.JTransfoImpl;
 import org.jtransfo.object.SimpleClassDomain;
 import org.jtransfo.object.SimpleClassNameTo;
 import org.junit.Before;
@@ -21,9 +22,12 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.mockito.Mockito.when;
 
-public class JTransfoImplTest {
+/**
+ * Test for {@link NewInstanceObjectFinder}.
+ */
+public class NewInstanceObjectFinderTest {
 
-    private JTransfo jTransfo;
+    private NewInstanceObjectFinder newInstanceObjectFinder;
 
     @Mock
     private ReflectionHelper reflectionHelper;
@@ -35,26 +39,26 @@ public class JTransfoImplTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
 
-        jTransfo = new JTransfoImpl();
+        newInstanceObjectFinder = new NewInstanceObjectFinder();
 
-        ReflectionTestUtils.setField(jTransfo, "reflectionHelper", reflectionHelper);
-        ReflectionTestUtils.setField(((JTransfoImpl) jTransfo).getObjectFinders().get(0), "reflectionHelper", reflectionHelper);
+        ReflectionTestUtils.setField(newInstanceObjectFinder, "reflectionHelper", reflectionHelper);
     }
 
     @Test
-    public void testConvertInstantiationException() throws Exception {
+    public void testInstantiationException() throws Exception {
         when(reflectionHelper.newInstance(SimpleClassDomain.class)).thenThrow(new InstantiationException());
 
         exception.expect(JTransfoException.class);
         exception.expectMessage("Cannot create instance for domain class org.jtransfo.object.SimpleClassDomain.");
-        jTransfo.convert(new SimpleClassNameTo());
+        newInstanceObjectFinder.getObject(SimpleClassDomain.class, new SimpleClassNameTo());
     }
 
     @Test
-    public void testConvertIllegalAccessException() throws Exception {
+    public void testIllegalAccessException() throws Exception {
         when(reflectionHelper.newInstance(SimpleClassDomain.class)).thenThrow(new IllegalAccessException());
         exception.expect(JTransfoException.class);
         exception.expectMessage("Cannot create instance for domain class org.jtransfo.object.SimpleClassDomain.");
-        jTransfo.convert(new SimpleClassNameTo());
+        newInstanceObjectFinder.getObject(SimpleClassDomain.class, new SimpleClassNameTo());
     }
+
 }

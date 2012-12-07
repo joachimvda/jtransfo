@@ -9,9 +9,11 @@
 package org.jtransfo;
 
 import org.jtransfo.internal.ConverterHelper;
+import org.jtransfo.internal.NewInstanceObjectFinder;
 import org.jtransfo.internal.ReflectionHelper;
 import org.jtransfo.internal.ToHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -25,6 +27,25 @@ public class JTransfoImpl implements JTransfo {
     private ReflectionHelper reflectionHelper = new ReflectionHelper();
     private ConverterHelper converterHelper = new ConverterHelper();
     private Map<Class, ToConverter> converters = new ConcurrentHashMap<Class, ToConverter>();
+    private List<ObjectFinder> objectFinders = new ArrayList<ObjectFinder>();
+
+    /**
+     * Constructor.
+     */
+    public JTransfoImpl() {
+        objectFinders.add(new NewInstanceObjectFinder());
+    }
+
+    /**
+     * Get the list of {@link ObjectFinder}s to allow customization.
+     * <p/>
+     * The elements are tried in reverse order (from end to start of list).
+     *
+     * @return list of object finders
+     */
+    public List<ObjectFinder> getObjectFinders() {
+        return objectFinders;
+    }
 
     @Override
     public <T> T convert(Object source, T target) {
@@ -51,16 +72,17 @@ public class JTransfoImpl implements JTransfo {
 
     @Override
     public Object convert(Object source) {
-        Class domainClass = toHelper.getDomainClass(source);
-        try {
-            // @todo allow creation to be pluggable, could need domain lookup based on a field in the source
-            Object target = reflectionHelper.newInstance(domainClass);
-            return convert(source, target);
-        } catch (InstantiationException ie) {
-            throw new JTransfoException("Cannot create instance for domain class " + domainClass.getName() + ".", ie);
-        } catch (IllegalAccessException ie) {
-            throw new JTransfoException("Cannot create instance for domain class " + domainClass.getName() + ".", ie);
+        Class<?> domainClass = toHelper.getDomainClass(source);
+        int i = objectFinders.size() - 1;
+        Object target = null;
+        while (null == target && i >= 0) {
+            target = objectFinders.get(i--).getObject(domainClass, source);
         }
+        if (null == target) {
+            throw new JTransfoException("Cannot create instance of domain class " + domainClass.getName() +
+                    " for transfer object "+ source + ".");
+        }
+        return convert(source, target);
     }
 
     private List<Converter> getToToConverters(Class toClass, Class domainClass) {
