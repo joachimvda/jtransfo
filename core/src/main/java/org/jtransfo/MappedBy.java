@@ -66,7 +66,13 @@ public @interface MappedBy {
      * Default value for {@link #typeConverterClass} indicating the type converter which should be used if
      * {@link #typeConverter} is not set.
      */
-    class DefaultTypeConverter implements TypeConverter {
+    class DefaultTypeConverter implements TypeConverter<Object, Object> {
+
+        @Override
+        public boolean canConvert(Class<?> realToType, Class<?> realDomainType) {
+            return false;
+        }
+
         @Override
         public Object convert(Object object) throws JTransfoException {
             return null;

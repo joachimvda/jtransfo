@@ -26,10 +26,12 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -175,7 +177,31 @@ public class ConverterHelperTest {
     }
 
     @Test
-    public void testGetDefaultTypeConverter() throws Exception {
+    public void testGetDefaultTypeConverterEmptyList() throws Exception {
+
+        TypeConverter typeConverter = converterHelper.getDefaultTypeConverter(Object.class, Date.class);
+
+        assertThat(typeConverter).isInstanceOf(NoConversionTypeConverter.class);
+    }
+
+    @Test
+    public void testGetDefaultTypeConverterMatchingConverter() throws Exception {
+        TypeConverter typeConverter = mock(TypeConverter.class);
+        when(typeConverter.canConvert(any(Class.class), any(Class.class))).thenReturn(true);
+        ReflectionTestUtils.setField(converterHelper, "typeConvertersInOrder",
+                Collections.singletonList(typeConverter));
+
+        TypeConverter result = converterHelper.getDefaultTypeConverter(Object.class, Date.class);
+
+        assertThat(result).isEqualTo(typeConverter);
+    }
+
+    @Test
+    public void testGetDefaultTypeConverterNoMatchingConverter() throws Exception {
+        List<TypeConverter> tcs = new ArrayList<TypeConverter>();
+        tcs.add(new DefaultTypeConverter());
+        tcs.add(new DefaultTypeConverter());
+        ReflectionTestUtils.setField(converterHelper, "typeConvertersInOrder", tcs);
 
         TypeConverter typeConverter = converterHelper.getDefaultTypeConverter(Object.class, Date.class);
 
@@ -205,4 +231,34 @@ public class ConverterHelperTest {
         converterHelper.getToConverter(FaultyExtendedTo.class, SimpleExtendedDomain.class);
     }
 
+    @Test
+    public void testSetTypeConvertersInOrder() throws Exception {
+        List org = (List) ReflectionTestUtils.getField(converterHelper, "typeConvertersInOrder");
+        TypeConverter typeConverter = mock(TypeConverter.class);
+        assertThat(org.size()).isEqualTo(0); // default is empty
+
+        converterHelper.setTypeConvertersInOrder(Collections.singletonList(typeConverter));
+        List res = (List) ReflectionTestUtils.getField(converterHelper, "typeConvertersInOrder");
+        assertThat(res.size()).isEqualTo(1);
+        assertThat((Object) res).isInstanceOf(LockableList.class);
+        assertThat((Boolean) ReflectionTestUtils.getField(res, "readOnly")).isTrue();
+    }
+
+    private class DefaultTypeConverter implements TypeConverter<Object, Object> {
+
+        @Override
+        public boolean canConvert(Class<?> realToType, Class<?> realDomainType) {
+            return false;
+        }
+
+        @Override
+        public Object convert(Object object) throws JTransfoException {
+            return null;
+        }
+
+        @Override
+        public Object reverse(Object object) throws JTransfoException {
+            return null;
+        }
+    }
 }

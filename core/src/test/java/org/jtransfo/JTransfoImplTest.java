@@ -8,6 +8,7 @@
 
 package org.jtransfo;
 
+import org.jtransfo.internal.ConverterHelper;
 import org.jtransfo.internal.ReflectionHelper;
 import org.jtransfo.object.SimpleClassDomain;
 import org.jtransfo.object.SimpleClassNameTo;
@@ -15,18 +16,33 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
+import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.Matchers.anyCollection;
+import static org.mockito.Matchers.anyList;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 public class JTransfoImplTest {
 
-    private JTransfo jTransfo;
+    private JTransfoImpl jTransfo;
 
     @Mock
     private ReflectionHelper reflectionHelper;
+
+    @Mock
+    private ConverterHelper converterHelper;
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
@@ -37,7 +53,6 @@ public class JTransfoImplTest {
 
         jTransfo = new JTransfoImpl();
 
-        ReflectionTestUtils.setField(jTransfo, "reflectionHelper", reflectionHelper);
         ReflectionTestUtils.setField(((JTransfoImpl) jTransfo).getObjectFinders().get(0), "reflectionHelper", reflectionHelper);
     }
 
@@ -56,5 +71,38 @@ public class JTransfoImplTest {
         exception.expect(JTransfoException.class);
         exception.expectMessage("Cannot create instance for domain class org.jtransfo.object.SimpleClassDomain.");
         jTransfo.convert(new SimpleClassNameTo());
+    }
+
+    @Test
+    public void testConvertNullTarget() throws Exception {
+        when(reflectionHelper.newInstance(SimpleClassDomain.class)).thenReturn(null);
+        exception.expect(JTransfoException.class);
+        exception.expectMessage("Cannot create instance of domain class org.jtransfo.object.SimpleClassDomain " +
+                "for transfer object org.jtransfo.object.SimpleClassNameTo");
+        jTransfo.convert(new SimpleClassNameTo());
+    }
+
+    @Test
+    public void testGetUpdateTypeConverters() throws Exception {
+        ReflectionTestUtils.setField(jTransfo, "converterHelper", converterHelper);
+
+        List<TypeConverter> converters = jTransfo.getTypeConverters();
+        int orgSize = converters.size();
+
+        converters.add(new NoConversionTypeConverter());
+        verifyNoMoreInteractions(converterHelper);
+
+        jTransfo.updateTypeConverters(null); // update with changed converters
+
+        ArgumentCaptor<Collection> captor1 = ArgumentCaptor.forClass(Collection.class);
+        verify(converterHelper, times(1)).setTypeConvertersInOrder(captor1.capture());
+        assertThat(captor1.getValue().size()).isEqualTo(orgSize + 1);
+
+        reset(converterHelper);
+        jTransfo.updateTypeConverters((List) Collections.singletonList(new NoConversionTypeConverter()));
+
+        ArgumentCaptor<Collection> captor2 = ArgumentCaptor.forClass(Collection.class);
+        verify(converterHelper, times(1)).setTypeConvertersInOrder(captor2.capture());
+        assertThat(captor2.getValue().size()).isEqualTo(1);
     }
 }

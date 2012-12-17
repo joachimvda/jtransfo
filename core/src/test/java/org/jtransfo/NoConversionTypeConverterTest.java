@@ -23,6 +23,12 @@ public class NoConversionTypeConverterTest {
     }
 
     @Test
+    public void testCanConvert() throws Exception {
+        assertThat(typeConverter.canConvert(Boolean.class, Boolean.class)).isTrue();
+        assertThat(typeConverter.canConvert(Boolean.class, Integer.class)).isFalse();
+    }
+
+    @Test
     public void testConvert() throws Exception {
         Object obj = new Object();
         assertThat(typeConverter.convert(obj)).isEqualTo(obj);

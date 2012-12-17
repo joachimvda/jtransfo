@@ -14,6 +14,11 @@ package org.jtransfo;
 public class NoConversionTypeConverter implements TypeConverter<Object, Object> {
 
     @Override
+    public boolean canConvert(Class<?> realToType, Class<?> realDomainType) {
+        return realToType.getName().equals(realDomainType.getName());
+    }
+
+    @Override
     public Object convert(Object object) throws JTransfoException {
         return object;
     }

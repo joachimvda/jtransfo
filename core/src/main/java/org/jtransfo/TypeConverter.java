@@ -17,6 +17,15 @@ package org.jtransfo;
 public interface TypeConverter<TO_TYPE, DOMAIN_TYPE> {
 
     /**
+     * Can this type converter handle conversions between the given transfer and domain object types?
+     *
+     * @param realToType real class for the type in the transfer object
+     * @param realDomainType real class for the type in the domain object
+     * @return true is this type converter can handle the type conversions
+     */
+    boolean canConvert(Class<?> realToType, Class<?> realDomainType);
+
+    /**
      * Convert a transfer object field value to the value for the domain object.
      *
      * @param object object to convert

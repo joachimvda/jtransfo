@@ -10,7 +10,6 @@ package org.jtransfo;
 
 import org.jtransfo.internal.ConverterHelper;
 import org.jtransfo.internal.NewInstanceObjectFinder;
-import org.jtransfo.internal.ReflectionHelper;
 import org.jtransfo.internal.ToHelper;
 
 import java.util.ArrayList;
@@ -24,16 +23,49 @@ import java.util.concurrent.ConcurrentHashMap;
 public class JTransfoImpl implements JTransfo {
 
     private ToHelper toHelper = new ToHelper();
-    private ReflectionHelper reflectionHelper = new ReflectionHelper();
     private ConverterHelper converterHelper = new ConverterHelper();
     private Map<Class, ToConverter> converters = new ConcurrentHashMap<Class, ToConverter>();
     private List<ObjectFinder> objectFinders = new ArrayList<ObjectFinder>();
+    private List<TypeConverter> typeConverters = new ArrayList<TypeConverter>();
 
     /**
      * Constructor.
      */
     public JTransfoImpl() {
         objectFinders.add(new NewInstanceObjectFinder());
+
+        typeConverters.add(new NoConversionTypeConverter());
+        converterHelper.setTypeConvertersInOrder(typeConverters);
+    }
+
+    /**
+     * Get the set of type converters which are used by this JTransfo instance.
+     * <p/>
+     * You are explicitly allowed to change this list, but beware to do this from one thread only.
+     * <p/>
+     * Changes in the list are not used until you call {@link #updateTypeConverters(java.util.List)}.
+     *
+     * @return current list of type converters.
+     */
+    public List<TypeConverter> getTypeConverters() {
+        return typeConverters;
+    }
+
+    /**
+     * Update the list of type converters which is used.
+     * <p/>
+     * When null is passed, this updates the changes to the internal list (see {@link #getTypeConverters()}.
+     * Alternatively, you can pass the new list explicitly.
+     *
+     * @param newConverters new list of type converters
+     */
+    public void updateTypeConverters(List<TypeConverter> newConverters) {
+        if (null != newConverters) {
+            typeConverters.clear();
+            typeConverters.addAll(newConverters);
+
+        }
+        converterHelper.setTypeConvertersInOrder(typeConverters);
     }
 
     /**

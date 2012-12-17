@@ -17,6 +17,8 @@ import org.jtransfo.TypeConverter;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -26,7 +28,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ConverterHelper {
 
     private ReflectionHelper reflectionHelper = new ReflectionHelper();
-    private ConcurrentHashMap<String, TypeConverter> typeConverters = new ConcurrentHashMap<String, TypeConverter>();
+    private ConcurrentHashMap<String, TypeConverter> typeConverterInstances =
+            new ConcurrentHashMap<String, TypeConverter>();
+    private List<TypeConverter> typeConvertersInOrder = Collections.emptyList(); // empty list for starters
 
     /**
      * Build the descriptor for conversion between given object types.
@@ -102,11 +106,11 @@ public class ConverterHelper {
             typeConverterClass = mappedBy.typeConverter();
         }
         if (!MappedBy.DEFAULT_TYPE_CONVERTER.equals(typeConverterClass)) {
-            TypeConverter typeConverter = typeConverters.get(typeConverterClass);
+            TypeConverter typeConverter = typeConverterInstances.get(typeConverterClass);
             if (null == typeConverter) {
                 try {
                     typeConverter = reflectionHelper.<TypeConverter>newInstance(typeConverterClass);
-                    typeConverters.put(typeConverterClass, typeConverter);
+                    typeConverterInstances.put(typeConverterClass, typeConverter);
                 } catch (ClassNotFoundException cnfe) {
                     throw new JTransfoException("Declared TypeConverter class " + typeConverterClass +
                             " cannot be found.", cnfe);
@@ -127,6 +131,19 @@ public class ConverterHelper {
     }
 
     /**
+     * Set the list of type converters. When searching a type conversion, the list is traversed front to back.
+     *
+     * @param typeConverters ordered list of type converters, the first converter in the list which can do the
+     *      conversion is used.
+     */
+    public void setTypeConvertersInOrder(Collection<TypeConverter> typeConverters) {
+        LockableList<TypeConverter> newList = new LockableList<TypeConverter>();
+        newList.addAll(typeConverters);
+        newList.lock();
+        typeConvertersInOrder = newList;
+    }
+
+    /**
      * Get the default type converter given the field types to convert between.
      *
      * @param toField transfer object field class
@@ -134,7 +151,12 @@ public class ConverterHelper {
      * @return type converter
      */
     protected TypeConverter getDefaultTypeConverter(Class<?> toField, Class<?> domainField) {
-        return new NoConversionTypeConverter(); // @todo no type conversion for now
+        for (TypeConverter typeConverter : typeConvertersInOrder) {
+            if (typeConverter.canConvert(toField, domainField)) {
+                return typeConverter;
+            }
+        }
+        return new NoConversionTypeConverter(); // default to no type conversion
     }
 
 }
