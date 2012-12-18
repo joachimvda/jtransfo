@@ -35,11 +35,12 @@ public class JTransfoImpl implements JTransfo {
         objectFinders.add(new NewInstanceObjectFinder());
 
         typeConverters.add(new NoConversionTypeConverter());
+        typeConverters.add(new ToDomainTypeConverter(this, toHelper));
         converterHelper.setTypeConvertersInOrder(typeConverters);
     }
 
     /**
-     * Get the set of type converters which are used by this JTransfo instance.
+     * Get the set of type converters which are used by this jTransfo instance.
      * <p/>
      * You are explicitly allowed to change this list, but beware to do this from one thread only.
      * <p/>
@@ -112,7 +113,7 @@ public class JTransfoImpl implements JTransfo {
 
     @Override
     public Object convert(Object source) {
-        Class<?> domainClass = toHelper.getDomainClass(source);
+        Class<?> domainClass = toHelper.getDomainClass(source.getClass());
         int i = objectFinders.size() - 1;
         Object target = null;
         while (null == target && i >= 0) {
@@ -134,11 +135,10 @@ public class JTransfoImpl implements JTransfo {
     }
 
     private ToConverter getToConverter(Class toClass, Class domainClass) {
-        Class clazz = toClass.getClass();
-        ToConverter toConverter = converters.get(clazz);
+        ToConverter toConverter = converters.get(toClass);
         if (null == toConverter) {
             toConverter = converterHelper.getToConverter(toClass, domainClass);
-            converters.put(clazz, toConverter);
+            converters.put(toClass, toConverter);
         }
         return toConverter;
     }

@@ -26,8 +26,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.fest.assertions.Assertions.assertThat;
-import static org.mockito.Matchers.anyCollection;
-import static org.mockito.Matchers.anyList;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -53,7 +51,7 @@ public class JTransfoImplTest {
 
         jTransfo = new JTransfoImpl();
 
-        ReflectionTestUtils.setField(((JTransfoImpl) jTransfo).getObjectFinders().get(0), "reflectionHelper", reflectionHelper);
+        ReflectionTestUtils.setField((jTransfo).getObjectFinders().get(0), "reflectionHelper", reflectionHelper);
     }
 
     @Test
@@ -92,7 +90,7 @@ public class JTransfoImplTest {
         converters.add(new NoConversionTypeConverter());
         verifyNoMoreInteractions(converterHelper);
 
-        jTransfo.updateTypeConverters(null); // update with changed converters
+        jTransfo.updateTypeConverters(); // update with changed converters
 
         ArgumentCaptor<Collection> captor1 = ArgumentCaptor.forClass(Collection.class);
         verify(converterHelper, times(1)).setTypeConvertersInOrder(captor1.capture());

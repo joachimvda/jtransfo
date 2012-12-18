@@ -36,29 +36,29 @@ public class ToHelperTest {
 
     @Test
     public void testGetDomainClass() throws Exception {
-        assertThat(toHelper.getDomainClass(new SimpleClassNameTo())).isEqualTo(SimpleClassDomain.class);
-        assertThat(toHelper.getDomainClass(new SimpleClassTypeTo())).isEqualTo(SimpleClassDomain.class);
+        assertThat(toHelper.getDomainClass(SimpleClassNameTo.class)).isEqualTo(SimpleClassDomain.class);
+        assertThat(toHelper.getDomainClass(SimpleClassTypeTo.class)).isEqualTo(SimpleClassDomain.class);
     }
 
     @Test
     public void testGetNoDomainClass() throws Exception {
         exception.expect(JTransfoException.class);
         exception.expectMessage(" not annotated with DomainClass.");
-        assertThat(toHelper.getDomainClass(new NoDomain())).isNull();
+        assertThat(toHelper.getDomainClass(NoDomain.class)).isNull();
     }
 
     @Test
     public void noClassDomainClassAnnotationTest() throws Exception {
         exception.expect(JTransfoException.class);
         exception.expectMessage(" DomainClass annotation does not specify class.");
-        assertThat(toHelper.getDomainClass(new NoClassTo())).isNull();
+        assertThat(toHelper.getDomainClass(NoClassTo.class)).isNull();
     }
 
     @Test
     public void unknownClassDomainClassAnnotationTest() throws Exception {
         exception.expect(JTransfoException.class);
         exception.expectMessage(" DomainClass org.jtransfo.UnknownClass not found.");
-        assertThat(toHelper.getDomainClass(new UnknownClassTo())).isNull();
+        assertThat(toHelper.getDomainClass(UnknownClassTo.class)).isNull();
     }
 
     @DomainClass

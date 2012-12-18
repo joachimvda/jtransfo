@@ -65,7 +65,7 @@ public class ToDomainConverterTest {
         sed.setA(A_VALUE);
 
         exception.expect(JTransfoException.class);
-        exception.expectMessage("Cannot convert field a to field b, field cannot be accessed.");
+        exception.expectMessage("Cannot convert TO field a to domain field b, field cannot be accessed.");
         toDomainConverterAccess.convert(sed, sed);
     }
 
@@ -76,7 +76,7 @@ public class ToDomainConverterTest {
         sed.setA(A_VALUE);
 
         exception.expect(JTransfoException.class);
-        exception.expectMessage("Cannot convert field a to field i, field needs type conversion.");
+        exception.expectMessage("Cannot convert TO field a to domain field i, field needs type conversion.");
         toDomainConverterArgument.convert(sed, sed);
     }
 

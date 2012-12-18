@@ -29,18 +29,20 @@ public interface TypeConverter<TO_TYPE, DOMAIN_TYPE> {
      * Convert a transfer object field value to the value for the domain object.
      *
      * @param object object to convert
+     * @param domainType target domain object type
      * @return converted object
      * @throws JTransfoException problem during type conversion
      */
-    DOMAIN_TYPE convert(TO_TYPE object) throws JTransfoException;
+    DOMAIN_TYPE convert(TO_TYPE object, Class<DOMAIN_TYPE> domainType) throws JTransfoException;
 
     /**
      * Convert a domain object field value to the value for the transfer object.
      *
      * @param object object to convert
+     * @param toType target transfer object type
      * @return converted object
      * @throws JTransfoException problem during type conversion
      */
-    TO_TYPE reverse(DOMAIN_TYPE object) throws JTransfoException;
+    TO_TYPE reverse(DOMAIN_TYPE object, Class<TO_TYPE> toType) throws JTransfoException;
 
 }

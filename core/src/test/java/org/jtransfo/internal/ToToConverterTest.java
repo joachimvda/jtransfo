@@ -65,7 +65,7 @@ public class ToToConverterTest {
         sed.setC(C_VALUE);
 
         exception.expect(JTransfoException.class);
-        exception.expectMessage("Cannot convert field c to field b, field cannot be accessed.");
+        exception.expectMessage("Cannot convert domain field c to TO field b, field cannot be accessed.");
         toToConverterAccess.convert(sed, sed);
     }
 
@@ -76,7 +76,7 @@ public class ToToConverterTest {
         sed.setC(C_VALUE);
 
         exception.expect(JTransfoException.class);
-        exception.expectMessage("Cannot convert field c to field i, field needs type conversion.");
+        exception.expectMessage("Cannot convert domain field c to TO field i, field needs type conversion.");
         toToConverterArgument.convert(sed, sed);
     }
 

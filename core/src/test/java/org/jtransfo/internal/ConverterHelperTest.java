@@ -252,12 +252,12 @@ public class ConverterHelperTest {
         }
 
         @Override
-        public Object convert(Object object) throws JTransfoException {
+        public Object convert(Object object, Class<Object> domainClass) throws JTransfoException {
             return null;
         }
 
         @Override
-        public Object reverse(Object object) throws JTransfoException {
+        public Object reverse(Object object, Class<Object> toClass) throws JTransfoException {
             return null;
         }
     }

@@ -31,12 +31,12 @@ public class NoConversionTypeConverterTest {
     @Test
     public void testConvert() throws Exception {
         Object obj = new Object();
-        assertThat(typeConverter.convert(obj)).isEqualTo(obj);
+        assertThat(typeConverter.convert(obj, Object.class)).isEqualTo(obj);
     }
 
     @Test
     public void testReverse() throws Exception {
         Object obj = new Object();
-        assertThat(typeConverter.reverse(obj)).isEqualTo(obj);
+        assertThat(typeConverter.reverse(obj, Object.class)).isEqualTo(obj);
     }
 }

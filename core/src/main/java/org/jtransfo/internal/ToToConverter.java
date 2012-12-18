@@ -40,12 +40,13 @@ public final class ToToConverter implements Converter {
     public void convert(Object source, Object target) throws JTransfoException {
         try {
             Object value = domainField.get(source);
-            toField.set(target, typeConverter.reverse(value));
+            Object converted = typeConverter.reverse(value, toField.getType());
+            toField.set(target, converted);
         } catch (IllegalAccessException iae) {
-            throw new JTransfoException("Cannot convert field " + domainField.getName() + " to field " +
+            throw new JTransfoException("Cannot convert domain field " + domainField.getName() + " to TO field " +
                     toField.getName() + ", field cannot be accessed.", iae);
         } catch (IllegalArgumentException iae) {
-            throw new JTransfoException("Cannot convert field " + domainField.getName() + " to field " +
+            throw new JTransfoException("Cannot convert domain field " + domainField.getName() + " to TO field " +
                     toField.getName() + ", field needs type conversion.", iae);
         }
     }

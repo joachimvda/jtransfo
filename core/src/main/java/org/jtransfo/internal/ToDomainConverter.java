@@ -40,12 +40,12 @@ public final class ToDomainConverter implements Converter {
     public void convert(Object source, Object target) throws JTransfoException {
         try {
             Object value = toField.get(source);
-            domainField.set(target, typeConverter.convert(value));
+            domainField.set(target, typeConverter.convert(value, domainField.getType()));
         } catch (IllegalAccessException iae) {
-            throw new JTransfoException("Cannot convert field " + toField.getName() + " to field " +
+            throw new JTransfoException("Cannot convert TO field " + toField.getName() + " to domain field " +
                     domainField.getName() + ", field cannot be accessed.", iae);
         } catch (IllegalArgumentException iae) {
-            throw new JTransfoException("Cannot convert field " + toField.getName() + " to field " +
+            throw new JTransfoException("Cannot convert TO field " + toField.getName() + " to domain field " +
                     domainField.getName() + ", field needs type conversion.", iae);
         }
     }

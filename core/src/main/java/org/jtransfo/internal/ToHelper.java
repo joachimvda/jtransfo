@@ -27,7 +27,18 @@ public class ToHelper {
      * @return true when object is a transfer object
      */
     public boolean isTo(Object object) {
-        Class<?> toClass = object.getClass();
+        return isToClass(object.getClass());
+    }
+
+    /**
+     * Is the given class a transfer object class?
+     * <p/>
+     * True when there is a {@link DomainClass} annotation on the class.
+     *
+     * @param toClass object class to test
+     * @return true when object is a transfer object
+     */
+    public boolean isToClass(Class<?> toClass) {
         DomainClass domainClass = toClass.getAnnotation(DomainClass.class);
         return null != domainClass;
     }
@@ -35,11 +46,10 @@ public class ToHelper {
     /**
      * Get domain class for transfer object.
      *
-     * @param to transfer object
+     * @param toClass transfer object class
      * @return domain class as annotated on class
      */
-    public Class<?> getDomainClass(Object to) {
-        Class<?> toClass = to.getClass();
+    public Class<?> getDomainClass(Class<?> toClass) {
         DomainClass domainClass = toClass.getAnnotation(DomainClass.class);
         if (null == domainClass) {
             throw new JTransfoException("Transfer object of type " + toClass.getName() +

@@ -41,20 +41,20 @@ public class StringEnumTypeConverterTest {
 
     @Test
     public void testConvert() throws Exception {
-        assertThat(enumTypeConverter.convert(Gender.MALE.name())).isEqualTo(Gender.MALE);
-        assertThat(enumTypeConverter.convert(Gender.FEMALE.name())).isEqualTo(Gender.FEMALE);
-        assertThat(enumTypeConverter.convert(null)).isNull();
-        assertThat(enumTypeConverter.convert("")).isNull();
+        assertThat(enumTypeConverter.convert(Gender.MALE.name(), Gender.class)).isEqualTo(Gender.MALE);
+        assertThat(enumTypeConverter.convert(Gender.FEMALE.name(), Gender.class)).isEqualTo(Gender.FEMALE);
+        assertThat(enumTypeConverter.convert(null, Gender.class)).isNull();
+        assertThat(enumTypeConverter.convert("", Gender.class)).isNull();
 
         exception.expect(IllegalArgumentException.class);
-        assertThat(enumTypeConverter.convert("blabla"));
+        assertThat(enumTypeConverter.convert("blabla", Gender.class));
     }
 
     @Test
     public void testReverse() throws Exception {
-        assertThat(enumTypeConverter.reverse(Gender.MALE)).isEqualTo(Gender.MALE.name());
-        assertThat(enumTypeConverter.reverse(Gender.FEMALE)).isEqualTo(Gender.FEMALE.name());
-        assertThat(enumTypeConverter.reverse(null)).isNull();
+        assertThat(enumTypeConverter.reverse(Gender.MALE, String.class)).isEqualTo(Gender.MALE.name());
+        assertThat(enumTypeConverter.reverse(Gender.FEMALE, String.class)).isEqualTo(Gender.FEMALE.name());
+        assertThat(enumTypeConverter.reverse(null, String.class)).isNull();
     }
 
 }
