@@ -52,6 +52,12 @@ public class JTransfoImpl implements JTransfo {
     }
 
     /**
+     * Update the list of type converters which is used based on the internal list (see {@link #getTypeConverters()}.
+     */
+    public void updateTypeConverters() {
+        updateTypeConverters(null);
+    }
+    /**
      * Update the list of type converters which is used.
      * <p/>
      * When null is passed, this updates the changes to the internal list (see {@link #getTypeConverters()}.
@@ -72,6 +78,8 @@ public class JTransfoImpl implements JTransfo {
      * Get the list of {@link ObjectFinder}s to allow customization.
      * <p/>
      * The elements are tried in reverse order (from end to start of list).
+     * <p/>
+     * Note that this list is not synchronized. It should only be modified in one thread before normal use.
      *
      * @return list of object finders
      */
