@@ -44,6 +44,7 @@ public class StringEnumTypeConverterTest {
         assertThat(enumTypeConverter.convert(Gender.MALE.name())).isEqualTo(Gender.MALE);
         assertThat(enumTypeConverter.convert(Gender.FEMALE.name())).isEqualTo(Gender.FEMALE);
         assertThat(enumTypeConverter.convert(null)).isNull();
+        assertThat(enumTypeConverter.convert("")).isNull();
 
         exception.expect(IllegalArgumentException.class);
         assertThat(enumTypeConverter.convert("blabla"));
