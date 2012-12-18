@@ -8,9 +8,6 @@
 
 package org.jtransfo;
 
-import org.jtransfo.JTransfoException;
-import org.jtransfo.TypeConverter;
-
 /**
  * Type converter for representing enums as string in the transfer object.
  *

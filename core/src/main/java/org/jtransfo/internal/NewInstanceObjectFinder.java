@@ -18,6 +18,7 @@ public class NewInstanceObjectFinder implements ObjectFinder {
 
     private ReflectionHelper reflectionHelper = new ReflectionHelper();
 
+    @Override
     public <T> T getObject(Class<T> domainClass, Object to) throws JTransfoException {
         try {
             return reflectionHelper.newInstance(domainClass);

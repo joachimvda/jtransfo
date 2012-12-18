@@ -356,7 +356,9 @@
             <property name="format" value="^Abstract.*$" />
         </module>
         <!-- Checks that class type parameter names conform to a format specified by the format property.  -->
-        <module name="ClassTypeParameterName"/>
+        <module name="ClassTypeParameterName">
+            <property name="format" value="^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$"/>
+        </module>
         <!-- Checks that constant names conform to a format specified by the format property. -->
         <module name="ConstantName"/>
         <!-- Checks that local final variable names conform to a format specified by the format property. -->

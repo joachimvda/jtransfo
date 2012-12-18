@@ -112,7 +112,7 @@ public class JTransfoImpl implements JTransfo {
         }
         if (null == target) {
             throw new JTransfoException("Cannot create instance of domain class " + domainClass.getName() +
-                    " for transfer object "+ source + ".");
+                    " for transfer object " + source + ".");
         }
         return convert(source, target);
     }
