@@ -9,6 +9,7 @@
 package org.jtransfo;
 
 import org.jtransfo.internal.ConverterHelper;
+import org.jtransfo.internal.LockableList;
 import org.jtransfo.internal.NewInstanceObjectFinder;
 import org.jtransfo.internal.ToHelper;
 
@@ -25,18 +26,20 @@ public class JTransfoImpl implements JTransfo {
     private ToHelper toHelper = new ToHelper();
     private ConverterHelper converterHelper = new ConverterHelper();
     private Map<Class, ToConverter> converters = new ConcurrentHashMap<Class, ToConverter>();
-    private List<ObjectFinder> objectFinders = new ArrayList<ObjectFinder>();
-    private List<TypeConverter> typeConverters = new ArrayList<TypeConverter>();
+    private List<ObjectFinder> modifyableObjectFinders = new ArrayList<ObjectFinder>();
+    private LockableList<ObjectFinder> objectFinders = new LockableList<ObjectFinder>();
+    private List<TypeConverter> modifyableTypeConverters = new ArrayList<TypeConverter>();
 
     /**
      * Constructor.
      */
     public JTransfoImpl() {
-        objectFinders.add(new NewInstanceObjectFinder());
+        modifyableObjectFinders.add(new NewInstanceObjectFinder());
+        updateObjectFinders();
 
-        typeConverters.add(new NoConversionTypeConverter());
-        typeConverters.add(new ToDomainTypeConverter(this, toHelper));
-        converterHelper.setTypeConvertersInOrder(typeConverters);
+        modifyableTypeConverters.add(new NoConversionTypeConverter());
+        modifyableTypeConverters.add(new ToDomainTypeConverter(this, toHelper));
+        updateTypeConverters();
     }
 
     /**
@@ -44,12 +47,12 @@ public class JTransfoImpl implements JTransfo {
      * <p/>
      * You are explicitly allowed to change this list, but beware to do this from one thread only.
      * <p/>
-     * Changes in the list are not used until you call {@link #updateTypeConverters(java.util.List)}.
+     * Changes in the list are not used until you call {@link #updateTypeConverters()}.
      *
      * @return current list of type converters.
      */
     public List<TypeConverter> getTypeConverters() {
-        return typeConverters;
+        return modifyableTypeConverters;
     }
 
     /**
@@ -58,6 +61,7 @@ public class JTransfoImpl implements JTransfo {
     public void updateTypeConverters() {
         updateTypeConverters(null);
     }
+
     /**
      * Update the list of type converters which is used.
      * <p/>
@@ -68,11 +72,11 @@ public class JTransfoImpl implements JTransfo {
      */
     public void updateTypeConverters(List<TypeConverter> newConverters) {
         if (null != newConverters) {
-            typeConverters.clear();
-            typeConverters.addAll(newConverters);
+            modifyableTypeConverters.clear();
+            modifyableTypeConverters.addAll(newConverters);
 
         }
-        converterHelper.setTypeConvertersInOrder(typeConverters);
+        converterHelper.setTypeConvertersInOrder(modifyableTypeConverters);
     }
 
     /**
@@ -80,16 +84,41 @@ public class JTransfoImpl implements JTransfo {
      * <p/>
      * The elements are tried in reverse order (from end to start of list).
      * <p/>
-     * Note that this list is not synchronized. It should only be modified in one thread before normal use.
+     * You are explicitly allowed to change this list, but beware to do this from one thread only.
+     * <p/>
+     * Changes in the list are not used until you call {@link #updateObjectFinders()}.
      *
      * @return list of object finders
      */
     public List<ObjectFinder> getObjectFinders() {
-        return objectFinders;
+        return modifyableObjectFinders;
     }
 
+    /**
+     * Update the list of object finders which is used based on the internal list (see {@link #getObjectFinders()}.
+     */
     public void updateObjectFinders() {
+        updateObjectFinders(null);
+    }
 
+    /**
+     * Update the list of object finders which is used.
+     * <p/>
+     * When null is passed, this updates the changes to the internal list (see {@link #getObjectFinders()}.
+     * Alternatively, you can pass the new list explicitly.
+     *
+     * @param newObjectFinders new list of type converters
+     */
+    public void updateObjectFinders(List<ObjectFinder> newObjectFinders) {
+        if (null != newObjectFinders) {
+            modifyableObjectFinders.clear();
+            modifyableObjectFinders.addAll(newObjectFinders);
+
+        }
+        LockableList<ObjectFinder> newList = new LockableList<ObjectFinder>();
+        newList.addAll(modifyableObjectFinders);
+        newList.lock();
+        objectFinders = newList;
     }
 
     @Override

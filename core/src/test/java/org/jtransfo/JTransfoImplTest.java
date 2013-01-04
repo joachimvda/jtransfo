@@ -9,6 +9,7 @@
 package org.jtransfo;
 
 import org.jtransfo.internal.ConverterHelper;
+import org.jtransfo.internal.NewInstanceObjectFinder;
 import org.jtransfo.internal.ReflectionHelper;
 import org.jtransfo.object.SimpleClassDomain;
 import org.jtransfo.object.SimpleClassNameTo;
@@ -102,5 +103,27 @@ public class JTransfoImplTest {
         ArgumentCaptor<Collection> captor2 = ArgumentCaptor.forClass(Collection.class);
         verify(converterHelper, times(1)).setTypeConvertersInOrder(captor2.capture());
         assertThat(captor2.getValue().size()).isEqualTo(1);
+    }
+
+    @Test
+    public void testGetUpdateObjectFinders() throws Exception {
+        List<ObjectFinder> internalObjectFinders;
+        List<ObjectFinder> objectFinders = jTransfo.getObjectFinders();
+        int orgSize = objectFinders.size();
+
+        objectFinders.add(new NewInstanceObjectFinder());
+
+        internalObjectFinders = (List<ObjectFinder>) ReflectionTestUtils.getField(jTransfo, "objectFinders");
+        assertThat(internalObjectFinders).hasSize(orgSize);
+
+        jTransfo.updateObjectFinders(); // update with changed converters
+
+        internalObjectFinders = (List<ObjectFinder>) ReflectionTestUtils.getField(jTransfo, "objectFinders");
+        assertThat(internalObjectFinders).hasSize(orgSize + 1);
+
+        jTransfo.updateObjectFinders((List) Collections.singletonList(new NewInstanceObjectFinder()));
+
+        internalObjectFinders = (List<ObjectFinder>) ReflectionTestUtils.getField(jTransfo, "objectFinders");
+        assertThat(internalObjectFinders).hasSize(1);
     }
 }
