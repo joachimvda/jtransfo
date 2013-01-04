@@ -1,9 +1,11 @@
 .idea
 *.iml
 .target
-core/target
+target
+**/target
 *.class
 *.jar
+*.test-jar
 *.war
 *.ear
 *~
