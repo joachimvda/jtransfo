@@ -88,6 +88,10 @@ public class JTransfoImpl implements JTransfo {
         return objectFinders;
     }
 
+    public void updateObjectFinders() {
+
+    }
+
     @Override
     public <T> T convert(Object source, T target) {
         if (null == source || null == target) {
