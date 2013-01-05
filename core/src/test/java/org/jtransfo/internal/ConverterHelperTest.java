@@ -13,7 +13,10 @@ import org.jtransfo.MappedBy;
 import org.jtransfo.NoConversionTypeConverter;
 import org.jtransfo.ToConverter;
 import org.jtransfo.TypeConverter;
+import org.jtransfo.object.AddressDomain;
 import org.jtransfo.object.FaultyExtendedTo;
+import org.jtransfo.object.PersonDomain;
+import org.jtransfo.object.PersonTransitiveTo;
 import org.jtransfo.object.SimpleExtendedDomain;
 import org.jtransfo.object.SimpleExtendedTo;
 import org.junit.Before;
@@ -67,6 +70,26 @@ public class ConverterHelperTest {
         assertThat(res[0]).isEqualTo(f2);
 
         res = converterHelper.findField(fields, "bla", new String[0]);
+        assertThat(res).isNull();
+    }
+
+    @Test
+    public void testFindFieldTransitive() throws Exception {
+        List<Field> fields = new ArrayList<Field>();
+        Field f1 = PersonDomain.class.getDeclaredField("name");
+        Field f2 = PersonDomain.class.getDeclaredField("address");
+        fields.add(f1);
+        fields.add(f2);
+        Field f3 = AddressDomain.class.getDeclaredField("id");
+        when(reflectionHelper.getFields(any(Class.class))).thenReturn(Collections.singletonList(f3));
+
+        Field[] res;
+        res = converterHelper.findField(fields, "id", new String[] { "address" });
+        assertThat(res).hasSize(2);
+        assertThat(res[0]).isEqualTo(f2);
+        assertThat(res[1]).isEqualTo(f3);
+
+        res = converterHelper.findField(fields, "id", new String[] { "bla" });
         assertThat(res).isNull();
     }
 
@@ -220,6 +243,17 @@ public class ConverterHelperTest {
     }
 
     @Test
+    public void testGetToConverterTransitive() throws Exception {
+        ReflectionTestUtils.setField(converterHelper, "reflectionHelper", new ReflectionHelper()); // echte gebruiken
+
+        ToConverter res = converterHelper.getToConverter(PersonTransitiveTo.class, PersonDomain.class);
+
+        assertThat(res).isNotNull();
+        assertThat(res.getToTo()).hasSize(3);
+        assertThat(res.getToDomain()).hasSize(3);
+    }
+
+    @Test
     public void testGetToConverterInvalidMapping() throws Exception {
         ReflectionTestUtils.setField(converterHelper, "reflectionHelper", new ReflectionHelper()); // echte gebruiken
 
@@ -242,6 +276,11 @@ public class ConverterHelperTest {
         assertThat(res.size()).isEqualTo(1);
         assertThat((Object) res).isInstanceOf(LockableList.class);
         assertThat((Boolean) ReflectionTestUtils.getField(res, "readOnly")).isTrue();
+    }
+
+    @Test
+    public void testWithPath() throws Exception {
+        assertThat(converterHelper.withPath(new String[] {"parts", "to", "add"})).isEqualTo(" (with path parts.to.add) ");
     }
 
     private class DefaultTypeConverter implements TypeConverter<Object, Object> {

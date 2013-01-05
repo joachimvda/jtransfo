@@ -10,6 +10,9 @@ package org.jtransfo.internal;
 
 import org.jtransfo.JTransfoException;
 import org.jtransfo.NoConversionTypeConverter;
+import org.jtransfo.object.AddressDomain;
+import org.jtransfo.object.PersonDomain;
+import org.jtransfo.object.PersonTransitiveTo;
 import org.jtransfo.object.SimpleBaseDomain;
 import org.jtransfo.object.SimpleExtendedDomain;
 import org.junit.Before;
@@ -78,6 +81,23 @@ public class ToDomainConverterTest {
         exception.expect(JTransfoException.class);
         exception.expectMessage("Cannot convert TO field a to domain field i, field needs type conversion.");
         toDomainConverterArgument.convert(sed, sed);
+    }
+
+    @Test
+    public void testTransitiveNullException() throws Exception {
+        Field addressId = PersonTransitiveTo.class.getDeclaredField("addressId");
+        Field address = PersonDomain.class.getDeclaredField("address");
+        Field id = AddressDomain.class.getDeclaredField("id");
+        reflectionHelper.makeAccessible(addressId);
+        reflectionHelper.makeAccessible(address);
+        reflectionHelper.makeAccessible(id);
+
+        toDomainConverter = new ToDomainConverter(addressId, new Field[]{ address, id }, new NoConversionTypeConverter());
+
+        exception.expect(JTransfoException.class);
+        exception.expectMessage("Cannot convert TO field addressId to domain field id (with path address), " +
+                "transitive field address in path is null.");
+        toDomainConverter.convert(new PersonTransitiveTo(), new PersonDomain());
     }
 
 }

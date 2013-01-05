@@ -63,15 +63,17 @@ public abstract class AbstractConverter implements Converter {
      */
     protected String domainFieldName(Field[] domainFields) {
         StringBuilder sb = new StringBuilder();
-        sb.append(domainFields[domainFields.length - 1].getName());
-        if (domainFields.length > 1) {
-            sb.append(" (with path ");
-            for (int i = 0; i < domainFields.length - 2; i++) {
-                sb.append(domainFields[domainFields.length - i].getName());
-                sb.append(".");
+        if (domainFields.length > 0) {
+            sb.append(domainFields[domainFields.length - 1].getName());
+            if (domainFields.length > 1) {
+                sb.append(" (with path ");
+                for (int i = 0; i < domainFields.length - 2; i++) {
+                    sb.append(domainFields[i].getName());
+                    sb.append(".");
+                }
+                sb.append(domainFields[domainFields.length - 2].getName());
+                sb.append(")");
             }
-            sb.append(domainFields[domainFields.length - 2].getName());
-            sb.append(")");
         }
         return sb.toString();
     }

@@ -82,11 +82,17 @@ public class ConverterHelper {
         return converter;
     }
 
-    private String withPath(String[] path) {
+    /**
+     * Convert path array to a readable representation.
+     *
+     * @param path array of path elements
+     * @return original path string
+     */
+    public String withPath(String[] path) {
         StringBuilder sb = new StringBuilder();
         if (path.length > 0) {
             sb.append(" (with path ");
-            for (int i = 0; i < path.length - 2; i++) {
+            for (int i = 0; i < path.length - 1; i++) {
                 sb.append(path[i]);
                 sb.append(".");
             }
