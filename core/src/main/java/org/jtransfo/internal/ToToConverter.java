@@ -18,6 +18,10 @@ import java.lang.reflect.Field;
  */
 public final class ToToConverter extends AbstractConverter {
 
+    private Field toField;
+    private Field[] domainFields;
+    private TypeConverter typeConverter;
+
     /**
      * Constructor.
      *
@@ -26,7 +30,9 @@ public final class ToToConverter extends AbstractConverter {
      * @param typeConverter type converter
      */
     public ToToConverter(Field toField, Field[] domainFields, TypeConverter typeConverter) {
-        super(toField, domainFields, typeConverter);
+        this.toField = toField;
+        this.domainFields = domainFields;
+        this.typeConverter = typeConverter;
     }
 
     @Override
@@ -42,11 +48,13 @@ public final class ToToConverter extends AbstractConverter {
 
     @Override
     public String accessExceptionMessage() {
-        return "Cannot convert domain field %s to TO field %s, field cannot be accessed.";
+        return String.format("Cannot convert domain field %s to TO field %s, field cannot be accessed.",
+                domainFieldName(domainFields), toField.getName());
     }
 
     @Override
     public String argumentExceptionMessage() {
-        return "Cannot convert domain field %s to TO field %s, field needs type conversion.";
+        return String.format("Cannot convert domain field %s to TO field %s, field needs type conversion.",
+                domainFieldName(domainFields), toField.getName());
     }
 }

@@ -18,6 +18,10 @@ import java.lang.reflect.Field;
  */
 public final class ToDomainConverter extends AbstractConverter {
 
+    private Field toField;
+    private Field[] domainFields;
+    private TypeConverter typeConverter;
+
     /**
      * Constructor.
      *
@@ -26,7 +30,9 @@ public final class ToDomainConverter extends AbstractConverter {
      * @param typeConverter type converter
      */
     public ToDomainConverter(Field toField, Field[] domainFields, TypeConverter typeConverter) {
-        super(toField, domainFields, typeConverter);
+        this.toField = toField;
+        this.domainFields = domainFields;
+        this.typeConverter = typeConverter;
     }
 
     @Override
@@ -34,11 +40,11 @@ public final class ToDomainConverter extends AbstractConverter {
             throws JTransfoException, IllegalAccessException, IllegalArgumentException {
         Object value = toField.get(source);
         Object target = firstTarget;
-        for (int i = 0; i < domainFields.length - 1 ; i++) {
+        for (int i = 0; i < domainFields.length - 1; i++) {
             target = domainFields[i].get(target);
             if (null == target) {
                 throw new JTransfoException(String.format("Cannot convert TO field %s to domain field %s, " +
-                        "transitive field %s in path is null.", toField.getName(), domainFieldName(),
+                        "transitive field %s in path is null.", toField.getName(), domainFieldName(domainFields),
                         domainFields[i].getName()));
             }
         }
@@ -48,11 +54,13 @@ public final class ToDomainConverter extends AbstractConverter {
 
     @Override
     public String accessExceptionMessage() {
-        return "Cannot convert TO field %2$s to domain field %1$s, field cannot be accessed.";
+        return String.format("Cannot convert TO field %s to domain field %s, field cannot be accessed.",
+                toField.getName(), domainFieldName(domainFields));
     }
 
     @Override
     public String argumentExceptionMessage() {
-        return "Cannot convert TO field %2$s to domain field %1$s, field needs type conversion.";
+        return String.format("Cannot convert TO field %s to domain field %s, field needs type conversion.",
+                toField.getName(), domainFieldName(domainFields));
     }
 }

@@ -10,7 +10,6 @@ package org.jtransfo.internal;
 
 import org.jtransfo.Converter;
 import org.jtransfo.JTransfoException;
-import org.jtransfo.TypeConverter;
 
 import java.lang.reflect.Field;
 
@@ -18,23 +17,6 @@ import java.lang.reflect.Field;
  * Converter class to copy one field to the transfer object class.
  */
 public abstract class AbstractConverter implements Converter {
-
-    protected Field toField;
-    protected Field[] domainFields;
-    protected TypeConverter typeConverter;
-
-    /**
-     * Constructor.
-     *
-     * @param toField transfer object field
-     * @param domainFields domain object field
-     * @param typeConverter type converter
-     */
-    public AbstractConverter(Field toField, Field[] domainFields, TypeConverter typeConverter) {
-        this.toField = toField;
-        this.domainFields = domainFields;
-        this.typeConverter = typeConverter;
-    }
 
     /**
      * Actual conversion code, exceptions handled by invoker.
@@ -67,15 +49,19 @@ public abstract class AbstractConverter implements Converter {
         try {
             doConvert(source, target);
         } catch (IllegalAccessException iae) {
-            throw new JTransfoException(String.format(accessExceptionMessage(), domainFieldName(), toField.getName()),
-                    iae);
+            throw new JTransfoException(accessExceptionMessage(), iae);
         } catch (IllegalArgumentException iae) {
-            throw new JTransfoException(String.format(argumentExceptionMessage(), domainFieldName(), toField.getName()),
-                    iae);
+            throw new JTransfoException(argumentExceptionMessage(), iae);
         }
     }
 
-    protected String domainFieldName() {
+    /**
+     * Get the domain fields is a readable way (with path indication).
+     *
+     * @param domainFields fields to convert
+     * @return readable domain fields
+     */
+    protected String domainFieldName(Field[] domainFields) {
         StringBuilder sb = new StringBuilder();
         sb.append(domainFields[domainFields.length - 1].getName());
         if (domainFields.length > 1) {
