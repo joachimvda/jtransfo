@@ -32,6 +32,13 @@ public @interface MappedBy {
     String field() default DEFAULT_FIELD;
 
     /**
+     * Path to the field when it is transitive.
+     * <p/>
+     * By default the path is empty, meaning that the field is inside the domain object itself.
+     */
+    String path() default DEFAULT_PATH;
+
+    /**
      * Fully qualified class name for the type converter.
      * <p/>
      * Using this allows you to avoid a compile dependency on the class name but makes the connection more brittle
@@ -56,6 +63,11 @@ public @interface MappedBy {
      * the annotated field.
      */
     String DEFAULT_FIELD = "?";
+
+    /**
+     * Default value for {@link #path} indicating that then domain object field is in the domain object itself.
+     */
+    String DEFAULT_PATH = "";
 
     /**
      * Default value for type converter class name, indicating no name specified.

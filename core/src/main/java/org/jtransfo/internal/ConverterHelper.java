@@ -51,19 +51,26 @@ public class ConverterHelper {
                 MappedBy mappedBy = field.getAnnotation(MappedBy.class);
 
                 String domainFieldName = field.getName();
-                if (null != mappedBy && !MappedBy.DEFAULT_FIELD.equals(mappedBy.field())) {
-                    domainFieldName = mappedBy.field();
+                String[] domainFieldPath = new String[0];
+                if (null != mappedBy) {
+                    if (!MappedBy.DEFAULT_FIELD.equals(mappedBy.field())) {
+                        domainFieldName = mappedBy.field();
+                    }
+                    if (!MappedBy.DEFAULT_PATH.equals(mappedBy.path())) {
+                        domainFieldPath = mappedBy.path().split("\\.");
+                    }
                 }
-                Field domainField = findField(domainFields, domainFieldName);
+                Field[] domainField = findField(domainFields, domainFieldName, domainFieldPath);
                 if (null == domainField) {
                     throw new JTransfoException(
                             "Cannot determine mapping for field " + field.getName() + " in class " + toClass.getName() +
-                                    ". The field " + domainFieldName + " in class " + domainClass.getName() +
-                                    " cannot be found.");
+                                    ". The field " + domainFieldName + " in class " + domainClass.getName() + " " +
+                                    withPath(domainFieldPath) + "cannot be found.");
                 }
                 TypeConverter typeConverter = getDeclaredTypeConverter(mappedBy);
                 if (null == typeConverter) {
-                    typeConverter = getDefaultTypeConverter(field.getType(), domainField.getType());
+                    typeConverter = getDefaultTypeConverter(field.getType(),
+                            domainField[domainField.length - 1].getType());
                 }
                 converter.getToTo().add(new ToToConverter(field, domainField, typeConverter));
                 if (null == mappedBy || !mappedBy.readOnly()) {
@@ -75,17 +82,50 @@ public class ConverterHelper {
         return converter;
     }
 
+    private String withPath(String[] path) {
+        StringBuilder sb = new StringBuilder();
+        if (path.length > 0) {
+            sb.append(" (with path ");
+            for (int i = 0; i < path.length - 2; i++) {
+                sb.append(path[i]);
+                sb.append(".");
+            }
+            sb.append(path[path.length - 1]);
+            sb.append(") ");
+        }
+        return sb.toString();
+
+    }
+
     /**
      * Find one field in a list of fields.
      *
-     * @param fields list of fields
+     * @param domainFields list of fields in domain object
      * @param fieldName field to search
+     * @param path list of intermediate fields for transitive fields
      * @return field with requested name or null when not found
      */
-    protected Field findField(List<Field> fields, String fieldName) {
+    protected Field[] findField(List<Field> domainFields, String fieldName, String[] path) {
+        List<Field> fields = domainFields;
+        Field[] result = new Field[path.length + 1];
+        int index = 0;
+        for (; index < path.length; index++) {
+            boolean found = false;
+            for (Field field : fields) {
+                if (field.getName().equals(path[index])) {
+                    found = true;
+                    fields = reflectionHelper.getFields(field.getType());
+                    result[index] = field;
+                }
+            }
+            if (!found) {
+                return null; // field in path not found
+            }
+        }
         for (Field field : fields) {
             if (field.getName().equals(fieldName)) {
-                return field;
+                result[index] = field;
+                return result;
             }
         }
         return null;

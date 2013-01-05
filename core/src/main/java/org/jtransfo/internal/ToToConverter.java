@@ -8,7 +8,6 @@
 
 package org.jtransfo.internal;
 
-import org.jtransfo.Converter;
 import org.jtransfo.JTransfoException;
 import org.jtransfo.TypeConverter;
 
@@ -17,37 +16,37 @@ import java.lang.reflect.Field;
 /**
  * Converter class to copy one field to the transfer object class.
  */
-public final class ToToConverter implements Converter {
-
-    private Field toField;
-    private Field domainField;
-    private TypeConverter typeConverter;
+public final class ToToConverter extends AbstractConverter {
 
     /**
      * Constructor.
      *
      * @param toField transfer object field
-     * @param domainField domain object field
+     * @param domainFields domain object field
      * @param typeConverter type converter
      */
-    public ToToConverter(Field toField, Field domainField, TypeConverter typeConverter) {
-        this.toField = toField;
-        this.domainField = domainField;
-        this.typeConverter = typeConverter;
+    public ToToConverter(Field toField, Field[] domainFields, TypeConverter typeConverter) {
+        super(toField, domainFields, typeConverter);
     }
 
     @Override
-    public void convert(Object source, Object target) throws JTransfoException {
-        try {
-            Object value = domainField.get(source);
-            Object converted = typeConverter.reverse(value, toField.getType());
-            toField.set(target, converted);
-        } catch (IllegalAccessException iae) {
-            throw new JTransfoException("Cannot convert domain field " + domainField.getName() + " to TO field " +
-                    toField.getName() + ", field cannot be accessed.", iae);
-        } catch (IllegalArgumentException iae) {
-            throw new JTransfoException("Cannot convert domain field " + domainField.getName() + " to TO field " +
-                    toField.getName() + ", field needs type conversion.", iae);
+    public void doConvert(Object source, Object target)
+            throws JTransfoException, IllegalAccessException, IllegalArgumentException {
+        Object value = source;
+        for (Field field : domainFields) {
+            value = field.get(value);
         }
+        Object converted = typeConverter.reverse(value, toField.getType());
+        toField.set(target, converted);
+    }
+
+    @Override
+    public String accessExceptionMessage() {
+        return "Cannot convert domain field %s to TO field %s, field cannot be accessed.";
+    }
+
+    @Override
+    public String argumentExceptionMessage() {
+        return "Cannot convert domain field %s to TO field %s, field needs type conversion.";
     }
 }

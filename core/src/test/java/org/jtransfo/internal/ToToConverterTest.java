@@ -44,9 +44,9 @@ public class ToToConverterTest {
         reflectionHelper.makeAccessible(c);
         reflectionHelper.makeAccessible(i);
 
-        toToConverter = new ToToConverter(a, c, new NoConversionTypeConverter());
-        toToConverterAccess = new ToToConverter(b, c, new NoConversionTypeConverter());
-        toToConverterArgument = new ToToConverter(i, c, new NoConversionTypeConverter());
+        toToConverter = new ToToConverter(a, new Field[]{ c }, new NoConversionTypeConverter());
+        toToConverterAccess = new ToToConverter(b, new Field[]{ c }, new NoConversionTypeConverter());
+        toToConverterArgument = new ToToConverter(i, new Field[]{ c }, new NoConversionTypeConverter());
     }
 
     @Test

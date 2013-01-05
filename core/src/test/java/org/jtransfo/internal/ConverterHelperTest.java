@@ -62,11 +62,11 @@ public class ConverterHelperTest {
         fields.add(f1);
         fields.add(f2);
 
-        Field res;
-        res = converterHelper.findField(fields, "c");
-        assertThat(res).isEqualTo(f2);
+        Field[] res;
+        res = converterHelper.findField(fields, "c", new String[0]);
+        assertThat(res[0]).isEqualTo(f2);
 
-        res = converterHelper.findField(fields, "bla");
+        res = converterHelper.findField(fields, "bla", new String[0]);
         assertThat(res).isNull();
     }
 

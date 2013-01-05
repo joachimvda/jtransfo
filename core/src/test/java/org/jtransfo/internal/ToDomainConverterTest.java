@@ -44,9 +44,9 @@ public class ToDomainConverterTest {
         reflectionHelper.makeAccessible(c);
         reflectionHelper.makeAccessible(i);
 
-        toDomainConverter = new ToDomainConverter(a, c, new NoConversionTypeConverter());
-        toDomainConverterAccess = new ToDomainConverter(a, b, new NoConversionTypeConverter());
-        toDomainConverterArgument = new ToDomainConverter(a, i, new NoConversionTypeConverter());
+        toDomainConverter = new ToDomainConverter(a, new Field[]{ c }, new NoConversionTypeConverter());
+        toDomainConverterAccess = new ToDomainConverter(a, new Field[]{ b }, new NoConversionTypeConverter());
+        toDomainConverterArgument = new ToDomainConverter(a, new Field[]{ i }, new NoConversionTypeConverter());
     }
 
     @Test
