@@ -18,8 +18,8 @@ public interface JTransfo {
      * <p/>
      * This will write all values from the transfer object, other fields are not touched.
      *
-     * @param source source object
-     * @param target target object
+     * @param source source object. Should not be null.
+     * @param target target object. Should not be null.
      * @param <T> type of object for target
      * @return target object
      */
@@ -27,6 +27,8 @@ public interface JTransfo {
 
     /**
      * Create a new domain object from the source transfer object.
+     * <p/>
+     * When the source is null, the result is also null.
      * <p/>
      * This only works if the domain object has a no-arguments constructor.
      *

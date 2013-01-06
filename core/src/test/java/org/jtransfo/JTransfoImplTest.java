@@ -56,6 +56,11 @@ public class JTransfoImplTest {
     }
 
     @Test
+    public void testConvertNull() {
+        assertThat(jTransfo.convert(null)).isNull();
+    }
+
+    @Test
     public void testConvertInstantiationException() throws Exception {
         when(reflectionHelper.newInstance(SimpleClassDomain.class)).thenThrow(new InstantiationException());
 

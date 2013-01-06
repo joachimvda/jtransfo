@@ -146,6 +146,9 @@ public class JTransfoImpl implements JTransfo {
 
     @Override
     public Object convert(Object source) {
+        if (null == source) {
+            return null;
+        }
         Class<?> domainClass = toHelper.getDomainClass(source.getClass());
         int i = objectFinders.size() - 1;
         Object target = null;
