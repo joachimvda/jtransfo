@@ -40,7 +40,9 @@ public final class ToToConverter extends AbstractConverter {
             throws JTransfoException, IllegalAccessException, IllegalArgumentException {
         Object value = source;
         for (Field field : domainFields) {
-            value = field.get(value);
+            if (null != value) {
+                value = field.get(value);
+            }
         }
         Object converted = typeConverter.reverse(value, toField.getType());
         toField.set(target, converted);

@@ -53,9 +53,20 @@ public class TransitiveFieldTest {
 
         PersonTransitiveTo to = jTransfo.convert(domain, new PersonTransitiveTo());
         assertThat(to.getName()).isEqualTo(NAME);
-        assertThat(to.getAddress()).isNotNull();
         assertThat(to.getAddressId()).isEqualTo(7L);
         assertThat(to.getAddress()).isEqualTo("Kerkstraat");
+    }
+
+    @Test
+    public void  testTransitiveNullToTo() throws Exception {
+        PersonDomain domain = new PersonDomain();
+        domain.setName(NAME);
+        Date now = new Date();
+
+        PersonTransitiveTo to = jTransfo.convert(domain, new PersonTransitiveTo());
+        assertThat(to.getName()).isEqualTo(NAME);
+        assertThat(to.getAddressId()).isNull();
+        assertThat(to.getAddress()).isNull();
     }
 
 }
