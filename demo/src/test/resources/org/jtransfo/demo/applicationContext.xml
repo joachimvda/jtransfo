@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ This file is part of jTransfo, a library for converting to and from transfer objects.
+  ~ Copyright (c) PROGS bvba, Belgium
+  ~
+  ~ The program is available in open source according to the Apache License, Version 2.0.
+  ~ For full licensing details, see LICENSE.txt in the project root.
+  -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.0.xsd">
+
+    <import resource="classpath:org/jtransfo/spring/jTransfoContext.xml" />
+
+    <jdbc:embedded-database id="dataSource" type="H2">
+        <jdbc:script location="classpath:org/jtransfo/demo/db-setup.sql" />
+    </jdbc:embedded-database>
+
+    <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="hibernateProperties" ref="hibernateProperties"/>
+        <property name="packagesToScan">
+            <list>
+                <value>org.jtransfo.demo.domain</value>
+            </list>
+        </property>
+        <property name="annotatedPackages">
+            <list>
+                <value>org.jtransfo.demo.domain</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="hibernateProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="locations" value="classpath:hibernate.properties"/>
+    </bean>
+
+
+</beans>
