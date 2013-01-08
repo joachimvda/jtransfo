@@ -21,7 +21,7 @@ public class DateDateMidnightConverter implements TypeConverter<Date, DateMidnig
 
     @Override
     public boolean canConvert(Class<?> realToType, Class<?> realDomainType) {
-        return Date.class.isAssignableFrom(realToType) && DateMidnight.class.isAssignableFrom(realDomainType);
+        return Date.class.equals(realToType) && DateMidnight.class.equals(realDomainType);
     }
 
     @Override

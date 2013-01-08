@@ -33,7 +33,7 @@ public class DateDateMidnightConverterTest {
     @Test
     public void testCanConvert() throws Exception {
         assertThat(typeConverter.canConvert(Date.class, DateMidnight.class)).isTrue();
-        assertThat(typeConverter.canConvert(java.sql.Date.class, DateMidnight.class)).isTrue();
+        assertThat(typeConverter.canConvert(java.sql.Date.class, DateMidnight.class)).isFalse();
         assertThat(typeConverter.canConvert(Object.class, DateMidnight.class)).isFalse();
         assertThat(typeConverter.canConvert(Date.class, String.class)).isFalse();
         assertThat(typeConverter.canConvert(Gender.class, String.class)).isFalse();

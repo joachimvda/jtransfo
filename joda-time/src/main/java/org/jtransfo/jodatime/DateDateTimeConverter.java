@@ -21,7 +21,7 @@ public class DateDateTimeConverter implements TypeConverter<Date, DateTime> {
 
     @Override
     public boolean canConvert(Class<?> realToType, Class<?> realDomainType) {
-        return Date.class.isAssignableFrom(realToType) && DateTime.class.isAssignableFrom(realDomainType);
+        return Date.class.equals(realToType) && DateTime.class.equals(realDomainType);
     }
 
     @Override

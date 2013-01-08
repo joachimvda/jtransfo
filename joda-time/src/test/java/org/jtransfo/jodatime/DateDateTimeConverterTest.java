@@ -31,7 +31,7 @@ public class DateDateTimeConverterTest {
     @Test
     public void testCanConvert() throws Exception {
         assertThat(typeConverter.canConvert(Date.class, DateTime.class)).isTrue();
-        assertThat(typeConverter.canConvert(java.sql.Date.class, DateTime.class)).isTrue();
+        assertThat(typeConverter.canConvert(java.sql.Date.class, DateTime.class)).isFalse();
         assertThat(typeConverter.canConvert(Object.class, DateTime.class)).isFalse();
         assertThat(typeConverter.canConvert(Date.class, String.class)).isFalse();
         assertThat(typeConverter.canConvert(Gender.class, String.class)).isFalse();
