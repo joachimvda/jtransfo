@@ -8,24 +8,10 @@
 
 package org.jtransfo.internal;
 
-import java.lang.reflect.Field;
-
 /**
- * Abstraction of a {@link Field} which uses the getter and setter if they exist.
+ * Abstraction of a {@link java.lang.reflect.Field} which allows different handling of the field accessors.
  */
-public class SyntheticField {
-
-    Field field;
-
-    /**
-     * Constructor.
-     *
-     * @param clazz clazz of which the field is part
-     * @param field field (may be in a parent class of clazz)
-     */
-    public SyntheticField(Class<?>clazz, Field field) {
-        this.field = field;
-    }
+public interface SyntheticField {
 
     /**
      * Get field value.
@@ -35,9 +21,7 @@ public class SyntheticField {
      * @throws IllegalAccessException illegal access
      * @throws IllegalArgumentException illegal argument
      */
-    public Object get(Object object) throws IllegalAccessException, IllegalArgumentException {
-        return field.get(object);
-    }
+    Object get(Object object) throws IllegalAccessException, IllegalArgumentException;
 
     /**
      * Set field value.
@@ -47,25 +31,19 @@ public class SyntheticField {
      * @throws IllegalAccessException illegal access
      * @throws IllegalArgumentException illegal argument
      */
-    public void set(Object object, Object value) throws IllegalAccessException, IllegalArgumentException {
-        field.set(object, value);
-    }
+    void set(Object object, Object value) throws IllegalAccessException, IllegalArgumentException;
 
     /**
      * Get field name.
      *
      * @return field name
      */
-    public String getName() {
-        return field.getName();
-    }
+    String getName();
 
     /**
      * Get field type.
      *
      * @return field type
      */
-    public Class<?> getType() {
-        return field.getType();
-    }
+    Class<?> getType();
 }

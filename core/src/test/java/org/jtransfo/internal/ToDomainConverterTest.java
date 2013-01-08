@@ -46,9 +46,9 @@ public class ToDomainConverterTest {
         reflectionHelper.makeAccessible(a);
         reflectionHelper.makeAccessible(c);
         reflectionHelper.makeAccessible(i);
-        SyntheticField sb = new SyntheticField(SimpleExtendedDomain.class, b);
-        SyntheticField sc = new SyntheticField(SimpleExtendedDomain.class, c);
-        SyntheticField si = new SyntheticField(SimpleExtendedDomain.class, i);
+        SyntheticField sb = new SimpleSyntheticField(b);
+        SyntheticField sc = new SimpleSyntheticField(c);
+        SyntheticField si = new SimpleSyntheticField(i);
 
         toDomainConverter = new ToDomainConverter(a, new SyntheticField[]{ sc }, new NoConversionTypeConverter());
         toDomainConverterAccess = new ToDomainConverter(a, new SyntheticField[]{ sb }, new NoConversionTypeConverter());
@@ -94,8 +94,8 @@ public class ToDomainConverterTest {
         reflectionHelper.makeAccessible(addressId);
         reflectionHelper.makeAccessible(address);
         reflectionHelper.makeAccessible(id);
-        SyntheticField sAddress = new SyntheticField(PersonDomain.class, address);
-        SyntheticField sId = new SyntheticField(AddressDomain.class, id);
+        SyntheticField sAddress = new SimpleSyntheticField(address);
+        SyntheticField sId = new SimpleSyntheticField(id);
 
         toDomainConverter = new ToDomainConverter(addressId, new SyntheticField[]{ sAddress, sId },
                 new NoConversionTypeConverter());

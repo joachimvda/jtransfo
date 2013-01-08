@@ -27,7 +27,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -60,10 +59,8 @@ public class ConverterHelperTest {
     @Test
     public void testFindField() throws Exception {
         List<SyntheticField> fields = new ArrayList<SyntheticField>();
-        SyntheticField f1 = new SyntheticField(SimpleExtendedDomain.class,
-                SimpleExtendedDomain.class.getDeclaredField("b"));
-        SyntheticField f2 = new SyntheticField(SimpleExtendedDomain.class,
-                SimpleExtendedDomain.class.getDeclaredField("c"));
+        SyntheticField f1 = new SimpleSyntheticField(SimpleExtendedDomain.class.getDeclaredField("b"));
+        SyntheticField f2 = new SimpleSyntheticField(SimpleExtendedDomain.class.getDeclaredField("c"));
         fields.add(f1);
         fields.add(f2);
 
@@ -78,11 +75,11 @@ public class ConverterHelperTest {
     @Test
     public void testFindFieldTransitive() throws Exception {
         List<SyntheticField> fields = new ArrayList<SyntheticField>();
-        SyntheticField f1 = new SyntheticField(PersonDomain.class, PersonDomain.class.getDeclaredField("name"));
-        SyntheticField f2 = new SyntheticField(PersonDomain.class, PersonDomain.class.getDeclaredField("address"));
+        SyntheticField f1 = new SimpleSyntheticField(PersonDomain.class.getDeclaredField("name"));
+        SyntheticField f2 = new SimpleSyntheticField(PersonDomain.class.getDeclaredField("address"));
         fields.add(f1);
         fields.add(f2);
-        SyntheticField f3 = new SyntheticField(AddressDomain.class, AddressDomain.class.getDeclaredField("id"));
+        SyntheticField f3 = new SimpleSyntheticField(AddressDomain.class.getDeclaredField("id"));
         when(reflectionHelper.getSyntheticFields(any(Class.class))).thenReturn(Collections.singletonList(f3));
 
         SyntheticField[] res;

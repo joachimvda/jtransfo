@@ -102,7 +102,7 @@ public class ReflectionHelper {
     public List<SyntheticField> makeSynthetic(Class<?> clazz, List<Field> fields) {
         List<SyntheticField> result = new ArrayList<SyntheticField>();
         for (Field field : fields) {
-            result.add(new SyntheticField(clazz, field));
+            result.add(new AccessorSyntheticField(this, clazz, field));
         }
         return result;
     }

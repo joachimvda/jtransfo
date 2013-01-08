@@ -7,8 +7,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import java.lang.reflect.Field;
-
 import static org.fest.assertions.Assertions.assertThat;
 
 /**
@@ -60,10 +58,9 @@ public class AbstractConverterTest {
 
     @Test
     public void testDomainFieldName() throws Exception {
-        Class sed = SimpleExtendedDomain.class;
-        SyntheticField sb = new SyntheticField(sed, sed.getDeclaredField("b"));
-        SyntheticField sc = new SyntheticField(sed, sed.getDeclaredField("c"));
-        SyntheticField si = new SyntheticField(sed, sed.getDeclaredField("i"));
+        SyntheticField sb = new SimpleSyntheticField(SimpleExtendedDomain.class.getDeclaredField("b"));
+        SyntheticField sc = new SimpleSyntheticField(SimpleExtendedDomain.class.getDeclaredField("c"));
+        SyntheticField si = new SimpleSyntheticField(SimpleExtendedDomain.class.getDeclaredField("i"));
         assertThat(abstractConverter.domainFieldName(new SyntheticField[]{si})).isEqualTo("i");
         assertThat(abstractConverter.domainFieldName(new SyntheticField[]{sc, si})).isEqualTo("i (with path c)");
         assertThat(abstractConverter.domainFieldName(new SyntheticField[]{sb, sc, si})).isEqualTo("i (with path b.c)");

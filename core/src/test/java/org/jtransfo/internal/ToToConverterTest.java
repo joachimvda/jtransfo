@@ -40,7 +40,7 @@ public class ToToConverterTest {
         Field b = SimpleExtendedDomain.class.getDeclaredField("b");
         Field c = SimpleExtendedDomain.class.getDeclaredField("c");
         Field i = SimpleExtendedDomain.class.getDeclaredField("i");
-        SyntheticField sc = new SyntheticField(SimpleExtendedDomain.class, c);
+        SyntheticField sc = new SimpleSyntheticField(c);
         reflectionHelper.makeAccessible(a);
         reflectionHelper.makeAccessible(c);
         reflectionHelper.makeAccessible(i);

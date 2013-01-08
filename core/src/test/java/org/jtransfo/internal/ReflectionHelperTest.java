@@ -59,4 +59,14 @@ public class ReflectionHelperTest {
         reflectionHelper.makeAccessible(field);
         assertThat(field.isAccessible()).isTrue();
     }
+
+    @Test
+    public void testMakeSynthetic() throws Exception {
+        // @todo
+    }
+
+    @Test
+    public void testGetSyntheticFields() throws Exception {
+        // @todo
+    }
 }
