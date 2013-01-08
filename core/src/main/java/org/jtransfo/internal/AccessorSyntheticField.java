@@ -8,7 +8,12 @@
 
 package org.jtransfo.internal;
 
+import org.jtransfo.JTransfoException;
+
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Locale;
 
 /**
  * Abstraction of a {@link Field} which uses the getter and setter if they exist.
@@ -16,8 +21,8 @@ import java.lang.reflect.Field;
 public class AccessorSyntheticField implements SyntheticField {
 
     private Field field;
-    //private Method getter;
-    //private Method setter;
+    private Method getter;
+    private Method setter;
 
     /**
      * Constructor.
@@ -28,8 +33,9 @@ public class AccessorSyntheticField implements SyntheticField {
      */
     public AccessorSyntheticField(ReflectionHelper reflectionHelper, Class<?> clazz, Field field) {
         this.field = field;
-        //getter = reflectionHelper.getMethod(getGetterName(field.getName));
-        //setter = reflectionHelper.getMethod(getSetterName(field.getName), field.getType());
+        getter = reflectionHelper.getMethod(clazz, field.getType(), getGetterName(field.getName(),
+                field.getType().getCanonicalName().equals(boolean.class.getCanonicalName())));
+        setter = reflectionHelper.getMethod(clazz, field.getType(), getSetterName(field.getName()), field.getType());
     }
 
     /**
@@ -41,6 +47,16 @@ public class AccessorSyntheticField implements SyntheticField {
      * @throws IllegalArgumentException illegal argument
      */
     public Object get(Object object) throws IllegalAccessException, IllegalArgumentException {
+        if (null != getter) {
+            try {
+                return getter.invoke(object);
+            } catch (InvocationTargetException ite) {
+                throw new JTransfoException("Trying to use " + getter.getName() + " on object of type " +
+                        object.getClass().getName() + " while expected type is " +
+                        getter.getDeclaringClass().getName());
+            }
+        }
+        // @todo first time, log warning about not using getter (not public, wrong name or wrong type)
         return field.get(object);
     }
 
@@ -53,6 +69,16 @@ public class AccessorSyntheticField implements SyntheticField {
      * @throws IllegalArgumentException illegal argument
      */
     public void set(Object object, Object value) throws IllegalAccessException, IllegalArgumentException {
+        if (null != setter) {
+            try {
+                setter.invoke(object, value);
+            } catch (InvocationTargetException ite) {
+                throw new JTransfoException("Trying to use " + setter.getName() + " on object of type " +
+                        object.getClass().getName() + " while expected type is " +
+                        setter.getDeclaringClass().getName());
+            }
+        }
+        // @todo first time, log warning about not using getter (not public, wrong name or wrong type)
         field.set(object, value);
     }
 
@@ -72,5 +98,20 @@ public class AccessorSyntheticField implements SyntheticField {
      */
     public Class<?> getType() {
         return field.getType();
+    }
+
+    private String getGetterName(String fieldName, boolean isBoolean) {
+        return (isBoolean ? "is" : "get") + capitalize(fieldName);
+    }
+
+    private String getSetterName(String fieldName) {
+        return "set" + capitalize(fieldName);
+    }
+
+    private String capitalize(String name) {
+        if (name == null || name.length() == 0) {
+            return name;
+        }
+        return name.substring(0, 1).toUpperCase(Locale.ENGLISH) + name.substring(1);
     }
 }

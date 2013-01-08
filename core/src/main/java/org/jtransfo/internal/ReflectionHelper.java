@@ -9,6 +9,7 @@
 package org.jtransfo.internal;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -131,6 +132,27 @@ public class ReflectionHelper {
         if ((!Modifier.isPublic(field.getModifiers()) || !Modifier.isPublic(field.getDeclaringClass().getModifiers()) ||
                 Modifier.isFinal(field.getModifiers())) && !field.isAccessible()) {
             field.setAccessible(true);
+        }
+    }
+
+    /**
+     * Get method with given name and parameters and given return type.
+     *
+     * @param type class on which method should be found
+     * @param returnType required return type (or null for void or no check)
+     * @param name method name
+     * @param parameters method parameter types
+     * @return method or null when method not found
+     */
+    public Method getMethod(Class<?> type, Class<?> returnType, String name, Class<?>... parameters) {
+        try {
+            Method method = type.getMethod(name, parameters);
+            if (null != returnType && !returnType.isAssignableFrom(method.getReturnType())) {
+                method = null;
+            }
+            return method;
+        } catch (NoSuchMethodException nsme) {
+            return null;
         }
     }
 
