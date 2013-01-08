@@ -45,6 +45,9 @@ public class ToDomainTypeConverter implements TypeConverter<Object, Object> {
     @Override
     public Object reverse(Object domainObject, Class<Object> toType) throws JTransfoException {
         try {
+            if (null == domainObject) {
+                return null;
+            }
             return jTransfo.convert(domainObject, reflectionHelper.newInstance(toType));
         } catch (InstantiationException ie) {
             throw new JTransfoException("Cannot create instance for transfer object class " + toType.getName() + ".",
