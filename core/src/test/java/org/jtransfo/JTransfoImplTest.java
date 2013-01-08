@@ -81,8 +81,8 @@ public class JTransfoImplTest {
     public void testConvertNullTarget() throws Exception {
         when(reflectionHelper.newInstance(SimpleClassDomain.class)).thenReturn(null);
         exception.expect(JTransfoException.class);
-        exception.expectMessage("Cannot create instance of domain class org.jtransfo.object.SimpleClassDomain " +
-                "for transfer object org.jtransfo.object.SimpleClassNameTo");
+        exception.expectMessage("Cannot create instance of target class org.jtransfo.object.SimpleClassDomain " +
+                "for source object org.jtransfo.object.SimpleClassNameTo");
         jTransfo.convert(new SimpleClassNameTo());
     }
 

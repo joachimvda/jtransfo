@@ -30,11 +30,25 @@ public interface JTransfo {
      * <p/>
      * When the source is null, the result is also null.
      * <p/>
-     * This only works if the domain object has a no-arguments constructor.
+     * The object finders are used to build the object to copy to.
      *
      * @param source source transfer object
      * @return domain object
      */
     Object convert(Object source);
+
+    /**
+     * Create a new domain object from the source transfer object.
+     * <p/>
+     * When the source is null, the result is also null.
+     * <p/>
+     * The object finders are used to build the object to copy to.
+     *
+     * @param source source transfer object
+     * @param targetClass target class to convert to
+     * @param <T> type of object for target
+     * @return domain object
+     */
+    <T> T convertTo(Object source, Class<T> targetClass);
 
 }

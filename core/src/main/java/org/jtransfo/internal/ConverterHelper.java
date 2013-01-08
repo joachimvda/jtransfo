@@ -10,6 +10,7 @@ package org.jtransfo.internal;
 
 import org.jtransfo.JTransfoException;
 import org.jtransfo.MappedBy;
+import org.jtransfo.Named;
 import org.jtransfo.NoConversionTypeConverter;
 import org.jtransfo.NotMapped;
 import org.jtransfo.ToConverter;
@@ -188,6 +189,18 @@ public class ConverterHelper {
         newList.addAll(typeConverters);
         newList.lock();
         typeConvertersInOrder = newList;
+
+        // update list of converters to allow mentioning type converter by name, class name is used if no name provided
+        for (TypeConverter tc : newList) {
+            String name = null;
+            if (tc instanceof Named) {
+                name = ((Named) tc).getName();
+            }
+            if (null == name) {
+                name = tc.getClass().getName();
+            }
+            typeConverterInstances.put(name, tc);
+        }
     }
 
     /**

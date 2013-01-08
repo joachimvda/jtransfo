@@ -76,6 +76,11 @@ public class JTransfoImpl implements JTransfo {
             modifyableTypeConverters.addAll(newConverters);
 
         }
+        for (TypeConverter tc : modifyableTypeConverters) {
+            if (tc instanceof NeedsJTransfo) {
+                ((NeedsJTransfo) tc).setJTransfo(this);
+            }
+        }
         converterHelper.setTypeConvertersInOrder(modifyableTypeConverters);
     }
 
@@ -150,16 +155,24 @@ public class JTransfoImpl implements JTransfo {
             return null;
         }
         Class<?> domainClass = toHelper.getDomainClass(source.getClass());
+        return convertTo(source,  domainClass);
+    }
+
+    @Override
+    public <T> T convertTo(Object source, Class<T> targetClass) {
+        if (null == source) {
+            return null;
+        }
         int i = objectFinders.size() - 1;
         Object target = null;
         while (null == target && i >= 0) {
-            target = objectFinders.get(i--).getObject(domainClass, source);
+            target = objectFinders.get(i--).getObject(targetClass, source);
         }
         if (null == target) {
-            throw new JTransfoException("Cannot create instance of domain class " + domainClass.getName() +
-                    " for transfer object " + source + ".");
+            throw new JTransfoException("Cannot create instance of target class " + targetClass.getName() +
+                    " for source object " + source + ".");
         }
-        return convert(source, target);
+        return (T) convert(source, target);
     }
 
     private List<Converter> getToToConverters(Class toClass, Class domainClass) {
