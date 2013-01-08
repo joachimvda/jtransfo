@@ -50,7 +50,7 @@ public class JTransfoAndHibernateTest {
         assertThat(to.getAddress().getId()).isEqualTo(ADDRESS_ID);
         assertThat(to.getAddress().getAddress()).isEqualTo("Churchstreet 11");
         assertThat(to.getAddress().getPostalCode()).isEqualTo("1234");
-        assertThat(to.getAddress().getLocation()).isEqualTo("MyTown");
+        assertThat(to.getAddress().getLocation()).isEqualTo("Mytown");
         assertThat(to.getAddress().getCountry()).isEqualTo("BE");
     }
 
