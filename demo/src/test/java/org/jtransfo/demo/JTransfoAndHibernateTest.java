@@ -14,12 +14,17 @@ import org.jtransfo.demo.domain.AddressTo;
 import org.jtransfo.demo.domain.Country;
 import org.jtransfo.demo.domain.Person;
 import org.jtransfo.demo.domain.PersonTo;
+import org.jtransfo.demo.domain.VoiceContact;
+import org.jtransfo.demo.domain.VoiceContactTo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.fest.assertions.Assertions.assertThat;
 
@@ -46,12 +51,19 @@ public class JTransfoAndHibernateTest {
         assertThat(to).isNotNull();
         assertThat(to.getId()).isEqualTo(PERSON_ID);
         assertThat(to.getName()).isEqualTo("John Doe");
-        assertThat(to.getAddress()).isNotNull();
-        assertThat(to.getAddress().getId()).isEqualTo(ADDRESS_ID);
-        assertThat(to.getAddress().getAddress()).isEqualTo("Churchstreet 11");
-        assertThat(to.getAddress().getPostalCode()).isEqualTo("1234");
-        assertThat(to.getAddress().getLocation()).isEqualTo("Mytown");
-        assertThat(to.getAddress().getCountry()).isEqualTo("BE");
+        AddressTo address = to.getAddress();
+        assertThat(address).isNotNull();
+        assertThat(address.getId()).isEqualTo(ADDRESS_ID);
+        assertThat(address.getAddress()).isEqualTo("Churchstreet 11");
+        assertThat(address.getPostalCode()).isEqualTo("1234");
+        assertThat(address.getLocation()).isEqualTo("Mytown");
+        assertThat(address.getCountry()).isEqualTo("BE");
+        List<VoiceContactTo> voiceContacts = to.getVoiceContacts();
+        assertThat(voiceContacts).isNotNull();
+        assertThat(voiceContacts).hasSize(2).onProperty("type").contains("work", "private, skype");
+        for (Object obj : voiceContacts) {
+            assertThat(obj).isInstanceOf(VoiceContactTo.class); // verify that list content was converted
+        }
     }
 
     @Test
@@ -67,6 +79,12 @@ public class JTransfoAndHibernateTest {
         addressTo.setPostalCode("zzz");
         addressTo.setLocation("Batheaston");
         addressTo.setCountry(Country.GB.name());
+        List<VoiceContactTo> voiceContacts = new ArrayList<VoiceContactTo>();
+        VoiceContactTo vc = new VoiceContactTo();
+        vc.setType("home");
+        vc.setVoice("+32 3 123 45 78");
+        voiceContacts.add(vc);
+        personTo.setVoiceContacts(voiceContacts);
 
         Person person = (Person) jTransfo.convert(personTo);
 
@@ -77,6 +95,10 @@ public class JTransfoAndHibernateTest {
         assertThat(person.getAddress().getPostalCode()).isEqualTo("zzz");
         assertThat(person.getAddress().getLocation()).isEqualTo("Batheaston");
         assertThat(person.getAddress().getCountry()).isEqualTo(Country.GB);
+        assertThat(person.getVoiceContacts()).hasSize(1).onProperty("type").contains("home");
+        for (Object obj : person.getVoiceContacts()) {
+            assertThat(obj).isInstanceOf(VoiceContact.class); // verify that list content was converted
+        }
     }
 
 }

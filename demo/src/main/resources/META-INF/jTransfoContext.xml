@@ -16,6 +16,11 @@
         <constructor-arg value="org.jtransfo.demo.domain.Country" />
     </bean>
 
+    <bean class="org.jtransfo.ListTypeConverter">
+        <constructor-arg value="voiceContactList" />
+        <constructor-arg value="org.jtransfo.demo.domain.VoiceContactTo" />
+    </bean>
+
     <bean class="org.jtransfo.demo.domain.HibernateObjectFinder" />
 
 </beans>

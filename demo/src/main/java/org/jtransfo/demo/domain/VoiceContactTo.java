@@ -10,25 +10,16 @@ package org.jtransfo.demo.domain;
 
 import lombok.Data;
 import org.jtransfo.DomainClass;
-import org.jtransfo.MappedBy;
-
-import java.util.List;
 
 /**
- * Transfer object for a person.
+ * Voice contact details.
  */
 @Data
-@DomainClass(domainClass = Person.class)
-public class PersonTo implements IdentifiedTo {
+@DomainClass(domainClass = VoiceContact.class)
+public class VoiceContactTo {
 
     private Long id;
-    private String name;
-    private AddressTo address;
+    private String type;
+    private String voice;
 
-    @MappedBy(readOnly = true)
-    private String comment;
-
-    @MappedBy(typeConverter = "voiceContactList")
-    private List<VoiceContactTo> voiceContacts;
 }
-

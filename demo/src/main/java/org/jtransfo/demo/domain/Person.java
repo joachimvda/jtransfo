@@ -18,9 +18,12 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.SequenceGenerator;
+import java.util.List;
 
 /**
  * Simple representation of a person.
@@ -37,13 +40,18 @@ public class Person implements Comparable<Person> {
     @Basic
     private String name;
 
-    @ManyToOne(cascade = CascadeType.ALL, optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, optional = true, fetch = FetchType.LAZY)
     @PrimaryKeyJoinColumn
     @ForeignKey(name = "person_address")
     private Address address;
 
     @Basic
     private String comment;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = false)
+    @JoinColumn(name = "person_id")
+    @ForeignKey(name = "person_voiceContact")
+    private List<VoiceContact> voiceContacts;
 
     @Override
     public int compareTo(Person other) {
