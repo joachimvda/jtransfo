@@ -19,7 +19,7 @@ import java.lang.reflect.Field;
 public final class ToToConverter extends AbstractConverter {
 
     private Field toField;
-    private Field[] domainFields;
+    private SyntheticField[] domainFields;
     private TypeConverter typeConverter;
 
     /**
@@ -29,7 +29,7 @@ public final class ToToConverter extends AbstractConverter {
      * @param domainFields domain object field
      * @param typeConverter type converter
      */
-    public ToToConverter(Field toField, Field[] domainFields, TypeConverter typeConverter) {
+    public ToToConverter(Field toField, SyntheticField[] domainFields, TypeConverter typeConverter) {
         this.toField = toField;
         this.domainFields = domainFields;
         this.typeConverter = typeConverter;
@@ -39,7 +39,7 @@ public final class ToToConverter extends AbstractConverter {
     public void doConvert(Object source, Object target)
             throws JTransfoException, IllegalAccessException, IllegalArgumentException {
         Object value = source;
-        for (Field field : domainFields) {
+        for (SyntheticField field : domainFields) {
             if (null != value) {
                 value = field.get(value);
             }

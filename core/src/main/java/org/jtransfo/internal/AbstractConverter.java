@@ -11,8 +11,6 @@ package org.jtransfo.internal;
 import org.jtransfo.Converter;
 import org.jtransfo.JTransfoException;
 
-import java.lang.reflect.Field;
-
 /**
  * Converter class to copy one field to the transfer object class.
  */
@@ -61,7 +59,7 @@ public abstract class AbstractConverter implements Converter {
      * @param domainFields fields to convert
      * @return readable domain fields
      */
-    protected String domainFieldName(Field[] domainFields) {
+    protected String domainFieldName(SyntheticField[] domainFields) {
         StringBuilder sb = new StringBuilder();
         if (domainFields.length > 0) {
             sb.append(domainFields[domainFields.length - 1].getName());

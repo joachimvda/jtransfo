@@ -46,10 +46,13 @@ public class ToDomainConverterTest {
         reflectionHelper.makeAccessible(a);
         reflectionHelper.makeAccessible(c);
         reflectionHelper.makeAccessible(i);
+        SyntheticField sb = new SyntheticField(SimpleExtendedDomain.class, b);
+        SyntheticField sc = new SyntheticField(SimpleExtendedDomain.class, c);
+        SyntheticField si = new SyntheticField(SimpleExtendedDomain.class, i);
 
-        toDomainConverter = new ToDomainConverter(a, new Field[]{ c }, new NoConversionTypeConverter());
-        toDomainConverterAccess = new ToDomainConverter(a, new Field[]{ b }, new NoConversionTypeConverter());
-        toDomainConverterArgument = new ToDomainConverter(a, new Field[]{ i }, new NoConversionTypeConverter());
+        toDomainConverter = new ToDomainConverter(a, new SyntheticField[]{ sc }, new NoConversionTypeConverter());
+        toDomainConverterAccess = new ToDomainConverter(a, new SyntheticField[]{ sb }, new NoConversionTypeConverter());
+        toDomainConverterArgument = new ToDomainConverter(a, new SyntheticField[]{ si }, new NoConversionTypeConverter());
     }
 
     @Test
@@ -91,8 +94,11 @@ public class ToDomainConverterTest {
         reflectionHelper.makeAccessible(addressId);
         reflectionHelper.makeAccessible(address);
         reflectionHelper.makeAccessible(id);
+        SyntheticField sAddress = new SyntheticField(PersonDomain.class, address);
+        SyntheticField sId = new SyntheticField(AddressDomain.class, id);
 
-        toDomainConverter = new ToDomainConverter(addressId, new Field[]{ address, id }, new NoConversionTypeConverter());
+        toDomainConverter = new ToDomainConverter(addressId, new SyntheticField[]{ sAddress, sId },
+                new NoConversionTypeConverter());
 
         exception.expect(JTransfoException.class);
         exception.expectMessage("Cannot convert TO field addressId to domain field id (with path address), " +

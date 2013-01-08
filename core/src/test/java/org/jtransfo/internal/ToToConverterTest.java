@@ -40,13 +40,14 @@ public class ToToConverterTest {
         Field b = SimpleExtendedDomain.class.getDeclaredField("b");
         Field c = SimpleExtendedDomain.class.getDeclaredField("c");
         Field i = SimpleExtendedDomain.class.getDeclaredField("i");
+        SyntheticField sc = new SyntheticField(SimpleExtendedDomain.class, c);
         reflectionHelper.makeAccessible(a);
         reflectionHelper.makeAccessible(c);
         reflectionHelper.makeAccessible(i);
 
-        toToConverter = new ToToConverter(a, new Field[]{ c }, new NoConversionTypeConverter());
-        toToConverterAccess = new ToToConverter(b, new Field[]{ c }, new NoConversionTypeConverter());
-        toToConverterArgument = new ToToConverter(i, new Field[]{ c }, new NoConversionTypeConverter());
+        toToConverter = new ToToConverter(a, new SyntheticField[]{ sc }, new NoConversionTypeConverter());
+        toToConverterAccess = new ToToConverter(b, new SyntheticField[]{ sc }, new NoConversionTypeConverter());
+        toToConverterArgument = new ToToConverter(i, new SyntheticField[]{ sc }, new NoConversionTypeConverter());
     }
 
     @Test

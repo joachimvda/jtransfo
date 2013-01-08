@@ -19,7 +19,7 @@ import java.lang.reflect.Field;
 public final class ToDomainConverter extends AbstractConverter {
 
     private Field toField;
-    private Field[] domainFields;
+    private SyntheticField[] domainFields;
     private TypeConverter typeConverter;
 
     /**
@@ -29,7 +29,7 @@ public final class ToDomainConverter extends AbstractConverter {
      * @param domainFields domain object field
      * @param typeConverter type converter
      */
-    public ToDomainConverter(Field toField, Field[] domainFields, TypeConverter typeConverter) {
+    public ToDomainConverter(Field toField, SyntheticField[] domainFields, TypeConverter typeConverter) {
         this.toField = toField;
         this.domainFields = domainFields;
         this.typeConverter = typeConverter;
@@ -48,7 +48,7 @@ public final class ToDomainConverter extends AbstractConverter {
                         domainFields[i].getName()));
             }
         }
-        Field domainField = domainFields[domainFields.length - 1];
+        SyntheticField domainField = domainFields[domainFields.length - 1];
         domainField.set(target, typeConverter.convert(value, domainField.getType()));
     }
 

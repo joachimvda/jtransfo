@@ -60,16 +60,14 @@ public class AbstractConverterTest {
 
     @Test
     public void testDomainFieldName() throws Exception {
-        assertThat(abstractConverter.domainFieldName(new Field[]{
-                SimpleExtendedDomain.class.getDeclaredField("i")})).isEqualTo("i");
-        assertThat(abstractConverter.domainFieldName(new Field[]{
-                SimpleExtendedDomain.class.getDeclaredField("c"),
-                SimpleExtendedDomain.class.getDeclaredField("i")})).isEqualTo("i (with path c)");
-        assertThat(abstractConverter.domainFieldName(new Field[]{
-                SimpleExtendedDomain.class.getDeclaredField("b"),
-                SimpleExtendedDomain.class.getDeclaredField("c"),
-                SimpleExtendedDomain.class.getDeclaredField("i")})).isEqualTo("i (with path b.c)");
-        assertThat(abstractConverter.domainFieldName(new Field[]{})).isEqualTo("");
+        Class sed = SimpleExtendedDomain.class;
+        SyntheticField sb = new SyntheticField(sed, sed.getDeclaredField("b"));
+        SyntheticField sc = new SyntheticField(sed, sed.getDeclaredField("c"));
+        SyntheticField si = new SyntheticField(sed, sed.getDeclaredField("i"));
+        assertThat(abstractConverter.domainFieldName(new SyntheticField[]{si})).isEqualTo("i");
+        assertThat(abstractConverter.domainFieldName(new SyntheticField[]{sc, si})).isEqualTo("i (with path c)");
+        assertThat(abstractConverter.domainFieldName(new SyntheticField[]{sb, sc, si})).isEqualTo("i (with path b.c)");
+        assertThat(abstractConverter.domainFieldName(new SyntheticField[]{})).isEqualTo("");
     }
 
     private final class TestConverter extends AbstractConverter {

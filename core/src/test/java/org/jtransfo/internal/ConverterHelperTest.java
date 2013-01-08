@@ -59,13 +59,15 @@ public class ConverterHelperTest {
 
     @Test
     public void testFindField() throws Exception {
-        List<Field> fields = new ArrayList<Field>();
-        Field f1 = SimpleExtendedDomain.class.getDeclaredField("b");
-        Field f2 = SimpleExtendedDomain.class.getDeclaredField("c");
+        List<SyntheticField> fields = new ArrayList<SyntheticField>();
+        SyntheticField f1 = new SyntheticField(SimpleExtendedDomain.class,
+                SimpleExtendedDomain.class.getDeclaredField("b"));
+        SyntheticField f2 = new SyntheticField(SimpleExtendedDomain.class,
+                SimpleExtendedDomain.class.getDeclaredField("c"));
         fields.add(f1);
         fields.add(f2);
 
-        Field[] res;
+        SyntheticField[] res;
         res = converterHelper.findField(fields, "c", new String[0]);
         assertThat(res[0]).isEqualTo(f2);
 
@@ -75,15 +77,15 @@ public class ConverterHelperTest {
 
     @Test
     public void testFindFieldTransitive() throws Exception {
-        List<Field> fields = new ArrayList<Field>();
-        Field f1 = PersonDomain.class.getDeclaredField("name");
-        Field f2 = PersonDomain.class.getDeclaredField("address");
+        List<SyntheticField> fields = new ArrayList<SyntheticField>();
+        SyntheticField f1 = new SyntheticField(PersonDomain.class, PersonDomain.class.getDeclaredField("name"));
+        SyntheticField f2 = new SyntheticField(PersonDomain.class, PersonDomain.class.getDeclaredField("address"));
         fields.add(f1);
         fields.add(f2);
-        Field f3 = AddressDomain.class.getDeclaredField("id");
-        when(reflectionHelper.getFields(any(Class.class))).thenReturn(Collections.singletonList(f3));
+        SyntheticField f3 = new SyntheticField(AddressDomain.class, AddressDomain.class.getDeclaredField("id"));
+        when(reflectionHelper.getSyntheticFields(any(Class.class))).thenReturn(Collections.singletonList(f3));
 
-        Field[] res;
+        SyntheticField[] res;
         res = converterHelper.findField(fields, "id", new String[] { "address" });
         assertThat(res).hasSize(2);
         assertThat(res[0]).isEqualTo(f2);

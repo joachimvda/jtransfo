@@ -43,7 +43,7 @@ public class ConverterHelper {
     public ToConverter getToConverter(Class toClass, Class domainClass) throws JTransfoException {
         ToConverter converter = new ToConverter();
 
-        List<Field> domainFields = reflectionHelper.getFields(domainClass);
+        List<SyntheticField> domainFields = reflectionHelper.getSyntheticFields(domainClass);
         for (Field field : reflectionHelper.getFields(toClass)) {
             boolean isTransient = Modifier.isTransient(field.getModifiers());
             NotMapped notMapped = field.getAnnotation(NotMapped.class);
@@ -60,7 +60,7 @@ public class ConverterHelper {
                         domainFieldPath = mappedBy.path().split("\\.");
                     }
                 }
-                Field[] domainField = findField(domainFields, domainFieldName, domainFieldPath);
+                SyntheticField[] domainField = findField(domainFields, domainFieldName, domainFieldPath);
                 if (null == domainField) {
                     throw new JTransfoException(
                             "Cannot determine mapping for field " + field.getName() + " in class " + toClass.getName() +
@@ -111,24 +111,25 @@ public class ConverterHelper {
      * @param path list of intermediate fields for transitive fields
      * @return field with requested name or null when not found
      */
-    protected Field[] findField(List<Field> domainFields, String fieldName, String[] path) {
-        List<Field> fields = domainFields;
-        Field[] result = new Field[path.length + 1];
+    protected SyntheticField[] findField(List<SyntheticField> domainFields, String fieldName, String[] path) {
+        List<SyntheticField> fields = domainFields;
+        SyntheticField[] result = new SyntheticField[path.length + 1];
         int index = 0;
         for (; index < path.length; index++) {
             boolean found = false;
-            for (Field field : fields) {
+            for (SyntheticField field : fields) {
                 if (field.getName().equals(path[index])) {
                     found = true;
-                    fields = reflectionHelper.getFields(field.getType());
+                    fields = reflectionHelper.getSyntheticFields(field.getType());
                     result[index] = field;
+                    break;
                 }
             }
             if (!found) {
                 return null; // field in path not found
             }
         }
-        for (Field field : fields) {
+        for (SyntheticField field : fields) {
             if (field.getName().equals(fieldName)) {
                 result[index] = field;
                 return result;

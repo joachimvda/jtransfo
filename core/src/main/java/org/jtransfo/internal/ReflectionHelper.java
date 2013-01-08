@@ -93,6 +93,31 @@ public class ReflectionHelper {
     }
 
     /**
+     * Convert list of (real) fields to synthetic fields (which use accessor methods).
+     *
+     * @param clazz class which contains the fields
+     * @param fields fields to convert to synthetic fields
+     * @return list of synthetic fields
+     */
+    public List<SyntheticField> makeSynthetic(Class<?> clazz, List<Field> fields) {
+        List<SyntheticField> result = new ArrayList<SyntheticField>();
+        for (Field field : fields) {
+            result.add(new SyntheticField(clazz, field));
+        }
+        return result;
+    }
+
+    /**
+     * Find all declared (synthetic) fields of a class.
+     *
+     * @param clazz class to find fields for
+     * @return list of fields
+     */
+    public List<SyntheticField> getSyntheticFields(Class<?> clazz) {
+        return makeSynthetic(clazz, getFields(clazz));
+    }
+
+    /**
      * Make the given field accessible, explicitly setting it accessible if necessary.
      * The <code>setAccessible(true)</code> method is only called when actually necessary, to avoid unnecessary
      * conflicts with a JVM SecurityManager (if active).
