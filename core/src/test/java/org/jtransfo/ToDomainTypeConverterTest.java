@@ -82,6 +82,11 @@ public class ToDomainTypeConverterTest {
     }
 
     @Test
+    public void testReverseNullHandling() throws Exception {
+        assertThat(typeConverter.reverse(null, SimpleBaseTo.class)).isNull();
+    }
+
+    @Test
     public void testReverseInstantiationException() throws Exception {
         SimpleBaseDomain source = new SimpleBaseDomain();
         SimpleBaseTo target = new SimpleBaseTo();
