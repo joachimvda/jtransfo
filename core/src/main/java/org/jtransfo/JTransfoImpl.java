@@ -140,8 +140,8 @@ public class JTransfoImpl implements JTransfo {
             }
         }
 
-        List<Converter> converters = targetIsTo ? getToToConverters(target.getClass(), source.getClass()) :
-                getToDomainConverters(source.getClass(), target.getClass());
+        List<Converter> converters = targetIsTo ? getToToConverters(target.getClass()) :
+                getToDomainConverters(source.getClass());
         for (Converter converter : converters) {
             converter.convert(source, target);
         }
@@ -175,17 +175,18 @@ public class JTransfoImpl implements JTransfo {
         return (T) convert(source, target);
     }
 
-    private List<Converter> getToToConverters(Class toClass, Class domainClass) {
-        return getToConverter(toClass, domainClass).getToTo();
+    private List<Converter> getToToConverters(Class toClass) {
+        return getToConverter(toClass).getToTo();
     }
 
-    private List<Converter> getToDomainConverters(Class toClass, Class domainClass) {
-        return getToConverter(toClass, domainClass).getToDomain();
+    private List<Converter> getToDomainConverters(Class toClass) {
+        return getToConverter(toClass).getToDomain();
     }
 
-    private ToConverter getToConverter(Class toClass, Class domainClass) {
+    private ToConverter getToConverter(Class toClass) {
         ToConverter toConverter = converters.get(toClass);
         if (null == toConverter) {
+            Class<?> domainClass = toHelper.getDomainClass(toClass);
             toConverter = converterHelper.getToConverter(toClass, domainClass);
             converters.put(toClass, toConverter);
         }
