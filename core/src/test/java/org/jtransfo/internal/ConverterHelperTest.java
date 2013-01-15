@@ -10,6 +10,7 @@ package org.jtransfo.internal;
 
 import org.jtransfo.JTransfoException;
 import org.jtransfo.MappedBy;
+import org.jtransfo.Named;
 import org.jtransfo.NoConversionTypeConverter;
 import org.jtransfo.ToConverter;
 import org.jtransfo.TypeConverter;
@@ -28,6 +29,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -35,6 +37,7 @@ import java.util.List;
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class ConverterHelperTest {
@@ -278,6 +281,20 @@ public class ConverterHelperTest {
     }
 
     @Test
+    public void testSetTypeConvertersInOrderNamed() throws Exception {
+        List org = (List) ReflectionTestUtils.getField(converterHelper, "typeConvertersInOrder");
+        NamedTypeConverter typeConverter = mock(NamedTypeConverter.class);
+        assertThat(org.size()).isEqualTo(0); // default is empty
+
+        converterHelper.setTypeConvertersInOrder((Collection) Collections.singletonList(typeConverter));
+        List res = (List) ReflectionTestUtils.getField(converterHelper, "typeConvertersInOrder");
+        assertThat(res.size()).isEqualTo(1);
+        assertThat((Object) res).isInstanceOf(LockableList.class);
+        assertThat((Boolean) ReflectionTestUtils.getField(res, "readOnly")).isTrue();
+        verify(typeConverter).getName();
+    }
+
+    @Test
     public void testWithPath() throws Exception {
         assertThat(converterHelper.withPath(new String[] {"parts", "to", "add"})).isEqualTo(" (with path parts.to.add) ");
     }
@@ -298,5 +315,8 @@ public class ConverterHelperTest {
         public Object reverse(Object object, Class<Object> toClass) throws JTransfoException {
             return null;
         }
+    }
+
+    private interface NamedTypeConverter extends TypeConverter, Named {
     }
 }

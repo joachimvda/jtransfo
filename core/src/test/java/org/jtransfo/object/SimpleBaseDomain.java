@@ -8,16 +8,18 @@
 
 package org.jtransfo.object;
 
+import org.jtransfo.JTransfoException;
+
 public class SimpleBaseDomain {
 
     private String a;
     private String b;
 
-    public String getA() {
+    public String getA() throws JTransfoException {
         return a;
     }
 
-    public void setA(String a) {
+    public void setA(String a) throws JTransfoException {
         this.a = a;
     }
 

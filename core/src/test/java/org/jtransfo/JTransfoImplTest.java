@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -58,6 +59,11 @@ public class JTransfoImplTest {
     @Test
     public void testConvertNull() {
         assertThat(jTransfo.convert(null)).isNull();
+    }
+
+    @Test
+    public void testConvertToNull() {
+        assertThat(jTransfo.convertTo(null, this.getClass())).isNull();
     }
 
     @Test
@@ -94,13 +100,16 @@ public class JTransfoImplTest {
         int orgSize = converters.size();
 
         converters.add(new NoConversionTypeConverter());
+        NeedsJTransfoTypeConverter needsJTransfoTypeConverter = mock(NeedsJTransfoTypeConverter.class);
+        converters.add(needsJTransfoTypeConverter);
         verifyNoMoreInteractions(converterHelper);
 
         jTransfo.updateTypeConverters(); // update with changed converters
 
+        verify(needsJTransfoTypeConverter).setJTransfo(jTransfo);
         ArgumentCaptor<Collection> captor1 = ArgumentCaptor.forClass(Collection.class);
         verify(converterHelper, times(1)).setTypeConvertersInOrder(captor1.capture());
-        assertThat(captor1.getValue().size()).isEqualTo(orgSize + 1);
+        assertThat(captor1.getValue().size()).isEqualTo(orgSize + 2);
 
         reset(converterHelper);
         jTransfo.updateTypeConverters((List) Collections.singletonList(new NoConversionTypeConverter()));
@@ -130,5 +139,8 @@ public class JTransfoImplTest {
 
         internalObjectFinders = (List<ObjectFinder>) ReflectionTestUtils.getField(jTransfo, "objectFinders");
         assertThat(internalObjectFinders).hasSize(1);
+    }
+
+    private interface NeedsJTransfoTypeConverter extends TypeConverter, NeedsJTransfo {
     }
 }
