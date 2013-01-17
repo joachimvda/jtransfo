@@ -93,7 +93,7 @@ public class ToDomainTypeConverterTest {
         when(reflectionHelper.newInstance(any(Class.class))).thenThrow(new InstantiationException());
 
         exception.expect(JTransfoException.class);
-        exception.expectMessage("Cannot create instance for transfer object class org.jtransfo.object.SimpleBaseTo.");
+        exception.expectMessage("Cannot create instance of transfer object class org.jtransfo.object.SimpleBaseTo.");
 
         typeConverter.reverse(source, SimpleBaseTo.class);
     }
@@ -105,7 +105,7 @@ public class ToDomainTypeConverterTest {
         when(reflectionHelper.newInstance(any(Class.class))).thenThrow(new IllegalAccessException());
 
         exception.expect(JTransfoException.class);
-        exception.expectMessage("Cannot create instance for transfer object class org.jtransfo.object.SimpleBaseTo.");
+        exception.expectMessage("Cannot create instance of transfer object class org.jtransfo.object.SimpleBaseTo.");
 
         typeConverter.reverse(source, SimpleBaseTo.class);
     }

@@ -16,6 +16,8 @@ import org.jtransfo.internal.ToHelper;
  */
 public class ToDomainTypeConverter implements TypeConverter<Object, Object> {
 
+    private static final String CANNOT_CREATE_INSTANCE_OF = "Cannot create instance of transfer object class ";
+
     private final ToHelper toHelper;
     private final JTransfo jTransfo;
     private final ReflectionHelper reflectionHelper = new ReflectionHelper();
@@ -50,10 +52,10 @@ public class ToDomainTypeConverter implements TypeConverter<Object, Object> {
             }
             return jTransfo.convert(domainObject, reflectionHelper.newInstance(toType));
         } catch (InstantiationException ie) {
-            throw new JTransfoException("Cannot create instance for transfer object class " + toType.getName() + ".",
+            throw new JTransfoException(CANNOT_CREATE_INSTANCE_OF + toType.getName() + ".",
                     ie);
         } catch (IllegalAccessException ie) {
-            throw new JTransfoException("Cannot create instance for transfer object class " + toType.getName() + ".",
+            throw new JTransfoException(CANNOT_CREATE_INSTANCE_OF + toType.getName() + ".",
                     ie);
         }
     }
