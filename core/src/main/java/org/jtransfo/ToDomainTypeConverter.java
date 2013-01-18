@@ -8,21 +8,18 @@
 
 package org.jtransfo;
 
-import org.jtransfo.internal.ToHelper;
-
 /**
  * Recursively use jTransfo to convert fields which are themselves a transfer object.
  */
 public class ToDomainTypeConverter extends AbstractToDomainTypeConverter {
 
     /**
-     * Construct type converter using given ToHelper instance (sharing the reflection cache).
+     * Construct type converter for given JTransfo instance.
      *
      * @param jTransfo jTransfo engine for conversion
-     * @param toHelper TO helper
      */
-    public ToDomainTypeConverter(JTransfo jTransfo, ToHelper toHelper) {
-        super(jTransfo, toHelper);
+    public ToDomainTypeConverter(JTransfo jTransfo) {
+        setJTransfo(jTransfo);
     }
 
     @Override

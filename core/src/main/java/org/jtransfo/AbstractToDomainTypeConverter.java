@@ -9,34 +9,26 @@
 package org.jtransfo;
 
 import org.jtransfo.internal.ReflectionHelper;
-import org.jtransfo.internal.ToHelper;
 
 /**
  * Recursively use jTransfo to convert fields which are themselves a transfer object.
  */
-public abstract class AbstractToDomainTypeConverter implements TypeConverter<Object, Object> {
+public abstract class AbstractToDomainTypeConverter implements TypeConverter<Object, Object>, NeedsJTransfo {
 
     private static final String CANNOT_CREATE_INSTANCE_OF = "Cannot create instance of transfer object class ";
 
-    private final ToHelper toHelper;
-    private final JTransfo jTransfo;
+    private JTransfo jTransfo;
     private final ReflectionHelper reflectionHelper = new ReflectionHelper();
 
-    /**
-     * Construct type converter using given ToHelper instance (sharing the reflection cache).
-     *
-     * @param jTransfo jTransfo engine for conversion
-     * @param toHelper TO helper
-     */
-    public AbstractToDomainTypeConverter(JTransfo jTransfo, ToHelper toHelper) {
+    @Override
+    public void setJTransfo(JTransfo jTransfo) {
         this.jTransfo = jTransfo;
-        this.toHelper = toHelper;
     }
 
     @Override
     public boolean canConvert(Class<?> realToType, Class<?> realDomainType) {
         // TO type should be marked with @DomainClass and domain should match declared
-        return toHelper.isToClass(realToType) && realDomainType.isAssignableFrom(toHelper.getDomainClass(realToType));
+        return jTransfo.isToClass(realToType) && realDomainType.isAssignableFrom(jTransfo.getDomainClass(realToType));
     }
 
     /**

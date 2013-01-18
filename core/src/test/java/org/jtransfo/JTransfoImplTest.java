@@ -13,6 +13,7 @@ import org.jtransfo.internal.NewInstanceObjectFinder;
 import org.jtransfo.internal.ReflectionHelper;
 import org.jtransfo.object.SimpleClassDomain;
 import org.jtransfo.object.SimpleClassNameTo;
+import org.jtransfo.object.SimpleClassTypeTo;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -196,6 +197,13 @@ public class JTransfoImplTest {
 
         verify(objectFinder).getObject(SimpleClassDomain.class, to);
         assertThat(res).isEqualTo(target);
+    }
+
+    @Test
+    public void isToClassTest() throws Exception {
+        assertThat(jTransfo.isToClass(SimpleClassNameTo.class)).isTrue();
+        assertThat(jTransfo.isToClass(SimpleClassTypeTo.class)).isTrue();
+        assertThat(jTransfo.isToClass(SimpleClassDomain.class)).isFalse();
     }
 
     private interface NeedsJTransfoTypeConverter extends TypeConverter, NeedsJTransfo {

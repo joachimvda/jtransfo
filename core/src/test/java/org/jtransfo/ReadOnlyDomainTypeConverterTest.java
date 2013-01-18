@@ -1,7 +1,6 @@
 package org.jtransfo;
 
 import org.jtransfo.internal.ReflectionHelper;
-import org.jtransfo.internal.ToHelper;
 import org.jtransfo.object.SimpleBaseDomain;
 import org.jtransfo.object.SimpleBaseTo;
 import org.jtransfo.object.SimpleExtendedDomain;
@@ -32,9 +31,6 @@ public class ReadOnlyDomainTypeConverterTest {
     private JTransfo jTransfo;
 
     @Mock
-    private ToHelper toHelper;
-
-    @Mock
     private ReflectionHelper reflectionHelper;
 
     @Rule
@@ -42,9 +38,15 @@ public class ReadOnlyDomainTypeConverterTest {
 
     @Before
     public void setUp() throws Exception {
-        typeConverter = new ReadOnlyDomainTypeConverter(jTransfo, new ToHelper()); // mocking ToHelper does not work well
+        typeConverter = new ReadOnlyDomainTypeConverter();
+        ((ReadOnlyDomainTypeConverter) typeConverter).setJTransfo(jTransfo);
 
         ReflectionTestUtils.setField(typeConverter, "reflectionHelper", reflectionHelper);
+
+        when(jTransfo.isToClass(SimpleBaseTo.class)).thenReturn(true);
+        when(jTransfo.isToClass(SimpleExtendedTo.class)).thenReturn(true);
+        when(jTransfo.getDomainClass(SimpleBaseTo.class)).thenReturn((Class) SimpleBaseDomain.class);
+        when(jTransfo.getDomainClass(SimpleExtendedTo.class)).thenReturn((Class) SimpleExtendedDomain.class);
     }
 
     @Test

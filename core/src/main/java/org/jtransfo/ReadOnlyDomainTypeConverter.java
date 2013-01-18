@@ -8,8 +8,6 @@
 
 package org.jtransfo;
 
-import org.jtransfo.internal.ToHelper;
-
 /**
  * Type converter which only copies linked objects' fields to the transfer object. For converting transfer object to
  * domain, the linked objects are looked up but the fields are not updated.
@@ -17,16 +15,6 @@ import org.jtransfo.internal.ToHelper;
 public class ReadOnlyDomainTypeConverter extends AbstractToDomainTypeConverter implements Named {
 
     private String name = "readOnlyDomain";
-
-    /**
-     * Construct type converter using given ToHelper instance (sharing the reflection cache).
-     *
-     * @param jTransfo jTransfo engine for conversion
-     * @param toHelper TO helper
-     */
-    public ReadOnlyDomainTypeConverter(JTransfo jTransfo, ToHelper toHelper) {
-        super(jTransfo, toHelper);
-    }
 
     @Override
     public Object doConvert(JTransfo jTransfo, Object toObject, Class<Object> domainType) throws JTransfoException {

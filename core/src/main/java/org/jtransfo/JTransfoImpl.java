@@ -38,7 +38,7 @@ public class JTransfoImpl implements JTransfo {
         updateObjectFinders();
 
         modifyableTypeConverters.add(new NoConversionTypeConverter());
-        modifyableTypeConverters.add(new ToDomainTypeConverter(this, toHelper));
+        modifyableTypeConverters.add(new ToDomainTypeConverter(this));
         updateTypeConverters();
     }
 
@@ -186,6 +186,11 @@ public class JTransfoImpl implements JTransfo {
     @Override
     public Class<?> getDomainClass(Class<?> toClass) {
         return toHelper.getDomainClass(toClass);
+    }
+
+    @Override
+    public boolean isToClass(Class<?> toClass) {
+        return toHelper.isToClass(toClass);
     }
 
     private List<Converter> getToToConverters(Class toClass) {

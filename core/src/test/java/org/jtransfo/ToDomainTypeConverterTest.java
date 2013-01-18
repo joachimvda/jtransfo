@@ -1,9 +1,6 @@
 package org.jtransfo;
 
-import org.hamcrest.BaseMatcher;
-import org.hamcrest.Description;
 import org.jtransfo.internal.ReflectionHelper;
-import org.jtransfo.internal.ToHelper;
 import org.jtransfo.object.SimpleBaseDomain;
 import org.jtransfo.object.SimpleBaseTo;
 import org.jtransfo.object.SimpleExtendedDomain;
@@ -13,16 +10,12 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -38,9 +31,6 @@ public class ToDomainTypeConverterTest {
     private JTransfo jTransfo;
 
     @Mock
-    private ToHelper toHelper;
-
-    @Mock
     private ReflectionHelper reflectionHelper;
 
     @Rule
@@ -48,9 +38,14 @@ public class ToDomainTypeConverterTest {
 
     @Before
     public void setUp() throws Exception {
-        typeConverter = new ToDomainTypeConverter(jTransfo, new ToHelper()); // mocking ToHelper does not work well
+        typeConverter = new ToDomainTypeConverter(jTransfo);
 
         ReflectionTestUtils.setField(typeConverter, "reflectionHelper", reflectionHelper);
+
+        when(jTransfo.isToClass(SimpleBaseTo.class)).thenReturn(true);
+        when(jTransfo.isToClass(SimpleExtendedTo.class)).thenReturn(true);
+        when(jTransfo.getDomainClass(SimpleBaseTo.class)).thenReturn((Class) SimpleBaseDomain.class);
+        when(jTransfo.getDomainClass(SimpleExtendedTo.class)).thenReturn((Class) SimpleExtendedDomain.class);
     }
 
     @Test

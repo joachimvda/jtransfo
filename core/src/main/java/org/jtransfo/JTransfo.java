@@ -73,4 +73,22 @@ public interface JTransfo {
      */
     Class<?> getDomainClass(Class<?> toClass);
 
+    /**
+     * Is the given object a transfer object?
+     * <p/>
+     * True when there is a {@link DomainClass} annotation on the class.
+     *
+     * @param object object to test
+     * @return true when object is a transfer object
+     */
+
+    /**
+     * Is the given class a transfer object class?
+     * <p/>
+     * True when there is a {@link DomainClass} annotation on the class.
+     *
+     * @param toClass object class to test
+     * @return true when object is a transfer object
+     */
+    boolean isToClass(Class<?> toClass);
 }
