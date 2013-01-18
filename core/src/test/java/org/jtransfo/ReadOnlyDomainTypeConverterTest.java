@@ -104,4 +104,12 @@ public class ReadOnlyDomainTypeConverterTest {
         typeConverter.reverse(source, SimpleBaseTo.class);
     }
 
+    @Test
+    public void testName() throws Exception {
+        assertThat(((ReadOnlyDomainTypeConverter) typeConverter).getName()).isEqualTo("readOnlyDomain");
+
+        ((ReadOnlyDomainTypeConverter) typeConverter).setName("bla");
+        assertThat(((ReadOnlyDomainTypeConverter) typeConverter).getName()).isEqualTo("bla");
+    }
+
 }
