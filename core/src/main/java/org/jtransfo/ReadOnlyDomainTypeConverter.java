@@ -11,9 +11,10 @@ package org.jtransfo;
 import org.jtransfo.internal.ToHelper;
 
 /**
- * Recursively use jTransfo to convert fields which are themselves a transfer object.
+ * Type converter which only copies linked objects' fields to the transfer object. For convertering transfer object to
+ * domain, the linked objects are looked up but the fields are not updated.
  */
-public class ToDomainTypeConverter extends AbstractToDomainTypeConverter {
+public class ReadOnlyDomainTypeConverter extends AbstractToDomainTypeConverter {
 
     /**
      * Construct type converter using given ToHelper instance (sharing the reflection cache).
@@ -21,12 +22,13 @@ public class ToDomainTypeConverter extends AbstractToDomainTypeConverter {
      * @param jTransfo jTransfo engine for conversion
      * @param toHelper TO helper
      */
-    public ToDomainTypeConverter(JTransfo jTransfo, ToHelper toHelper) {
+    public ReadOnlyDomainTypeConverter(JTransfo jTransfo, ToHelper toHelper) {
         super(jTransfo, toHelper);
     }
 
     @Override
     public Object doConvert(JTransfo jTransfo, Object toObject, Class<Object> domainType) throws JTransfoException {
-        return jTransfo.convert(toObject);
+        // only use object finder
+        return jTransfo.findTarget(toObject, domainType);
     }
 }

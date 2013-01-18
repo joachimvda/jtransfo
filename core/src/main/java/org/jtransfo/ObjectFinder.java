@@ -24,6 +24,7 @@ public interface ObjectFinder {
      * @param domainClass type of class needed
      * @param to transfer object which needs to be converted
      * @return base domain object or null if object finder cannot handle this case
+     * @throws JTransfoException something went wrong while trying to find object
      */
-    <T> T getObject(Class<T> domainClass, Object to);
+    <T> T getObject(Class<T> domainClass, Object to) throws JTransfoException;
 }

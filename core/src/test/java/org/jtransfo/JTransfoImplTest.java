@@ -34,6 +34,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
+/**
+ * Test for JTransfoImpl.
+ */
 public class JTransfoImplTest {
 
     private JTransfoImpl jTransfo;
@@ -67,6 +70,11 @@ public class JTransfoImplTest {
     }
 
     @Test
+    public void testFindTargetNull() {
+        assertThat(jTransfo.findTarget(null, this.getClass())).isNull();
+    }
+
+    @Test
     public void testConvertInstantiationException() throws Exception {
         when(reflectionHelper.newInstance(SimpleClassDomain.class)).thenThrow(new InstantiationException());
 
@@ -76,11 +84,45 @@ public class JTransfoImplTest {
     }
 
     @Test
+    public void testConvertToInstantiationException() throws Exception {
+        when(reflectionHelper.newInstance(SimpleClassDomain.class)).thenThrow(new InstantiationException());
+
+        exception.expect(JTransfoException.class);
+        exception.expectMessage("Cannot create instance for domain class org.jtransfo.object.SimpleClassDomain.");
+        jTransfo.convertTo(new SimpleClassNameTo(), SimpleClassDomain.class);
+    }
+
+    @Test
+    public void testFindTargetInstantiationException() throws Exception {
+        when(reflectionHelper.newInstance(SimpleClassDomain.class)).thenThrow(new InstantiationException());
+
+        exception.expect(JTransfoException.class);
+        exception.expectMessage("Cannot create instance for domain class org.jtransfo.object.SimpleClassDomain.");
+        jTransfo.findTarget(new SimpleClassNameTo(), SimpleClassDomain.class);
+    }
+
+    @Test
     public void testConvertIllegalAccessException() throws Exception {
         when(reflectionHelper.newInstance(SimpleClassDomain.class)).thenThrow(new IllegalAccessException());
         exception.expect(JTransfoException.class);
         exception.expectMessage("Cannot create instance for domain class org.jtransfo.object.SimpleClassDomain.");
         jTransfo.convert(new SimpleClassNameTo());
+    }
+
+    @Test
+    public void testConvertToIllegalAccessException() throws Exception {
+        when(reflectionHelper.newInstance(SimpleClassDomain.class)).thenThrow(new IllegalAccessException());
+        exception.expect(JTransfoException.class);
+        exception.expectMessage("Cannot create instance for domain class org.jtransfo.object.SimpleClassDomain.");
+        jTransfo.convertTo(new SimpleClassNameTo(), SimpleClassDomain.class);
+    }
+
+    @Test
+    public void testFindTargetIllegalAccessException() throws Exception {
+        when(reflectionHelper.newInstance(SimpleClassDomain.class)).thenThrow(new IllegalAccessException());
+        exception.expect(JTransfoException.class);
+        exception.expectMessage("Cannot create instance for domain class org.jtransfo.object.SimpleClassDomain.");
+        jTransfo.findTarget(new SimpleClassNameTo(), SimpleClassDomain.class);
     }
 
     @Test
@@ -139,6 +181,21 @@ public class JTransfoImplTest {
 
         internalObjectFinders = (List<ObjectFinder>) ReflectionTestUtils.getField(jTransfo, "objectFinders");
         assertThat(internalObjectFinders).hasSize(1);
+    }
+
+    @Test
+    public void testFindTarget() throws Exception {
+        SimpleClassNameTo to = new SimpleClassNameTo();
+        SimpleClassDomain target = mock(SimpleClassDomain.class);
+        ObjectFinder objectFinder = mock(ObjectFinder.class);
+        when(objectFinder.getObject(SimpleClassDomain.class, to)).thenReturn(target);
+
+        jTransfo.updateObjectFinders(Collections.singletonList(objectFinder));
+
+        SimpleClassDomain res = jTransfo.findTarget(to, SimpleClassDomain.class);
+
+        verify(objectFinder).getObject(SimpleClassDomain.class, to);
+        assertThat(res).isEqualTo(target);
     }
 
     private interface NeedsJTransfoTypeConverter extends TypeConverter, NeedsJTransfo {

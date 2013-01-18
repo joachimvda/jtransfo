@@ -154,7 +154,7 @@ public class JTransfoImpl implements JTransfo {
         if (null == source) {
             return null;
         }
-        Class<?> domainClass = toHelper.getDomainClass(source.getClass());
+        Class<?> domainClass = getDomainClass(source.getClass());
         return convertTo(source,  domainClass);
     }
 
@@ -163,8 +163,16 @@ public class JTransfoImpl implements JTransfo {
         if (null == source) {
             return null;
         }
+        return (T) convert(source, findTarget(source, targetClass));
+    }
+
+    @Override
+    public <T> T findTarget(Object source, Class<T> targetClass) {
+        if (null == source) {
+            return null;
+        }
         int i = objectFinders.size() - 1;
-        Object target = null;
+        T target = null;
         while (null == target && i >= 0) {
             target = objectFinders.get(i--).getObject(targetClass, source);
         }
@@ -172,7 +180,12 @@ public class JTransfoImpl implements JTransfo {
             throw new JTransfoException("Cannot create instance of target class " + targetClass.getName() +
                     " for source object " + source + ".");
         }
-        return (T) convert(source, target);
+        return target;
+    }
+
+    @Override
+    public Class<?> getDomainClass(Class<?> toClass) {
+        return toHelper.getDomainClass(toClass);
     }
 
     private List<Converter> getToToConverters(Class toClass) {
@@ -186,7 +199,7 @@ public class JTransfoImpl implements JTransfo {
     private ToConverter getToConverter(Class toClass) {
         ToConverter toConverter = converters.get(toClass);
         if (null == toConverter) {
-            Class<?> domainClass = toHelper.getDomainClass(toClass);
+            Class<?> domainClass = getDomainClass(toClass);
             toConverter = converterHelper.getToConverter(toClass, domainClass);
             converters.put(toClass, toConverter);
         }

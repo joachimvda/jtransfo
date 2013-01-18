@@ -51,4 +51,26 @@ public interface JTransfo {
      */
     <T> T convertTo(Object source, Class<T> targetClass);
 
+    /**
+     * Get the base target (domain) object for the source (transfer) object.
+     * <p/>
+     * When the source is null, the result is also null.
+     * <p/>
+     * The object finders are used to build the object to copy to.
+     *
+     * @param source source transfer object
+     * @param targetClass target class to convert to
+     * @param <T> type of object for target
+     * @return domain object
+     */
+    <T> T findTarget(Object source, Class<T> targetClass);
+
+    /**
+     * Get domain class for transfer object.
+     *
+     * @param toClass transfer object class
+     * @return domain class as annotated on class
+     */
+    Class<?> getDomainClass(Class<?> toClass);
+
 }
