@@ -12,7 +12,7 @@
     <parent>
         <groupId>org.jtransfo</groupId>
         <artifactId>jtransfo</artifactId>
-        <version>0.6-SNAPSHOT</version>
+        <version>0.6</version>
     </parent>
     <groupId>org.jtransfo</groupId>
     <artifactId>jtransfo-spring</artifactId>
