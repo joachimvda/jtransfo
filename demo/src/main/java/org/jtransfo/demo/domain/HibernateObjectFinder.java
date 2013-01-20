@@ -26,6 +26,8 @@ public class HibernateObjectFinder implements ObjectFinder {
             Long id = ((IdentifiedTo) to).getId();
             if (null != id) {
                 return (T) sessionFactory.getCurrentSession().get(domainClass, id);
+                // if the database id is generated, then you may want to throw an exception if the result is null
+                // if the id is not generated, then you may need to create a new instance and set the database id here
             }
         }
         return null;

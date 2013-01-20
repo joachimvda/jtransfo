@@ -10,6 +10,7 @@ package org.jtransfo.demo.domain;
 
 import lombok.Data;
 import org.jtransfo.DomainClass;
+import org.jtransfo.MappedBy;
 
 /**
  * Transfer object for address.
@@ -18,6 +19,7 @@ import org.jtransfo.DomainClass;
 @DomainClass(domainClass = Address.class)
 public class AddressTo implements IdentifiedTo {
 
+    @MappedBy(readOnly = true) // writable database id can cause Hibernate exceptions
     private Long id;
     private String address;
     private String postalCode;

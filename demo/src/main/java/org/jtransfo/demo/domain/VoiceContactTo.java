@@ -10,6 +10,7 @@ package org.jtransfo.demo.domain;
 
 import lombok.Data;
 import org.jtransfo.DomainClass;
+import org.jtransfo.MappedBy;
 
 /**
  * Voice contact details.
@@ -18,6 +19,7 @@ import org.jtransfo.DomainClass;
 @DomainClass(domainClass = VoiceContact.class)
 public class VoiceContactTo {
 
+    @MappedBy(readOnly = true) // writable database id can cause Hibernate exceptions
     private Long id;
     private String type;
     private String voice;

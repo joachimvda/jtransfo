@@ -99,6 +99,9 @@ public class JTransfoAndHibernateTest {
         for (Object obj : person.getVoiceContacts()) {
             assertThat(obj).isInstanceOf(VoiceContact.class); // verify that list content was converted
         }
+
+        // verify that object can be saved
+        sessionFactory.getCurrentSession().saveOrUpdate(person);
     }
 
 }

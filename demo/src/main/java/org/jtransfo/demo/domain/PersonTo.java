@@ -21,6 +21,7 @@ import java.util.List;
 @DomainClass(domainClass = Person.class)
 public class PersonTo implements IdentifiedTo {
 
+    @MappedBy(readOnly = true) // writable database id can cause Hibernate exceptions
     private Long id;
     private String name;
     private AddressTo address;
