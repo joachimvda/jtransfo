@@ -20,12 +20,13 @@ import java.util.Locale;
  */
 public class AccessorSyntheticField implements SyntheticField {
 
+    private String name;
     private Field field;
     private Method getter;
     private Method setter;
 
     /**
-     * Constructor.
+     * Constructor, access field using getter and setter if exist.
      *
      * @param reflectionHelper reflection helper to use
      * @param clazz clazz of which the field is part
@@ -36,6 +37,35 @@ public class AccessorSyntheticField implements SyntheticField {
         getter = reflectionHelper.getMethod(clazz, field.getType(), getGetterName(field.getName(),
                 field.getType().getCanonicalName().equals(boolean.class.getCanonicalName())));
         setter = reflectionHelper.getMethod(clazz, null, getSetterName(field.getName()), field.getType());
+        name = field.getName();
+    }
+
+    /**
+     * Constructor, there is no field, just use getter (and setter is not readOnly).
+     *
+     * @param reflectionHelper reflection helper to use
+     * @param clazz clazz of which the field is part
+     * @param name field name
+     * @param readOnlyField is a getter sufficient
+     * @throws JTransfoException can not find getter for given name or
+     */
+    public AccessorSyntheticField(ReflectionHelper reflectionHelper, Class<?> clazz, String name,
+            boolean readOnlyField) throws JTransfoException {
+        this.field = null;
+        getter = reflectionHelper.getMethod(clazz, null, getGetterName(name, false));
+        if (null == getter) {
+            throw new JTransfoException("Cannot find getter " + getGetterName(name, false) + " on class " +
+                    clazz.getName() + ".");
+        }
+        if (!readOnlyField) {
+            Class<?> type = getter.getReturnType();
+            setter = reflectionHelper.getMethod(clazz, null, getSetterName(name), type);
+            if (null == setter) {
+                throw new JTransfoException("Cannot find setter " + getSetterName(name) + " on class " +
+                        clazz.getName() + ".");
+            }
+        }
+        this.name = name;
     }
 
     /**
@@ -90,7 +120,7 @@ public class AccessorSyntheticField implements SyntheticField {
      * @return field name
      */
     public String getName() {
-        return field.getName();
+        return name;
     }
 
     /**
@@ -99,7 +129,11 @@ public class AccessorSyntheticField implements SyntheticField {
      * @return field type
      */
     public Class<?> getType() {
-        return field.getType();
+        if (null != field) {
+            return field.getType();
+        } else {
+            return getter.getReturnType();
+        }
     }
 
     private String getGetterName(String fieldName, boolean isBoolean) {

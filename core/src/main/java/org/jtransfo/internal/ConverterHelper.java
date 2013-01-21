@@ -28,6 +28,8 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class ConverterHelper {
 
+    private static final String DECLARED_TYPE_CONVERTER_CLASS = "Declared TypeConverter class ";
+
     private ReflectionHelper reflectionHelper = new ReflectionHelper();
     private ConcurrentHashMap<String, TypeConverter> typeConverterInstances =
             new ConcurrentHashMap<String, TypeConverter>();
@@ -53,6 +55,7 @@ public class ConverterHelper {
 
                 String domainFieldName = field.getName();
                 String[] domainFieldPath = new String[0];
+                boolean readOnlyField = false;
                 if (null != mappedBy) {
                     if (!MappedBy.DEFAULT_FIELD.equals(mappedBy.field())) {
                         domainFieldName = mappedBy.field();
@@ -60,13 +63,16 @@ public class ConverterHelper {
                     if (!MappedBy.DEFAULT_PATH.equals(mappedBy.path())) {
                         domainFieldPath = mappedBy.path().split("\\.");
                     }
+                    readOnlyField = mappedBy.readOnly();
                 }
-                SyntheticField[] domainField = findField(domainFields, domainFieldName, domainFieldPath);
-                if (null == domainField) {
+                SyntheticField[] domainField;
+                try {
+                    domainField = findField(domainFields, domainFieldName, domainFieldPath, domainClass, readOnlyField);
+                } catch (JTransfoException jte) {
                     throw new JTransfoException(
                             "Cannot determine mapping for field " + field.getName() + " in class " + toClass.getName() +
                                     ". The field " + domainFieldName + " in class " + domainClass.getName() + " " +
-                                    withPath(domainFieldPath) + "cannot be found.");
+                                    withPath(domainFieldPath) + "cannot be found.", jte);
                 }
                 TypeConverter typeConverter = getDeclaredTypeConverter(mappedBy);
                 if (null == typeConverter) {
@@ -110,25 +116,31 @@ public class ConverterHelper {
      * @param domainFields list of fields in domain object
      * @param fieldName field to search
      * @param path list of intermediate fields for transitive fields
+     * @param type type of object to find fields in
+     * @param readOnlyField is the requested field read only
      * @return field with requested name or null when not found
+     * @throws JTransfoException cannot find fields
      */
-    protected SyntheticField[] findField(List<SyntheticField> domainFields, String fieldName, String[] path) {
+    protected SyntheticField[] findField(List<SyntheticField> domainFields, String fieldName, String[] path,
+            Class<?> type, boolean readOnlyField) throws JTransfoException {
         List<SyntheticField> fields = domainFields;
         SyntheticField[] result = new SyntheticField[path.length + 1];
         int index = 0;
+        Class<?> currentType = type;
         for (; index < path.length; index++) {
             boolean found = false;
             for (SyntheticField field : fields) {
                 if (field.getName().equals(path[index])) {
                     found = true;
-                    fields = reflectionHelper.getSyntheticFields(field.getType());
                     result[index] = field;
                     break;
                 }
             }
             if (!found) {
-                return null; // field in path not found
+                result[index] = new AccessorSyntheticField(reflectionHelper, currentType, path[index], readOnlyField);
             }
+            currentType = result[index].getType();
+            fields = reflectionHelper.getSyntheticFields(currentType);
         }
         for (SyntheticField field : fields) {
             if (field.getName().equals(fieldName)) {
@@ -136,7 +148,8 @@ public class ConverterHelper {
                 return result;
             }
         }
-        return null;
+        result[index] = new AccessorSyntheticField(reflectionHelper, currentType, fieldName, readOnlyField);
+        return result;
     }
 
     /**
@@ -160,16 +173,16 @@ public class ConverterHelper {
                     typeConverter = reflectionHelper.<TypeConverter>newInstance(typeConverterClass);
                     typeConverterInstances.put(typeConverterClass, typeConverter);
                 } catch (ClassNotFoundException cnfe) {
-                    throw new JTransfoException("Declared TypeConverter class " + typeConverterClass +
+                    throw new JTransfoException(DECLARED_TYPE_CONVERTER_CLASS + typeConverterClass +
                             " cannot be found.", cnfe);
                 } catch (InstantiationException ie) {
-                    throw new JTransfoException("Declared TypeConverter class " + typeConverterClass +
+                    throw new JTransfoException(DECLARED_TYPE_CONVERTER_CLASS + typeConverterClass +
                             " cannot be instantiated.", ie);
                 } catch (IllegalAccessException iae) {
-                    throw new JTransfoException("Declared TypeConverter class " + typeConverterClass +
+                    throw new JTransfoException(DECLARED_TYPE_CONVERTER_CLASS + typeConverterClass +
                             " cannot be accessed.", iae);
                 } catch (ClassCastException cce) {
-                    throw new JTransfoException("Declared TypeConverter class " + typeConverterClass +
+                    throw new JTransfoException(DECLARED_TYPE_CONVERTER_CLASS + typeConverterClass +
                             " cannot be cast to a TypeConverter.", cce);
                 }
             }

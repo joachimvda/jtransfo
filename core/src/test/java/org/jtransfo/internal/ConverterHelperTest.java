@@ -68,11 +68,13 @@ public class ConverterHelperTest {
         fields.add(f2);
 
         SyntheticField[] res;
-        res = converterHelper.findField(fields, "c", new String[0]);
+        res = converterHelper.findField(fields, "c", new String[0], SimpleExtendedDomain.class, false);
         assertThat(res[0]).isEqualTo(f2);
 
-        res = converterHelper.findField(fields, "bla", new String[0]);
-        assertThat(res).isNull();
+        exception.expect(JTransfoException.class);
+        exception.expectMessage("Cannot find getter getBla on class org.jtransfo.object.SimpleExtendedDomain.");
+
+        converterHelper.findField(fields, "bla", new String[0], SimpleExtendedDomain.class, false);
     }
 
     @Test
@@ -86,13 +88,15 @@ public class ConverterHelperTest {
         when(reflectionHelper.getSyntheticFields(any(Class.class))).thenReturn(Collections.singletonList(f3));
 
         SyntheticField[] res;
-        res = converterHelper.findField(fields, "id", new String[] { "address" });
+        res = converterHelper.findField(fields, "id", new String[] { "address" }, PersonDomain.class, false);
         assertThat(res).hasSize(2);
         assertThat(res[0]).isEqualTo(f2);
         assertThat(res[1]).isEqualTo(f3);
 
-        res = converterHelper.findField(fields, "id", new String[] { "bla" });
-        assertThat(res).isNull();
+        exception.expect(JTransfoException.class);
+        exception.expectMessage("Cannot find getter getBla on class org.jtransfo.object.PersonDomain.");
+
+        converterHelper.findField(fields, "id", new String[] { "bla" }, PersonDomain.class, false);
     }
 
     @Test
