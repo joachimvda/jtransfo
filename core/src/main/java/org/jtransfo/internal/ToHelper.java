@@ -9,6 +9,7 @@
 package org.jtransfo.internal;
 
 import org.jtransfo.DomainClass;
+import org.jtransfo.DomainClassDelegate;
 import org.jtransfo.JTransfoException;
 
 /**
@@ -40,7 +41,11 @@ public class ToHelper {
      */
     public boolean isToClass(Class<?> toClass) {
         DomainClass domainClass = toClass.getAnnotation(DomainClass.class);
-        return null != domainClass;
+        if (null != domainClass) {
+            return true;
+        }
+        DomainClassDelegate domainClassDelegate = toClass.getAnnotation(DomainClassDelegate.class);
+        return null != domainClassDelegate;
     }
 
     /**
