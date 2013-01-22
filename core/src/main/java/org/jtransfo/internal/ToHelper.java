@@ -41,9 +41,18 @@ public class ToHelper {
      */
     public boolean isToClass(Class<?> toClass) {
         DomainClass domainClass = toClass.getAnnotation(DomainClass.class);
-        if (null != domainClass) {
-            return true;
-        }
+        return null != domainClass;
+    }
+
+    /**
+     * Is the given transfer object class root of a tree of transfer objects?
+     * <p/>
+     * True when there is a {@link DomainClassDelegate} annotation on the class.
+     *
+     * @param toClass object class to test
+     * @return true when object is a transfer object
+     */
+    public boolean hasDomainClassDelegates(Class<?> toClass) {
         DomainClassDelegate domainClassDelegate = toClass.getAnnotation(DomainClassDelegate.class);
         return null != domainClassDelegate;
     }
@@ -73,6 +82,29 @@ public class ToHelper {
             throw new JTransfoException("Transfer object of type " + toClass.getName() +
                     " DomainClass " + domainClass.value() + " not found.", cnfe);
         }
+    }
+
+    /**
+     * Get the correct transfer object type for the given domain object.
+     * <p/>
+     * This searches the DomainClassDelegates (if present) to see of there is a better matching transfer object than
+     * the one given as parameter.
+     *
+     * @param toType base transfer object type
+     * @param domainObject domain object (instance)
+     * @return proper transfer object type to use
+     */
+    public  Class<?> getToSubType(Class<?> toType, Object domainObject) {
+        DomainClassDelegate domainClassDelegate = toType.getAnnotation(DomainClassDelegate.class);
+        if (null != domainClassDelegate) {
+            for (Class<?> delegate : domainClassDelegate.delegates()) {
+                Class<?> delegateDomain = getDomainClass(delegate);
+                if (delegateDomain.isInstance(domainObject)) {
+                    toType = delegate;
+                }
+            }
+        }
+        return toType;
     }
 
 }

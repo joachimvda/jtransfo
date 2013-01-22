@@ -71,11 +71,11 @@ public class InheritedAbstractBaseClassTest {
         assertThat(gt.getSlaves().get(0)).isInstanceOf(MaleHumanTo.class);
         assertThat(((MaleHumanTo) gt.getSlaves().get(0)).getWeeklyPubVisits()).isEqualTo(0);
         assertThat(gt.getSlaves().get(1)).isInstanceOf(FemaleHumanTo.class);
-        assertThat(((FemaleHumanTo) gt.getSlaves().get(0)).getHairColourCount()).isEqualTo(1);
+        assertThat(((FemaleHumanTo) gt.getSlaves().get(1)).getHairColourCount()).isEqualTo(1);
     }
 
     @Test
-    public void testConvertDomainTransferObject() throws Exception {
+    public void testConvertTransferObject() throws Exception {
         GroupTo gt = new GroupTo();
         FemaleHumanTo lt = new FemaleHumanTo();
         lt.setName("leader");
@@ -104,7 +104,7 @@ public class InheritedAbstractBaseClassTest {
         assertThat(gd.getSlaves().get(0)).isInstanceOf(MaleHumanDomain.class);
         assertThat(((MaleHumanDomain) gd.getSlaves().get(0)).getWeeklyPubVisits()).isEqualTo(0);
         assertThat(gd.getSlaves().get(1)).isInstanceOf(FemaleHumanDomain.class);
-        assertThat(((FemaleHumanDomain) gd.getSlaves().get(0)).getHairColourCount()).isEqualTo(1);
+        assertThat(((FemaleHumanDomain) gd.getSlaves().get(1)).getHairColourCount()).isEqualTo(1);
     }
 
 }

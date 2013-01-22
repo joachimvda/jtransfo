@@ -193,6 +193,11 @@ public class JTransfoImpl implements JTransfo {
         return toHelper.isToClass(toClass);
     }
 
+    @Override
+    public Class<?> getToSubType(Class<?> toType, Object domainObject) {
+        return toHelper.getToSubType(toType, domainObject);
+    }
+
     private List<Converter> getToToConverters(Class toClass) {
         return getToConverter(toClass).getToTo();
     }

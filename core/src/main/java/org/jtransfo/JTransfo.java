@@ -74,15 +74,6 @@ public interface JTransfo {
     Class<?> getDomainClass(Class<?> toClass);
 
     /**
-     * Is the given object a transfer object?
-     * <p/>
-     * True when there is a {@link DomainClass} annotation on the class.
-     *
-     * @param object object to test
-     * @return true when object is a transfer object
-     */
-
-    /**
      * Is the given class a transfer object class?
      * <p/>
      * True when there is a {@link DomainClass} annotation on the class.
@@ -91,4 +82,16 @@ public interface JTransfo {
      * @return true when object is a transfer object
      */
     boolean isToClass(Class<?> toClass);
+
+    /**
+     * Get the correct transfer object type for the given domain object.
+     * <p/>
+     * This searches the DomainClassDelegates (if present) to see of there is a better matching transfer object than
+     * the one given as parameter.
+     *
+     * @param toType base transfer object type
+     * @param domainObject domain object (instance)
+     * @return proper transfer object type to use
+     */
+     Class<?> getToSubType(Class<?> toType, Object domainObject);
 }

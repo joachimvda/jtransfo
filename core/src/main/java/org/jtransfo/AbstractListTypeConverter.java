@@ -18,7 +18,6 @@ public abstract class AbstractListTypeConverter implements TypeConverter<List, L
 
     private String name;
     private Class<?> toType;
-    private Class<?> domainType;
     private JTransfo jTransfo;
 
     /**
@@ -40,7 +39,6 @@ public abstract class AbstractListTypeConverter implements TypeConverter<List, L
     @Override
     public void setJTransfo(JTransfo jTransfo) {
         this.jTransfo = jTransfo;
-        domainType = jTransfo.getDomainClass(toType);
     }
 
     @Override
@@ -67,7 +65,7 @@ public abstract class AbstractListTypeConverter implements TypeConverter<List, L
         }
         List<Object> res = new ArrayList<Object>();
         for (Object to : toObjects) {
-            res.add(doConvertOne(jTransfo, to, domainType));
+            res.add(doConvertOne(jTransfo, to, jTransfo.getDomainClass(to.getClass())));
         }
         return res;
     }
@@ -79,7 +77,7 @@ public abstract class AbstractListTypeConverter implements TypeConverter<List, L
         }
         List<Object> res = new ArrayList<Object>();
         for (Object domain : domainObjects) {
-            res.add(jTransfo.convertTo(domain, toType));
+            res.add(jTransfo.convertTo(domain, jTransfo.getToSubType(toType, domain)));
         }
         return res;
     }

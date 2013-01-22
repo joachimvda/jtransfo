@@ -54,7 +54,8 @@ public abstract class AbstractToDomainTypeConverter implements TypeConverter<Obj
             if (null == domainObject) {
                 return null;
             }
-            return jTransfo.convert(domainObject, reflectionHelper.newInstance(toType));
+            Class<?> realToType = jTransfo.getToSubType(toType, domainObject); // to type based on @DomainClassDelegate
+            return jTransfo.convert(domainObject, reflectionHelper.newInstance(realToType));
         } catch (InstantiationException ie) {
             throw new JTransfoException(CANNOT_CREATE_INSTANCE_OF + toType.getName() + ".", ie);
         } catch (IllegalAccessException ie) {

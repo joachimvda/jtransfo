@@ -1,10 +1,12 @@
 package org.jtransfo.object;
 
+import org.jtransfo.DomainClass;
 import org.jtransfo.DomainClassDelegate;
 
 /**
  * Base human.
  */
+@DomainClass(domainClass = AbstractHumanDomain.class)
 @DomainClassDelegate(delegates = {MaleHumanTo.class, FemaleHumanTo.class})
 public class AbstractHumanTo {
 
