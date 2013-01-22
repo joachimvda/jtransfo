@@ -65,6 +65,15 @@ public class ReadOnlyDomainTypeConverterTest {
         typeConverter.convert(source, SimpleBaseDomain.class);
 
         verify(jTransfo).findTarget(source, SimpleBaseDomain.class);
+        verify(jTransfo).getDomainClass(SimpleBaseTo.class);
+
+        assertThat(typeConverter.convert(source, SimpleBaseDomain.class)).isNull();
+    }
+
+
+    @Test
+    public void testConvertNull() throws Exception {
+        assertThat(typeConverter.convert(null, SimpleBaseDomain.class)).isNull();
     }
 
     @Test
