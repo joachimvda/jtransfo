@@ -45,19 +45,6 @@ public class ToHelper {
     }
 
     /**
-     * Is the given transfer object class root of a tree of transfer objects?
-     * <p/>
-     * True when there is a {@link DomainClassDelegate} annotation on the class.
-     *
-     * @param toClass object class to test
-     * @return true when object is a transfer object
-     */
-    public boolean hasDomainClassDelegates(Class<?> toClass) {
-        DomainClassDelegate domainClassDelegate = toClass.getAnnotation(DomainClassDelegate.class);
-        return null != domainClassDelegate;
-    }
-
-    /**
      * Get domain class for transfer object.
      *
      * @param toClass transfer object class

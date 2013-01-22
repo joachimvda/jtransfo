@@ -10,7 +10,13 @@ package org.jtransfo.internal;
 
 import org.jtransfo.DomainClass;
 import org.jtransfo.JTransfoException;
+import org.jtransfo.object.AbstractHumanTo;
+import org.jtransfo.object.FemaleHumanDomain;
+import org.jtransfo.object.FemaleHumanTo;
+import org.jtransfo.object.MaleHumanDomain;
+import org.jtransfo.object.MaleHumanTo;
 import org.jtransfo.object.NoDomain;
+import org.jtransfo.object.PersonTo;
 import org.jtransfo.object.SimpleClassDomain;
 import org.jtransfo.object.SimpleClassNameTo;
 import org.jtransfo.object.SimpleClassTypeTo;
@@ -59,6 +65,21 @@ public class ToHelperTest {
         exception.expect(JTransfoException.class);
         exception.expectMessage(" DomainClass org.jtransfo.UnknownClass not found.");
         assertThat(toHelper.getDomainClass(UnknownClassTo.class)).isNull();
+    }
+
+    @Test
+    public void getToSubTypeNoDomainClassDelegates() throws Exception {
+        assertThat(toHelper.getToSubType(PersonTo.class, new PersonTo())).isEqualTo(PersonTo.class);
+    }
+
+    @Test
+    public void getToSubTypeWithDomainClassDelegates() throws Exception {
+        assertThat(toHelper.getToSubType(AbstractHumanTo.class, new FemaleHumanDomain())).
+                isEqualTo(FemaleHumanTo.class);
+        assertThat(toHelper.getToSubType(AbstractHumanTo.class, new MaleHumanDomain())).isEqualTo(MaleHumanTo.class);
+
+        assertThat(toHelper.getToSubType(AbstractHumanTo.class, new Object())).isEqualTo(AbstractHumanTo.class);
+        assertThat(toHelper.getToSubType(AbstractHumanTo.class, new MaleHumanDomain(){})).isEqualTo(MaleHumanTo.class);
     }
 
     @DomainClass
