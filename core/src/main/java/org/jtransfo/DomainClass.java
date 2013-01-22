@@ -31,7 +31,7 @@ public @interface DomainClass {
     String value() default DEFAULT_NAME;
 
     /**
-     * Class for te domain object.
+     * Class for the domain object.
      * <p/>
      * This requires a compile dependency on the domain class. The value has precedence over the {@link #value()}
      * field.
