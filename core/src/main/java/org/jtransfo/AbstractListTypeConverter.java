@@ -19,6 +19,7 @@ public abstract class AbstractListTypeConverter implements TypeConverter<List, L
     private String name;
     private Class<?> toType;
     private JTransfo jTransfo;
+    private boolean keepNullList;
 
     /**
      * Construct type converter for converting a list, assign given name and use given transfer object type.
@@ -61,7 +62,7 @@ public abstract class AbstractListTypeConverter implements TypeConverter<List, L
     @Override
     public List convert(List toObjects, Class<List> domainFieldType) throws JTransfoException {
         if (null == toObjects) {
-            return null;
+            return getNullList();
         }
         List<Object> res = new ArrayList<Object>();
         for (Object to : toObjects) {
@@ -73,12 +74,25 @@ public abstract class AbstractListTypeConverter implements TypeConverter<List, L
     @Override
     public List reverse(List domainObjects, Class<List> toFieldType) throws JTransfoException {
         if (null == domainObjects) {
-            return null;
+            return getNullList();
         }
         List<Object> res = new ArrayList<Object>();
         for (Object domain : domainObjects) {
             res.add(jTransfo.convertTo(domain, jTransfo.getToSubType(toType, domain)));
         }
         return res;
+    }
+
+    private List getNullList() {
+        return keepNullList ? null : new ArrayList<Object>();
+    }
+
+    /**
+     * Set whether null values should be kept (true). When false (which is the default value), an empty list is set.
+     *
+     * @param keepNullList should null be kept as value or replaced by an empty list.
+     */
+    public void setKeepNullList(boolean keepNullList) {
+        this.keepNullList = keepNullList;
     }
 }

@@ -70,6 +70,8 @@ public class ReadOnlyDomainListTypeConverterTest {
 
     @Test
     public void testConvertNull() throws Exception {
+        assertThat(listTypeConverter.convert(null, List.class)).isEmpty();
+        listTypeConverter.setKeepNullList(true);
         assertThat(listTypeConverter.convert(null, List.class)).isNull();
     }
 
@@ -94,6 +96,8 @@ public class ReadOnlyDomainListTypeConverterTest {
 
     @Test
     public void testReverseNull() throws Exception {
+        assertThat(listTypeConverter.reverse(null, List.class)).isEmpty();
+        listTypeConverter.setKeepNullList(true);
         assertThat(listTypeConverter.reverse(null, List.class)).isNull();
     }
 }
