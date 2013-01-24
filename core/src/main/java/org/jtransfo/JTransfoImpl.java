@@ -160,10 +160,14 @@ public class JTransfoImpl implements JTransfo {
 
     @Override
     public <T> T convertTo(Object source, Class<T> targetClass) {
+        Class<T> realTarget = targetClass;
         if (null == source) {
             return null;
         }
-        return (T) convert(source, findTarget(source, targetClass));
+        if (isToClass(targetClass)) {
+            realTarget = (Class<T>) getToSubType(targetClass, source);
+        }
+        return (T) convert(source, findTarget(source, realTarget));
     }
 
     @Override
