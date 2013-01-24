@@ -171,6 +171,18 @@ public class JTransfoImpl implements JTransfo {
     }
 
     @Override
+    public <T> List<T> convertList(List<?> source, Class<T> targetClass) {
+        if (null == source) {
+            return null;
+        }
+        List<T> result = new ArrayList<T>();
+        for (Object object : source) {
+            result.add(convertTo(object, targetClass));
+        }
+        return result;
+    }
+
+    @Override
     public <T> T findTarget(Object source, Class<T> targetClass) {
         if (null == source) {
             return null;

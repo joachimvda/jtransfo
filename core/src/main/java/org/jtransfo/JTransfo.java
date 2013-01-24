@@ -8,6 +8,8 @@
 
 package org.jtransfo;
 
+import java.util.List;
+
 /**
  * jTransfo main access point.
  */
@@ -50,6 +52,18 @@ public interface JTransfo {
      * @return domain object
      */
     <T> T convertTo(Object source, Class<T> targetClass);
+
+    /**
+     * Convert a list of object to the given type. Applies {@link #convertTo(Object, Class)} on each object.
+     * <p/>
+     * When the source is null, the result is also null.
+     *
+     * @param source source list of objects
+     * @param targetClass target class to convert each object to
+     * @param <T> type of object for target
+     * @return list of target objects
+     */
+    <T> List<T> convertList(List<?> source, Class<T> targetClass);
 
     /**
      * Get the base target (domain) object for the source (transfer) object.
