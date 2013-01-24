@@ -41,18 +41,18 @@ public class DateDateMidnightConverterTest {
 
     @Test
     public void testConvert() throws Exception {
-        assertThat(typeConverter.convert(null, DateMidnight.class)).isNull();
-        assertThat(typeConverter.convert(dm1.toDate(), DateMidnight.class)).isEqualTo(dm1);
-        assertThat(typeConverter.convert(dm2.toDate(), DateMidnight.class)).isEqualTo(dm2);
-        assertThat(typeConverter.convert(dm3.toDate(), DateMidnight.class)).isEqualTo(dm3);
-        assertThat(typeConverter.convert(dm3t.toDate(), DateMidnight.class)).isEqualTo(dm3);
+        assertThat(typeConverter.convert(null, null, null)).isNull();
+        assertThat(typeConverter.convert(dm1.toDate(), null, null)).isEqualTo(dm1);
+        assertThat(typeConverter.convert(dm2.toDate(), null, null)).isEqualTo(dm2);
+        assertThat(typeConverter.convert(dm3.toDate(), null, null)).isEqualTo(dm3);
+        assertThat(typeConverter.convert(dm3t.toDate(), null, null)).isEqualTo(dm3);
     }
 
     @Test
     public void testReverse() throws Exception {
-        assertThat(typeConverter.reverse(null, Date.class)).isNull();
-        assertThat(typeConverter.reverse(dm1, Date.class)).isEqualTo(dm1.toDate());
-        assertThat(typeConverter.reverse(dm2, Date.class)).isEqualTo(dm2.toDate());
-        assertThat(typeConverter.reverse(dm3, Date.class)).isEqualTo(dm3.toDate());
+        assertThat(typeConverter.reverse(null, null, null)).isNull();
+        assertThat(typeConverter.reverse(dm1, null, null)).isEqualTo(dm1.toDate());
+        assertThat(typeConverter.reverse(dm2, null, null)).isEqualTo(dm2.toDate());
+        assertThat(typeConverter.reverse(dm3, null, null)).isEqualTo(dm3.toDate());
     }
 }

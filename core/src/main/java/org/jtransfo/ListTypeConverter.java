@@ -24,8 +24,7 @@ public class ListTypeConverter extends AbstractListTypeConverter {
     }
 
     @Override
-    public Object doConvertOne(JTransfo jTransfo, Object toObject, Class<?> domainObjectType)
-            throws JTransfoException {
+    public Object doConvertOne(JTransfo jTransfo, Object toObject, Class<?> domainObjectType) throws JTransfoException {
         return jTransfo.convert(toObject);
     }
 }

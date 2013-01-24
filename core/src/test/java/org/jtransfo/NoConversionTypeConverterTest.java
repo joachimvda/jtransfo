@@ -8,8 +8,11 @@
 
 package org.jtransfo;
 
+import org.jtransfo.internal.SyntheticField;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import static org.fest.assertions.Assertions.assertThat;
 
@@ -17,8 +20,13 @@ public class NoConversionTypeConverterTest {
 
     private TypeConverter<Object, Object> typeConverter;
 
+    @Mock
+    private SyntheticField field;
+
     @Before
     public void setup() {
+        MockitoAnnotations.initMocks(this);
+
         typeConverter = new NoConversionTypeConverter();
     }
 
@@ -31,12 +39,12 @@ public class NoConversionTypeConverterTest {
     @Test
     public void testConvert() throws Exception {
         Object obj = new Object();
-        assertThat(typeConverter.convert(obj, Object.class)).isEqualTo(obj);
+        assertThat(typeConverter.convert(obj, field, null)).isEqualTo(obj);
     }
 
     @Test
     public void testReverse() throws Exception {
         Object obj = new Object();
-        assertThat(typeConverter.reverse(obj, Object.class)).isEqualTo(obj);
+        assertThat(typeConverter.reverse(obj, field, null)).isEqualTo(obj);
     }
 }

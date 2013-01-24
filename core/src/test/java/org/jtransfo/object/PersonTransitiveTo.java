@@ -11,8 +11,6 @@ package org.jtransfo.object;
 import org.jtransfo.DomainClass;
 import org.jtransfo.MappedBy;
 
-import java.util.Date;
-
 /**
  * Person transfer object.
  */

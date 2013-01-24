@@ -11,6 +11,7 @@ package org.jtransfo.jodatime;
 import org.joda.time.DateTime;
 import org.jtransfo.JTransfoException;
 import org.jtransfo.TypeConverter;
+import org.jtransfo.internal.SyntheticField;
 
 import java.util.Date;
 
@@ -25,7 +26,7 @@ public class DateDateTimeConverter implements TypeConverter<Date, DateTime> {
     }
 
     @Override
-    public DateTime convert(Date object, Class<DateTime> domainType) throws JTransfoException {
+    public DateTime convert(Date object, SyntheticField domainField, Object domainObject) throws JTransfoException {
         if (null == object) {
             return null;
         }
@@ -33,7 +34,7 @@ public class DateDateTimeConverter implements TypeConverter<Date, DateTime> {
     }
 
     @Override
-    public Date reverse(DateTime object, Class<Date> toType) throws JTransfoException {
+    public Date reverse(DateTime object, SyntheticField toField, Object toObject) throws JTransfoException {
         if (null == object) {
             return null;
         }

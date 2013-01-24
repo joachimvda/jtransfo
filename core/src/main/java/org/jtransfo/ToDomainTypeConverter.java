@@ -8,6 +8,8 @@
 
 package org.jtransfo;
 
+import org.jtransfo.internal.SyntheticField;
+
 /**
  * Recursively use jTransfo to convert fields which are themselves a transfer object.
  */
@@ -23,7 +25,7 @@ public class ToDomainTypeConverter extends AbstractToDomainTypeConverter {
     }
 
     @Override
-    public Object doConvert(JTransfo jTransfo, Object toObject, Class<Object> domainType) throws JTransfoException {
+    public Object doConvert(JTransfo jTransfo, Object toObject, SyntheticField domainField) throws JTransfoException {
         return jTransfo.convert(toObject);
     }
 }

@@ -10,7 +10,6 @@ package org.jtransfo.object;
 
 import org.jtransfo.DomainClass;
 import org.jtransfo.MappedBy;
-import org.jtransfo.NotMapped;
 
 import java.util.Date;
 

@@ -79,9 +79,10 @@ public class ConverterHelper {
                     typeConverter = getDefaultTypeConverter(field.getType(),
                             domainField[domainField.length - 1].getType());
                 }
-                converter.getToTo().add(new ToToConverter(field, domainField, typeConverter));
+                SyntheticField sField = new SimpleSyntheticField(field);
+                converter.getToTo().add(new ToToConverter(sField, domainField, typeConverter));
                 if (null == mappedBy || !mappedBy.readOnly()) {
-                    converter.getToDomain().add(new ToDomainConverter(field, domainField, typeConverter));
+                    converter.getToDomain().add(new ToDomainConverter(sField, domainField, typeConverter));
                 }
             }
         }
@@ -170,7 +171,7 @@ public class ConverterHelper {
             TypeConverter typeConverter = typeConverterInstances.get(typeConverterClass);
             if (null == typeConverter) {
                 try {
-                    typeConverter = reflectionHelper.<TypeConverter>newInstance(typeConverterClass);
+                    typeConverter = reflectionHelper.newInstance(typeConverterClass);
                     typeConverterInstances.put(typeConverterClass, typeConverter);
                 } catch (ClassNotFoundException cnfe) {
                     throw new JTransfoException(DECLARED_TYPE_CONVERTER_CLASS + typeConverterClass +

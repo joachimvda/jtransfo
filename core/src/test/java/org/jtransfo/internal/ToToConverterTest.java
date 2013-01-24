@@ -45,9 +45,11 @@ public class ToToConverterTest {
         reflectionHelper.makeAccessible(c);
         reflectionHelper.makeAccessible(i);
 
-        toToConverter = new ToToConverter(a, new SyntheticField[]{ sc }, new NoConversionTypeConverter());
-        toToConverterAccess = new ToToConverter(b, new SyntheticField[]{ sc }, new NoConversionTypeConverter());
-        toToConverterArgument = new ToToConverter(i, new SyntheticField[]{ sc }, new NoConversionTypeConverter());
+        toToConverter = new ToToConverter(new SimpleSyntheticField(a),
+                new SyntheticField[]{ sc }, new NoConversionTypeConverter());
+        toToConverterAccess = new ToToConverter(new SimpleSyntheticField(b), new SyntheticField[]{ sc }, new NoConversionTypeConverter());
+        toToConverterArgument = new ToToConverter(new SimpleSyntheticField(i),
+                new SyntheticField[]{ sc }, new NoConversionTypeConverter());
     }
 
     @Test

@@ -39,17 +39,17 @@ public class DateDateTimeConverterTest {
 
     @Test
     public void testConvert() throws Exception {
-        assertThat(typeConverter.convert(null, DateTime.class)).isNull();
-        assertThat(typeConverter.convert(dt1.toDate(), DateTime.class)).isEqualTo(dt1);
-        assertThat(typeConverter.convert(dt2.toDate(), DateTime.class)).isEqualTo(dt2);
-        assertThat(typeConverter.convert(dt3.toDate(), DateTime.class)).isEqualTo(dt3);
+        assertThat(typeConverter.convert(null, null, null)).isNull();
+        assertThat(typeConverter.convert(dt1.toDate(), null, null)).isEqualTo(dt1);
+        assertThat(typeConverter.convert(dt2.toDate(), null, null)).isEqualTo(dt2);
+        assertThat(typeConverter.convert(dt3.toDate(), null, null)).isEqualTo(dt3);
     }
 
     @Test
     public void testReverse() throws Exception {
-        assertThat(typeConverter.reverse(null, Date.class)).isNull();
-        assertThat(typeConverter.reverse(dt1, Date.class)).isEqualTo(dt1.toDate());
-        assertThat(typeConverter.reverse(dt2, Date.class)).isEqualTo(dt2.toDate());
-        assertThat(typeConverter.reverse(dt3, Date.class)).isEqualTo(dt3.toDate());
+        assertThat(typeConverter.reverse(null, null, null)).isNull();
+        assertThat(typeConverter.reverse(dt1, null, null)).isEqualTo(dt1.toDate());
+        assertThat(typeConverter.reverse(dt2, null, null)).isEqualTo(dt2.toDate());
+        assertThat(typeConverter.reverse(dt3, null, null)).isEqualTo(dt3.toDate());
     }
 }

@@ -8,6 +8,8 @@
 
 package org.jtransfo;
 
+import org.jtransfo.internal.SyntheticField;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +22,7 @@ public abstract class AbstractListTypeConverter implements TypeConverter<List, L
     private Class<?> toType;
     private JTransfo jTransfo;
     private boolean keepNullList;
+    private boolean alwaysNewList;
 
     /**
      * Construct type converter for converting a list, assign given name and use given transfer object type.
@@ -60,11 +63,11 @@ public abstract class AbstractListTypeConverter implements TypeConverter<List, L
             throws JTransfoException;
 
     @Override
-    public List convert(List toObjects, Class<List> domainFieldType) throws JTransfoException {
+    public List convert(List toObjects, SyntheticField domainField, Object domainObject) throws JTransfoException {
         if (null == toObjects) {
             return getNullList();
         }
-        List<Object> res = new ArrayList<Object>();
+        List<Object> res = newList(domainField, domainObject);
         for (Object to : toObjects) {
             res.add(doConvertOne(jTransfo, to, jTransfo.getDomainClass(to.getClass())));
         }
@@ -72,16 +75,34 @@ public abstract class AbstractListTypeConverter implements TypeConverter<List, L
     }
 
     @Override
-    public List reverse(List domainObjects, Class<List> toFieldType) throws JTransfoException {
+    public List reverse(List domainObjects, SyntheticField toField, Object toObject) throws JTransfoException {
         if (null == domainObjects) {
             return getNullList();
         }
-        List<Object> res = new ArrayList<Object>();
+        List<Object> res = newList(toField, toObject);
         for (Object domain : domainObjects) {
             res.add(jTransfo.convertTo(domain, jTransfo.getToSubType(toType, domain)));
         }
         return res;
     }
+
+    private List<Object> newList(SyntheticField targetField, Object targetObject) {
+        List<Object> res = null;
+        if (!alwaysNewList && null != targetObject) {
+            try {
+                res = (List<Object>) targetField.get(targetObject);
+            } catch (Exception exception) {
+                res = null; // avoid problems in case of exception
+            }
+        }
+        if (null != res) {
+            res.clear();
+        } else {
+            res = new ArrayList<Object>();
+        }
+        return res;
+    }
+
 
     private List getNullList() {
         return keepNullList ? null : new ArrayList<Object>();
@@ -94,5 +115,14 @@ public abstract class AbstractListTypeConverter implements TypeConverter<List, L
      */
     public void setKeepNullList(boolean keepNullList) {
         this.keepNullList = keepNullList;
+    }
+
+    /**
+     * Set whether a new list should be used to as container for the values. When false the list is reused if not null.
+     *
+     * @param alwaysNewList should null be kept as value or replaced by an empty list.
+     */
+    public void setAlwaysNewList(boolean alwaysNewList) {
+        this.alwaysNewList = alwaysNewList;
     }
 }

@@ -1,5 +1,6 @@
 package org.jtransfo;
 
+import org.jtransfo.internal.SyntheticField;
 import org.jtransfo.object.AddressDomain;
 import org.jtransfo.object.AddressTo;
 import org.junit.Before;
@@ -28,6 +29,9 @@ public class ReadOnlyDomainListTypeConverterTest {
     @Mock
     private JTransfo jTransfo;
 
+    @Mock
+    private SyntheticField listField;
+
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
@@ -38,6 +42,8 @@ public class ReadOnlyDomainListTypeConverterTest {
         when(jTransfo.getToSubType(eq(AddressTo.class), anyObject())).thenReturn((Class) AddressTo.class);
 
         listTypeConverter.setJTransfo(jTransfo);
+
+        when(listField.getType()).thenReturn((Class) List.class);
     }
 
     @Test
@@ -60,7 +66,7 @@ public class ReadOnlyDomainListTypeConverterTest {
         addresses.add(to1);
         addresses.add(to2);
 
-        List<AddressDomain> res = listTypeConverter.convert(addresses, List.class);
+        List<AddressDomain> res = listTypeConverter.convert(addresses, listField, null);
 
         assertThat(res).isNotNull();
         assertThat(res).hasSize(2);
@@ -70,9 +76,9 @@ public class ReadOnlyDomainListTypeConverterTest {
 
     @Test
     public void testConvertNull() throws Exception {
-        assertThat(listTypeConverter.convert(null, List.class)).isEmpty();
+        assertThat(listTypeConverter.convert(null, listField, null)).isEmpty();
         listTypeConverter.setKeepNullList(true);
-        assertThat(listTypeConverter.convert(null, List.class)).isNull();
+        assertThat(listTypeConverter.convert(null, listField, null)).isNull();
     }
 
     @Test
@@ -85,7 +91,7 @@ public class ReadOnlyDomainListTypeConverterTest {
         addresses.add(ad1);
         addresses.add(ad2);
 
-        List<AddressTo> res = listTypeConverter.reverse(addresses, List.class);
+        List<AddressTo> res = listTypeConverter.reverse(addresses, listField, null);
 
         assertThat(res).isNotNull();
         assertThat(res).hasSize(2);
@@ -96,8 +102,8 @@ public class ReadOnlyDomainListTypeConverterTest {
 
     @Test
     public void testReverseNull() throws Exception {
-        assertThat(listTypeConverter.reverse(null, List.class)).isEmpty();
+        assertThat(listTypeConverter.reverse(null, listField, null)).isEmpty();
         listTypeConverter.setKeepNullList(true);
-        assertThat(listTypeConverter.reverse(null, List.class)).isNull();
+        assertThat(listTypeConverter.reverse(null, listField, null)).isNull();
     }
 }

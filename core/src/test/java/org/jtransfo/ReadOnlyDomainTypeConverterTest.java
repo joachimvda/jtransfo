@@ -1,6 +1,7 @@
 package org.jtransfo;
 
 import org.jtransfo.internal.ReflectionHelper;
+import org.jtransfo.internal.SyntheticField;
 import org.jtransfo.object.SimpleBaseDomain;
 import org.jtransfo.object.SimpleBaseTo;
 import org.jtransfo.object.SimpleExtendedDomain;
@@ -16,6 +17,8 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -33,6 +36,12 @@ public class ReadOnlyDomainTypeConverterTest {
     @Mock
     private ReflectionHelper reflectionHelper;
 
+    @Mock
+    private SyntheticField toField;
+
+    @Mock
+    private SyntheticField domainField;
+
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
@@ -47,6 +56,10 @@ public class ReadOnlyDomainTypeConverterTest {
         when(jTransfo.isToClass(SimpleExtendedTo.class)).thenReturn(true);
         when(jTransfo.getDomainClass(SimpleBaseTo.class)).thenReturn((Class) SimpleBaseDomain.class);
         when(jTransfo.getDomainClass(SimpleExtendedTo.class)).thenReturn((Class) SimpleExtendedDomain.class);
+        when(jTransfo.getToSubType(eq(SimpleBaseTo.class), anyObject())).thenReturn((Class) SimpleBaseTo.class);
+        when(domainField.getType()).thenReturn((Class) SimpleBaseDomain.class);
+        when(toField.getType()).thenReturn((Class) SimpleBaseTo.class);
+
     }
 
     @Test
@@ -62,18 +75,18 @@ public class ReadOnlyDomainTypeConverterTest {
     @Test
     public void testConvert() throws Exception {
         SimpleBaseTo source = new SimpleBaseTo();
-        typeConverter.convert(source, SimpleBaseDomain.class);
+        typeConverter.convert(source, domainField, null);
 
         verify(jTransfo).findTarget(source, SimpleBaseDomain.class);
         verify(jTransfo).getDomainClass(SimpleBaseTo.class);
 
-        assertThat(typeConverter.convert(source, SimpleBaseDomain.class)).isNull();
+        assertThat(typeConverter.convert(source, domainField, null)).isNull();
     }
 
 
     @Test
     public void testConvertNull() throws Exception {
-        assertThat(typeConverter.convert(null, SimpleBaseDomain.class)).isNull();
+        assertThat(typeConverter.convert(null, domainField, null)).isNull();
     }
 
     @Test
@@ -81,38 +94,36 @@ public class ReadOnlyDomainTypeConverterTest {
         SimpleBaseDomain source = new SimpleBaseDomain();
         SimpleBaseTo target = new SimpleBaseTo();
         when(reflectionHelper.newInstance(any(Class.class))).thenReturn(target);
-        typeConverter.reverse(source, SimpleBaseTo.class);
+        typeConverter.reverse(source, toField, null);
 
         verify(jTransfo).convert(source, target);
     }
 
     @Test
     public void testReverseNullHandling() throws Exception {
-        assertThat(typeConverter.reverse(null, SimpleBaseTo.class)).isNull();
+        assertThat(typeConverter.reverse(null, toField, null)).isNull();
     }
 
     @Test
     public void testReverseInstantiationException() throws Exception {
         SimpleBaseDomain source = new SimpleBaseDomain();
-        SimpleBaseTo target = new SimpleBaseTo();
         when(reflectionHelper.newInstance(any(Class.class))).thenThrow(new InstantiationException());
 
         exception.expect(JTransfoException.class);
         exception.expectMessage("Cannot create instance of transfer object class org.jtransfo.object.SimpleBaseTo.");
 
-        typeConverter.reverse(source, SimpleBaseTo.class);
+        typeConverter.reverse(source, toField, null);
     }
 
     @Test
     public void testReverseIllegalAccessException() throws Exception {
         SimpleBaseDomain source = new SimpleBaseDomain();
-        SimpleBaseTo target = new SimpleBaseTo();
         when(reflectionHelper.newInstance(any(Class.class))).thenThrow(new IllegalAccessException());
 
         exception.expect(JTransfoException.class);
         exception.expectMessage("Cannot create instance of transfer object class org.jtransfo.object.SimpleBaseTo.");
 
-        typeConverter.reverse(source, SimpleBaseTo.class);
+        typeConverter.reverse(source, toField, null);
     }
 
     @Test

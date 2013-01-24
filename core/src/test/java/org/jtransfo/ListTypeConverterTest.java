@@ -1,5 +1,6 @@
 package org.jtransfo;
 
+import org.jtransfo.internal.SyntheticField;
 import org.jtransfo.object.AddressDomain;
 import org.jtransfo.object.AddressTo;
 import org.junit.Before;
@@ -27,6 +28,9 @@ public class ListTypeConverterTest {
 
     @Mock
     private JTransfo jTransfo;
+
+    @Mock
+    private SyntheticField field;
 
     @Before
     public void setUp() throws Exception {
@@ -60,7 +64,7 @@ public class ListTypeConverterTest {
         addresses.add(to1);
         addresses.add(to2);
 
-        List<AddressDomain> res = listTypeConverter.convert(addresses, List.class);
+        List<AddressDomain> res = listTypeConverter.convert(addresses, field, null);
 
         assertThat(res).isNotNull();
         assertThat(res).hasSize(2);
@@ -70,9 +74,9 @@ public class ListTypeConverterTest {
 
     @Test
     public void testConvertNull() throws Exception {
-        assertThat(listTypeConverter.convert(null, List.class)).isEmpty();
+        assertThat(listTypeConverter.convert(null, field, null)).isEmpty();
         listTypeConverter.setKeepNullList(true);
-        assertThat(listTypeConverter.convert(null, List.class)).isNull();
+        assertThat(listTypeConverter.convert(null, field, null)).isNull();
     }
 
     @Test
@@ -85,7 +89,7 @@ public class ListTypeConverterTest {
         addresses.add(ad1);
         addresses.add(ad2);
 
-        List<AddressTo> res = listTypeConverter.reverse(addresses, List.class);
+        List<AddressTo> res = listTypeConverter.reverse(addresses, field, null);
 
         assertThat(res).isNotNull();
         assertThat(res).hasSize(2);
@@ -96,8 +100,8 @@ public class ListTypeConverterTest {
 
     @Test
     public void testReverseNull() throws Exception {
-        assertThat(listTypeConverter.reverse(null, List.class)).isEmpty();
+        assertThat(listTypeConverter.reverse(null, field, null)).isEmpty();
         listTypeConverter.setKeepNullList(true);
-        assertThat(listTypeConverter.reverse(null, List.class)).isNull();
+        assertThat(listTypeConverter.reverse(null, field, null)).isNull();
     }
 }

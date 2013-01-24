@@ -17,8 +17,6 @@ import org.junit.rules.ExpectedException;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.lang.reflect.Field;
-
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 

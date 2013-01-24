@@ -9,6 +9,7 @@
 package org.jtransfo;
 
 import org.jtransfo.internal.ReflectionHelper;
+import org.jtransfo.internal.SyntheticField;
 
 /**
  * Recursively use jTransfo to convert fields which are themselves a transfer object.
@@ -36,30 +37,30 @@ public abstract class AbstractToDomainTypeConverter implements TypeConverter<Obj
      *
      * @param jTransfo jTransfo instance in use
      * @param toObject transfer object
-     * @param domainType domain object type
+     * @param domainField domain object field
      * @return domain object
      * @throws JTransfoException oops, cannot convert
      */
-    public abstract Object doConvert(JTransfo jTransfo, Object toObject, Class<Object> domainType)
+    public abstract Object doConvert(JTransfo jTransfo, Object toObject, SyntheticField domainField)
             throws JTransfoException;
 
     @Override
-    public Object convert(Object toObject, Class<Object> domainType) throws JTransfoException {
-        return doConvert(jTransfo, toObject, domainType);
+    public Object convert(Object toObject, SyntheticField domainField, Object domainObject) throws JTransfoException {
+        return doConvert(jTransfo, toObject, domainField);
     }
 
     @Override
-    public Object reverse(Object domainObject, Class<Object> toType) throws JTransfoException {
+    public Object reverse(Object domainObject, SyntheticField toField, Object toObject) throws JTransfoException {
+        if (null == domainObject) {
+            return null;
+        }
+        Class<?> realToType = jTransfo.getToSubType(toField.getType(), domainObject); // type cfr @DomainClassDelegate
         try {
-            if (null == domainObject) {
-                return null;
-            }
-            Class<?> realToType = jTransfo.getToSubType(toType, domainObject); // to type based on @DomainClassDelegate
             return jTransfo.convert(domainObject, reflectionHelper.newInstance(realToType));
         } catch (InstantiationException ie) {
-            throw new JTransfoException(CANNOT_CREATE_INSTANCE_OF + toType.getName() + ".", ie);
+            throw new JTransfoException(CANNOT_CREATE_INSTANCE_OF + realToType.getName() + ".", ie);
         } catch (IllegalAccessException ie) {
-            throw new JTransfoException(CANNOT_CREATE_INSTANCE_OF + toType.getName() + ".", ie);
+            throw new JTransfoException(CANNOT_CREATE_INSTANCE_OF + realToType.getName() + ".", ie);
         }
     }
 }

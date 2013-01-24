@@ -11,14 +11,12 @@ package org.jtransfo.internal;
 import org.jtransfo.JTransfoException;
 import org.jtransfo.TypeConverter;
 
-import java.lang.reflect.Field;
-
 /**
  * Converter class to copy one field to the transfer object class.
  */
 public final class ToToConverter extends AbstractConverter {
 
-    private Field toField;
+    private SyntheticField toField;
     private SyntheticField[] domainFields;
     private TypeConverter typeConverter;
 
@@ -29,7 +27,7 @@ public final class ToToConverter extends AbstractConverter {
      * @param domainFields domain object field
      * @param typeConverter type converter
      */
-    public ToToConverter(Field toField, SyntheticField[] domainFields, TypeConverter typeConverter) {
+    public ToToConverter(SyntheticField toField, SyntheticField[] domainFields, TypeConverter typeConverter) {
         this.toField = toField;
         this.domainFields = domainFields;
         this.typeConverter = typeConverter;
@@ -44,7 +42,7 @@ public final class ToToConverter extends AbstractConverter {
                 value = field.get(value);
             }
         }
-        Object converted = typeConverter.reverse(value, toField.getType());
+        Object converted = typeConverter.reverse(value, toField, target);
         toField.set(target, converted);
     }
 

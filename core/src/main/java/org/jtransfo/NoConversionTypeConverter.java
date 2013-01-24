@@ -8,6 +8,8 @@
 
 package org.jtransfo;
 
+import org.jtransfo.internal.SyntheticField;
+
 /**
  * Fallback type converter which does no conversion at all.
  */
@@ -19,12 +21,12 @@ public class NoConversionTypeConverter implements TypeConverter<Object, Object> 
     }
 
     @Override
-    public Object convert(Object object, Class<Object> domainClass) throws JTransfoException {
+    public Object convert(Object object, SyntheticField domainField, Object domainObject) throws JTransfoException {
         return object;
     }
 
     @Override
-    public Object reverse(Object object, Class<Object> toClass) throws JTransfoException {
+    public Object reverse(Object object, SyntheticField toField, Object toObject) throws JTransfoException {
         return object;
     }
 }

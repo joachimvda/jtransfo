@@ -311,12 +311,12 @@ public class ConverterHelperTest {
         }
 
         @Override
-        public Object convert(Object object, Class<Object> domainClass) throws JTransfoException {
+        public Object convert(Object object, SyntheticField domainField, Object domainObject) throws JTransfoException {
             return null;
         }
 
         @Override
-        public Object reverse(Object object, Class<Object> toClass) throws JTransfoException {
+        public Object reverse(Object object, SyntheticField toField, Object toObject) throws JTransfoException {
             return null;
         }
     }

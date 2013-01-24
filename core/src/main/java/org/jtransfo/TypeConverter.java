@@ -8,6 +8,8 @@
 
 package org.jtransfo;
 
+import org.jtransfo.internal.SyntheticField;
+
 /**
  * Do type conversion to allow object to be stored using a different type in transfer and domain objects.
  *
@@ -29,20 +31,22 @@ public interface TypeConverter<TO_TYPE, DOMAIN_TYPE> {
      * Convert a transfer object field value to the value for the domain object.
      *
      * @param object object to convert
-     * @param domainType target domain object type
+     * @param domainField target domain field
+     * @param domainObject target domain object
      * @return converted object
      * @throws JTransfoException problem during type conversion
      */
-    DOMAIN_TYPE convert(TO_TYPE object, Class<DOMAIN_TYPE> domainType) throws JTransfoException;
+    DOMAIN_TYPE convert(TO_TYPE object, SyntheticField domainField, Object domainObject) throws JTransfoException;
 
     /**
      * Convert a domain object field value to the value for the transfer object.
      *
      * @param object object to convert
-     * @param toType target transfer object type
+     * @param toField target transfer object field
+     * @param toObject target transfer object
      * @return converted object
      * @throws JTransfoException problem during type conversion
      */
-    TO_TYPE reverse(DOMAIN_TYPE object, Class<TO_TYPE> toType) throws JTransfoException;
+    TO_TYPE reverse(DOMAIN_TYPE object, SyntheticField toField, Object toObject) throws JTransfoException;
 
 }

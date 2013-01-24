@@ -9,7 +9,6 @@
 package org.jtransfo.internal;
 
 import org.jtransfo.JTransfoException;
-import org.jtransfo.JTransfoImpl;
 import org.jtransfo.object.SimpleClassDomain;
 import org.jtransfo.object.SimpleClassNameTo;
 import org.junit.Before;

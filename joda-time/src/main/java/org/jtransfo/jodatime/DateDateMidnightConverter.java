@@ -11,6 +11,7 @@ package org.jtransfo.jodatime;
 import org.joda.time.DateMidnight;
 import org.jtransfo.JTransfoException;
 import org.jtransfo.TypeConverter;
+import org.jtransfo.internal.SyntheticField;
 
 import java.util.Date;
 
@@ -25,7 +26,7 @@ public class DateDateMidnightConverter implements TypeConverter<Date, DateMidnig
     }
 
     @Override
-    public DateMidnight convert(Date object, Class<DateMidnight> domainType) throws JTransfoException {
+    public DateMidnight convert(Date object, SyntheticField domainField, Object domainObject) throws JTransfoException {
         if (null == object) {
             return null;
         }
@@ -33,7 +34,7 @@ public class DateDateMidnightConverter implements TypeConverter<Date, DateMidnig
     }
 
     @Override
-    public Date reverse(DateMidnight object, Class<Date> toType) throws JTransfoException {
+    public Date reverse(DateMidnight object, SyntheticField toField, Object toObject) throws JTransfoException {
         if (null == object) {
             return null;
         }
