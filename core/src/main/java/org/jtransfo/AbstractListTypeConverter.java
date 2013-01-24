@@ -11,6 +11,7 @@ package org.jtransfo;
 import org.jtransfo.internal.SyntheticField;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -23,6 +24,7 @@ public abstract class AbstractListTypeConverter implements TypeConverter<List, L
     private JTransfo jTransfo;
     private boolean keepNullList;
     private boolean alwaysNewList;
+    private boolean sortList;
 
     /**
      * Construct type converter for converting a list, assign given name and use given transfer object type.
@@ -83,7 +85,7 @@ public abstract class AbstractListTypeConverter implements TypeConverter<List, L
         for (Object domain : domainObjects) {
             res.add(jTransfo.convertTo(domain, jTransfo.getToSubType(toType, domain)));
         }
-        return res;
+        return sort(res);
     }
 
     private List<Object> newList(SyntheticField targetField, Object targetObject) {
@@ -100,9 +102,17 @@ public abstract class AbstractListTypeConverter implements TypeConverter<List, L
         } else {
             res = new ArrayList<Object>();
         }
-        return res;
+        return sort(res);
     }
 
+    private List<Object> sort(List<Object> list) {
+        if (sortList) {
+            if (null != list && list.size() > 1 && list.get(0) instanceof Comparable) {
+                Collections.sort((List) list);
+            }
+        }
+        return list;
+    }
 
     private List getNullList() {
         return keepNullList ? null : new ArrayList<Object>();
@@ -125,4 +135,14 @@ public abstract class AbstractListTypeConverter implements TypeConverter<List, L
     public void setAlwaysNewList(boolean alwaysNewList) {
         this.alwaysNewList = alwaysNewList;
     }
+
+    /**
+     * Should the list be sorted if the first member is Comparable?
+     *
+     * @param sortList true when list should be sorted
+     */
+    public void setSortList(boolean sortList) {
+        this.sortList = sortList;
+    }
+
 }
