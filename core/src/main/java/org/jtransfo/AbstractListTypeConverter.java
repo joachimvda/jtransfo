@@ -73,7 +73,7 @@ public abstract class AbstractListTypeConverter implements TypeConverter<List, L
         for (Object to : toObjects) {
             res.add(doConvertOne(jTransfo, to, jTransfo.getDomainClass(to.getClass())));
         }
-        return res;
+        return sort(res);
     }
 
     @Override
@@ -94,7 +94,7 @@ public abstract class AbstractListTypeConverter implements TypeConverter<List, L
             try {
                 res = (List<Object>) targetField.get(targetObject);
             } catch (Exception exception) {
-                res = null; // avoid problems in case of exception
+                res = null; // avoid problems in case of exception @todo should be logged
             }
         }
         if (null != res) {
@@ -128,7 +128,7 @@ public abstract class AbstractListTypeConverter implements TypeConverter<List, L
     }
 
     /**
-     * Set whether a new list should be used to as container for the values. When false the list is reused if not null.
+     * Set whether a new list should be used as container for the values. When false the list is reused if not null.
      *
      * @param alwaysNewList should null be kept as value or replaced by an empty list.
      */
