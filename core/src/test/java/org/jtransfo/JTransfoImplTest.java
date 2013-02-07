@@ -23,6 +23,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -204,6 +205,24 @@ public class JTransfoImplTest {
         assertThat(jTransfo.isToClass(SimpleClassNameTo.class)).isTrue();
         assertThat(jTransfo.isToClass(SimpleClassTypeTo.class)).isTrue();
         assertThat(jTransfo.isToClass(SimpleClassDomain.class)).isFalse();
+    }
+
+    @Test
+    public void testConvertList() throws Exception {
+        when(reflectionHelper.newInstance(SimpleClassNameTo.class)).thenReturn(new SimpleClassNameTo());
+        List<SimpleClassDomain> list = new ArrayList<SimpleClassDomain>();
+        list.add(new SimpleClassDomain());
+        list.add(new SimpleClassDomain());
+
+        List<SimpleClassNameTo> res = jTransfo.convertList(list, SimpleClassNameTo.class);
+
+        assertThat(res).isNotNull().isNotEmpty().hasSize(2);
+        assertThat(res.get(0)).isInstanceOf(SimpleClassNameTo.class);
+    }
+
+    @Test
+    public void testConvertListNull() {
+        assertThat(jTransfo.convertList(null, SimpleClassNameTo.class)).isNull();
     }
 
     private interface NeedsJTransfoTypeConverter extends TypeConverter, NeedsJTransfo {
