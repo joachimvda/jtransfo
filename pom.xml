@@ -260,15 +260,4 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
-    <distributionManagement>
-        <repository>
-            <id>awv-releases</id>
-            <url>http://dev-colab.awv.vlaanderen.be/nexus/content/repositories/releases</url>
-        </repository>
-        <snapshotRepository>
-            <id>awv-snapshots</id>
-            <url>http://dev-colab.awv.vlaanderen.be/nexus/content/repositories/snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
-
 </project>
