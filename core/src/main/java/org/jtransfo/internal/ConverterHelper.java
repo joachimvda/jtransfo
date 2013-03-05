@@ -9,6 +9,8 @@
 package org.jtransfo.internal;
 
 import org.jtransfo.JTransfoException;
+import org.jtransfo.MapOnlies;
+import org.jtransfo.MapOnly;
 import org.jtransfo.MappedBy;
 import org.jtransfo.Named;
 import org.jtransfo.NoConversionTypeConverter;
@@ -18,6 +20,7 @@ import org.jtransfo.TypeConverter;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -74,20 +77,60 @@ public class ConverterHelper {
                                     ". The field " + domainFieldName + " in class " + domainClass.getName() + " " +
                                     withPath(domainFieldPath) + "cannot be found.", jte);
                 }
-                TypeConverter typeConverter = getDeclaredTypeConverter(mappedBy);
-                if (null == typeConverter) {
-                    typeConverter = getDefaultTypeConverter(field.getType(),
-                            domainField[domainField.length - 1].getType());
-                }
-                SyntheticField sField = new SimpleSyntheticField(field);
-                converter.getToTo().add(new ToToConverter(sField, domainField, typeConverter));
-                if (null == mappedBy || !mappedBy.readOnly()) {
-                    converter.getToDomain().add(new ToDomainConverter(sField, domainField, typeConverter));
-                }
+
+                buildConverters(field, domainField, converter, mappedBy);
             }
         }
 
         return converter;
+    }
+
+    private void buildConverters(Field field, SyntheticField[] domainField, ToConverter converter, MappedBy mappedBy) {
+        TypeConverter typeConverter = getDeclaredTypeConverter(mappedBy);
+        if (null == typeConverter) {
+            typeConverter = getDefaultTypeConverter(field.getType(),
+                    domainField[domainField.length - 1].getType());
+        }
+        SyntheticField sField = new SimpleSyntheticField(field);
+        List<MapOnly> mapOnlies = getMapOnlies(field);
+        if (null == mapOnlies) {
+            converter.getToTo().add(new ToToConverter(sField, domainField, typeConverter));
+            if (null == mappedBy || !mappedBy.readOnly()) {
+                converter.getToDomain().add(new ToDomainConverter(sField, domainField, typeConverter));
+            }
+        } else {
+            TaggedConverter toTo = new TaggedConverter();
+            TaggedConverter toDomain = new TaggedConverter();
+            converter.getToTo().add(toTo);
+            converter.getToDomain().add(toDomain);
+
+            for (MapOnly mapOnly : mapOnlies) {
+                TypeConverter moTypeConverter = getDeclaredTypeConverter(mapOnly, typeConverter);
+                ToToConverter ttc = new ToToConverter(sField, domainField, moTypeConverter);
+                toTo.addConverters(mapOnly.value(), ttc);
+                if (!mapOnly.readOnly()) {
+                    ToDomainConverter tdc = new ToDomainConverter(sField, domainField, moTypeConverter);
+                    toDomain.addConverters(mapOnly.value(), tdc);
+                }
+            }
+            // for now, not mapped at all
+        }
+    }
+
+    private List<MapOnly> getMapOnlies(Field field) {
+        MapOnly mapOnly = field.getAnnotation(MapOnly.class);
+        MapOnlies mapOnlies = field.getAnnotation(MapOnlies.class);
+        if (null == mapOnly && null == mapOnlies) {
+            return null;
+        }
+        List<MapOnly> res = new ArrayList<MapOnly>();
+        if (null != mapOnly) {
+            res.add(mapOnly);
+        }
+        if (null != mapOnlies) {
+            Collections.addAll(res, mapOnlies.value());
+        }
+        return res;
     }
 
     /**
@@ -156,16 +199,14 @@ public class ConverterHelper {
     /**
      * Get the {@link TypeConverter} which was specified in the {@link MappedBy} annotation (if any).
      *
-     * @param mappedBy annotation
-     * @return declared type converter
+     * @param typeConverterClassName1 highest priority type converter name (from class in annotation)
+     * @param typeConverterClassName2  second highest priority type converter name (FQN)
+     * @return type converter with highest precedence
      */
-    protected TypeConverter getDeclaredTypeConverter(MappedBy mappedBy) {
-        if (null == mappedBy) {
-            return null;
-        }
-        String typeConverterClass = mappedBy.typeConverterClass().getName();
+    protected TypeConverter getDeclaredTypeConverter(String typeConverterClassName1, String typeConverterClassName2) {
+        String typeConverterClass = typeConverterClassName1;
         if (MappedBy.DefaultTypeConverter.class.getName().equals(typeConverterClass)) {
-            typeConverterClass = mappedBy.typeConverter();
+            typeConverterClass = typeConverterClassName2;
         }
         if (!MappedBy.DEFAULT_TYPE_CONVERTER.equals(typeConverterClass)) {
             TypeConverter typeConverter = typeConverterInstances.get(typeConverterClass);
@@ -190,6 +231,37 @@ public class ConverterHelper {
             return typeConverter;
         }
         return null;
+    }
+
+    /**
+     * Get declared type converter for a @MappedBy annotation.
+     *
+     * @param mappedBy MappedBy annotation
+     * @return type converter with highest precedence
+     */
+    protected TypeConverter getDeclaredTypeConverter(MappedBy mappedBy) {
+        if (null == mappedBy) {
+            return null;
+        }
+        return getDeclaredTypeConverter(mappedBy.typeConverterClass().getName(), mappedBy.typeConverter());
+    }
+
+    /**
+     * Determine type converter for a @MapOnly annotation (falling back to @MappedBy type converter.
+     *
+     * @param mapOnly MapOnly annotation
+     * @param fallback type converter from MappedBy annotation
+     * @return type converter with highest precedence
+     */
+    protected TypeConverter getDeclaredTypeConverter(MapOnly mapOnly, TypeConverter fallback) {
+        if (null != mapOnly) {
+            TypeConverter typeConverter = getDeclaredTypeConverter(
+                    mapOnly.typeConverterClass().getName(), mapOnly.typeConverter());
+            if (null != typeConverter) {
+                return typeConverter;
+            }
+        }
+        return fallback;
     }
 
     /**

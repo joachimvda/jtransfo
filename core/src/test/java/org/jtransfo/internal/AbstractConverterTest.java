@@ -69,7 +69,7 @@ public class AbstractConverterTest {
 
     private final class TestConverter extends AbstractConverter {
         @Override
-        public void doConvert(Object source, Object target)
+        public void doConvert(Object source, Object target, String... tags)
         throws JTransfoException, IllegalAccessException, IllegalArgumentException {
             switch (doConvertResult) {
                 case 0:

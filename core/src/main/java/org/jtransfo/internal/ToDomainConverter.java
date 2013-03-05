@@ -34,7 +34,7 @@ public final class ToDomainConverter extends AbstractConverter {
     }
 
     @Override
-    public void doConvert(Object source, Object firstTarget)
+    public void doConvert(Object source, Object firstTarget, String... tags)
             throws JTransfoException, IllegalAccessException, IllegalArgumentException {
         Object value = toField.get(source);
         Object target = firstTarget;

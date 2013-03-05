@@ -22,10 +22,12 @@ public interface JTransfo {
      *
      * @param source source object. Should not be null.
      * @param target target object. Should not be null.
+     * @param tags tags which indicate which fields can be converted based on {@link MapOnly} annotations.
+     *      Tags are processed from left to right.
      * @param <T> type of object for target
      * @return target object
      */
-    <T> T convert(Object source, T target);
+    <T> T convert(Object source, T target, String... tags);
 
     /**
      * Create a new domain object from the source transfer object.
@@ -48,22 +50,26 @@ public interface JTransfo {
      *
      * @param source source transfer object
      * @param targetClass target class to convert to
+     * @param tags tags which indicate which fields can be converted based on {@link MapOnly} annotations.
+     *      Tags are processed from left to right.
      * @param <T> type of object for target
      * @return domain object
      */
-    <T> T convertTo(Object source, Class<T> targetClass);
+    <T> T convertTo(Object source, Class<T> targetClass, String... tags);
 
     /**
-     * Convert a list of object to the given type. Applies {@link #convertTo(Object, Class)} on each object.
+     * Convert a list of object to the given type. Applies {@link #convertTo(Object, Class, String...)} on each object.
      * <p/>
      * When the source is null, the result is also null.
      *
      * @param source source list of objects
      * @param targetClass target class to convert each object to
+     * @param tags tags which indicate which fields can be converted based on {@link MapOnly} annotations.
+     *      Tags are processed from left to right.
      * @param <T> type of object for target
      * @return list of target objects
      */
-    <T> List<T> convertList(List<?> source, Class<T> targetClass);
+    <T> List<T> convertList(List<?> source, Class<T> targetClass, String... tags);
 
     /**
      * Get the base target (domain) object for the source (transfer) object.

@@ -21,11 +21,12 @@ public abstract class AbstractConverter implements Converter {
      *
      * @param source source object
      * @param target target object
+     * @param tags tags which indicate which fields can be converted based on {@link org.jtransfo.MapOnly} annotations
      * @throws JTransfoException oops
      * @throws IllegalAccessException oops
      * @throws IllegalArgumentException oops
      */
-    public abstract void doConvert(Object source, Object target)
+    public abstract void doConvert(Object source, Object target, String... tags)
             throws JTransfoException, IllegalAccessException, IllegalArgumentException;
 
     /**
@@ -43,9 +44,9 @@ public abstract class AbstractConverter implements Converter {
     public abstract String argumentExceptionMessage();
 
     @Override
-    public void convert(Object source, Object target) throws JTransfoException {
+    public void convert(Object source, Object target, String... tags) throws JTransfoException {
         try {
-            doConvert(source, target);
+            doConvert(source, target, tags);
         } catch (IllegalAccessException iae) {
             throw new JTransfoException(accessExceptionMessage(), iae);
         } catch (IllegalArgumentException iae) {

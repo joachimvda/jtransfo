@@ -34,7 +34,7 @@ public final class ToToConverter extends AbstractConverter {
     }
 
     @Override
-    public void doConvert(Object source, Object target)
+    public void doConvert(Object source, Object target, String... tags)
             throws JTransfoException, IllegalAccessException, IllegalArgumentException {
         Object value = source;
         for (SyntheticField field : domainFields) {

@@ -18,7 +18,8 @@ public interface Converter {
      *
      * @param source source to read from
      * @param target  target to write into
+     * @param tags tags which indicate which fields can be converted based on {@link MapOnly} annotations
      * @throws JTransfoException problem during conversion
      */
-    void convert(Object source, Object target) throws JTransfoException;
+    void convert(Object source, Object target, String... tags) throws JTransfoException;
 }

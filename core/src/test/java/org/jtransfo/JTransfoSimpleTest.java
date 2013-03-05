@@ -38,13 +38,13 @@ public class JTransfoSimpleTest {
                 ToConverter converter = new ToConverter();
                 converter.addToTo(new Converter() {
                     @Override
-                    public void convert(Object source, Object target) {
+                    public void convert(Object source, Object target, String... tags) {
                         ((SimpleClassNameTo) target).setBla(((SimpleClassDomain) source).getBla());
                     }
                 });
                 converter.addToDomain(new Converter() {
                     @Override
-                    public void convert(Object source, Object target) {
+                    public void convert(Object source, Object target, String... tags) {
                         ((SimpleClassDomain) target).setBla(((SimpleClassNameTo) source).getBla());
                     }
                 });

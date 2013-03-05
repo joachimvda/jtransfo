@@ -49,7 +49,7 @@ public class ToConverterTest {
 
     private class DummyConverter implements Converter {
         @Override
-        public void convert(Object source, Object target) {
+        public void convert(Object source, Object target, String... tags) {
             // nothing to do
         }
     }

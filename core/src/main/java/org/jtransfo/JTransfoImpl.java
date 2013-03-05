@@ -127,7 +127,7 @@ public class JTransfoImpl implements JTransfo {
     }
 
     @Override
-    public <T> T convert(Object source, T target) {
+    public <T> T convert(Object source, T target, String... tags) {
         if (null == source || null == target) {
             throw new JTransfoException("Source and target are required to be not-null.");
         }
@@ -143,7 +143,7 @@ public class JTransfoImpl implements JTransfo {
         List<Converter> converters = targetIsTo ? getToToConverters(target.getClass()) :
                 getToDomainConverters(source.getClass());
         for (Converter converter : converters) {
-            converter.convert(source, target);
+            converter.convert(source, target, tags);
         }
 
         return target;
@@ -159,7 +159,7 @@ public class JTransfoImpl implements JTransfo {
     }
 
     @Override
-    public <T> T convertTo(Object source, Class<T> targetClass) {
+    public <T> T convertTo(Object source, Class<T> targetClass, String... tags) {
         Class<T> realTarget = targetClass;
         if (null == source) {
             return null;
@@ -167,17 +167,17 @@ public class JTransfoImpl implements JTransfo {
         if (isToClass(targetClass)) {
             realTarget = (Class<T>) getToSubType(targetClass, source);
         }
-        return (T) convert(source, findTarget(source, realTarget));
+        return (T) convert(source, findTarget(source, realTarget), tags);
     }
 
     @Override
-    public <T> List<T> convertList(List<?> source, Class<T> targetClass) {
+    public <T> List<T> convertList(List<?> source, Class<T> targetClass, String... tags) {
         if (null == source) {
             return null;
         }
         List<T> result = new ArrayList<T>();
         for (Object object : source) {
-            result.add(convertTo(object, targetClass));
+            result.add(convertTo(object, targetClass, tags));
         }
         return result;
     }
