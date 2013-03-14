@@ -9,7 +9,6 @@
 package org.jtransfo.internal;
 
 import org.jtransfo.JTransfoException;
-import org.jtransfo.ListTypeConverter;
 import org.jtransfo.MapOnly;
 import org.jtransfo.MappedBy;
 import org.jtransfo.Named;
@@ -22,6 +21,7 @@ import org.jtransfo.object.PersonDomain;
 import org.jtransfo.object.PersonTransitiveTo;
 import org.jtransfo.object.SimpleExtendedDomain;
 import org.jtransfo.object.SimpleExtendedTo;
+import org.jtransfo.object.TaggedPersonTo;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -30,11 +30,13 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Matchers.any;
@@ -101,7 +103,7 @@ public class ConverterHelperTest {
         exception.expect(JTransfoException.class);
         exception.expectMessage("Cannot find getter getBla on class org.jtransfo.object.PersonDomain.");
 
-        converterHelper.findField(fields, "id", new String[] { "bla" }, PersonDomain.class, false);
+        converterHelper.findField(fields, "id", new String[]{"bla"}, PersonDomain.class, false);
     }
 
     @Test
@@ -250,7 +252,24 @@ public class ConverterHelperTest {
 
         assertThat(res).isNotNull();
         assertThat(res.getToTo()).hasSize(4);
+        assertThat(res.getToTo().get(0)).isInstanceOf(ToToConverter.class);
         assertThat(res.getToDomain()).hasSize(3);
+        assertThat(res.getToDomain().get(0)).isInstanceOf(ToDomainConverter.class);
+    }
+
+    @Test
+    public void testGetToConverter_mapOnly() throws Exception {
+        ReflectionTestUtils.setField(converterHelper, "reflectionHelper", new ReflectionHelper()); // echte gebruiken
+        ((Map<String, TypeConverter>) ReflectionTestUtils.getField(converterHelper, "typeConverterInstances")).
+                put("always2", new DefaultTypeConverter());
+
+        ToConverter res = converterHelper.getToConverter(TaggedPersonTo.class, PersonDomain.class);
+
+        assertThat(res).isNotNull();
+        assertThat(res.getToTo()).hasSize(4);
+        assertThat(res.getToTo().get(0)).isInstanceOf(TaggedConverter.class);
+        assertThat(res.getToDomain()).hasSize(3);
+        assertThat(res.getToDomain().get(0)).isInstanceOf(TaggedConverter.class);
     }
 
     @Test
@@ -305,7 +324,7 @@ public class ConverterHelperTest {
 
     @Test
     public void testWithPath() throws Exception {
-        assertThat(converterHelper.withPath(new String[] {"parts", "to", "add"})).isEqualTo(" (with path parts.to.add) ");
+        assertThat(converterHelper.withPath(new String[]{"parts", "to", "add"})).isEqualTo(" (with path parts.to.add) ");
     }
 
     @Test
@@ -332,6 +351,36 @@ public class ConverterHelperTest {
         TypeConverter res = converterHelper.getDeclaredTypeConverter(mapOnly, tc);
 
         assertThat(res).isInstanceOf(DefaultTypeConverter.class);
+    }
+
+    @Test
+    public void testGetMapOnlies_both() throws Exception {
+        Field field = TaggedPersonTo.class.getDeclaredField("gender"); // has both annotations
+        field.setAccessible(true);
+
+        List<MapOnly> res = converterHelper.getMapOnlies(field);
+
+        assertThat(res).hasSize(2); // one MapOnly, one in MapOnlies
+    }
+
+    @Test
+    public void testGetMapOnlies_mapOnlies() throws Exception {
+        Field field = TaggedPersonTo.class.getDeclaredField("name"); // has both annotations
+        field.setAccessible(true);
+
+        List<MapOnly> res = converterHelper.getMapOnlies(field);
+
+        assertThat(res).hasSize(2); // no MapOnly, two in MapOnlies
+    }
+
+    @Test
+    public void testGetMapOnlies_none() throws Exception {
+        Field field = TaggedPersonTo.class.getDeclaredField("lastChanged"); // has both annotations
+        field.setAccessible(true);
+
+        List<MapOnly> res = converterHelper.getMapOnlies(field);
+
+        assertThat(res).isNull(); // neither -> null
     }
 
     @Test
