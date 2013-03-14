@@ -9,6 +9,8 @@
 package org.jtransfo.internal;
 
 import org.jtransfo.JTransfoException;
+import org.jtransfo.ListTypeConverter;
+import org.jtransfo.MapOnly;
 import org.jtransfo.MappedBy;
 import org.jtransfo.Named;
 import org.jtransfo.NoConversionTypeConverter;
@@ -40,6 +42,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+/**
+ * Test for {@link ConverterHelper}.
+ */
 public class ConverterHelperTest {
 
     private ConverterHelper converterHelper;
@@ -301,6 +306,41 @@ public class ConverterHelperTest {
     @Test
     public void testWithPath() throws Exception {
         assertThat(converterHelper.withPath(new String[] {"parts", "to", "add"})).isEqualTo(" (with path parts.to.add) ");
+    }
+
+    @Test
+    public void testGetDeclaredTypeConverter() throws Exception {
+        MapOnly mapOnly = mock(MapOnly.class);
+        when(mapOnly.typeConverterClass()).thenReturn(MappedBy.DefaultTypeConverter.class);
+        when(mapOnly.typeConverter()).thenReturn(MappedBy.DEFAULT_TYPE_CONVERTER);
+        TypeConverter tc = mock(TypeConverter.class);
+
+        TypeConverter res = converterHelper.getDeclaredTypeConverter(mapOnly, tc);
+
+        assertThat(res).isEqualTo(tc);
+    }
+
+    @Test
+    public void testGetDeclaredTypeConverter_withTypeConverter() throws Exception {
+        MapOnly mapOnly = mock(MapOnly.class);
+        when(reflectionHelper.newInstance("org.jtransfo.internal.ConverterHelperTest$DefaultTypeConverter")).
+                thenReturn(new DefaultTypeConverter());
+        when(mapOnly.typeConverterClass()).thenReturn(DefaultTypeConverter.class);
+        when(mapOnly.typeConverter()).thenReturn(MappedBy.DEFAULT_TYPE_CONVERTER);
+        TypeConverter tc = mock(TypeConverter.class);
+
+        TypeConverter res = converterHelper.getDeclaredTypeConverter(mapOnly, tc);
+
+        assertThat(res).isInstanceOf(DefaultTypeConverter.class);
+    }
+
+    @Test
+    public void testGetDeclaredTypeConverter_null() throws Exception {
+        TypeConverter tc = mock(TypeConverter.class);
+
+        TypeConverter res = converterHelper.getDeclaredTypeConverter(null, tc);
+
+        assertThat(res).isEqualTo(tc);
     }
 
     private class DefaultTypeConverter implements TypeConverter<Object, Object> {

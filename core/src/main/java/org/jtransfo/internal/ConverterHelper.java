@@ -117,7 +117,14 @@ public class ConverterHelper {
         }
     }
 
-    private List<MapOnly> getMapOnlies(Field field) {
+    /**
+     * Get the @MapOnly definitions which exist on a field, be it an individual {@link MapOnly} annotation or grouped
+     * in {@link MapOnlies} or both.
+     *
+     * @param field field to get annotations for
+     * @return list of annotations
+     */
+    protected List<MapOnly> getMapOnlies(Field field) {
         MapOnly mapOnly = field.getAnnotation(MapOnly.class);
         MapOnlies mapOnlies = field.getAnnotation(MapOnlies.class);
         if (null == mapOnly && null == mapOnlies) {
