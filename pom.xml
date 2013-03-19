@@ -17,7 +17,7 @@
 
     <groupId>org.jtransfo</groupId>
     <artifactId>jtransfo</artifactId>
-    <version>0.9-SNAPSHOT</version>
+    <version>0.9</version>
 	<packaging>pom</packaging>
 
 	<name>jTransfo</name>
