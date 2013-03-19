@@ -12,7 +12,7 @@
     <parent>
         <groupId>org.jtransfo</groupId>
         <artifactId>jtransfo</artifactId>
-        <version>0.9</version>
+        <version>0.10-SNAPSHOT</version>
     </parent>
     <groupId>org.jtransfo</groupId>
     <artifactId>jtransfo-joda-time</artifactId>
