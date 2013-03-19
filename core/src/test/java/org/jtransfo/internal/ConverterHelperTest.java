@@ -400,12 +400,14 @@ public class ConverterHelperTest {
         }
 
         @Override
-        public Object convert(Object object, SyntheticField domainField, Object domainObject) throws JTransfoException {
+        public Object convert(Object object, SyntheticField domainField, Object domainObject, String... tags)
+                throws JTransfoException {
             return null;
         }
 
         @Override
-        public Object reverse(Object object, SyntheticField toField, Object toObject) throws JTransfoException {
+        public Object reverse(Object object, SyntheticField toField, Object toObject, String... tags)
+                throws JTransfoException {
             return null;
         }
     }

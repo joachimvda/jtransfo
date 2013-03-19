@@ -26,7 +26,8 @@ public class DateDateTimeConverter implements TypeConverter<Date, DateTime> {
     }
 
     @Override
-    public DateTime convert(Date object, SyntheticField domainField, Object domainObject) throws JTransfoException {
+    public DateTime convert(Date object, SyntheticField domainField, Object domainObject, String... tags)
+            throws JTransfoException {
         if (null == object) {
             return null;
         }
@@ -34,7 +35,8 @@ public class DateDateTimeConverter implements TypeConverter<Date, DateTime> {
     }
 
     @Override
-    public Date reverse(DateTime object, SyntheticField toField, Object toObject) throws JTransfoException {
+    public Date reverse(DateTime object, SyntheticField toField, Object toObject, String... tags)
+            throws JTransfoException {
         if (null == object) {
             return null;
         }

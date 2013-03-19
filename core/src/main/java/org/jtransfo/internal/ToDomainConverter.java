@@ -47,7 +47,7 @@ public final class ToDomainConverter extends AbstractConverter {
             }
         }
         SyntheticField domainField = domainFields[domainFields.length - 1];
-        domainField.set(target, typeConverter.convert(value, domainField, target));
+        domainField.set(target, typeConverter.convert(value, domainField, target, tags));
     }
 
     @Override

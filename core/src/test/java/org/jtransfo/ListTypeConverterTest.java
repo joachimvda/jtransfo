@@ -63,13 +63,14 @@ public class ListTypeConverterTest {
         List<AddressTo> addresses = new ArrayList<AddressTo>();
         addresses.add(to1);
         addresses.add(to2);
+        String[] tags = new String[] { "a", "b", "c" };
 
-        List<AddressDomain> res = listTypeConverter.convert(addresses, field, null);
+        List<AddressDomain> res = listTypeConverter.convert(addresses, field, null, tags);
 
         assertThat(res).isNotNull();
         assertThat(res).hasSize(2);
-        verify(jTransfo).convert(to1);
-        verify(jTransfo).convert(to2);
+        verify(jTransfo).convertTo(to1, AddressDomain.class, tags);
+        verify(jTransfo).convertTo(to2, AddressDomain.class, tags);
     }
 
     @Test
@@ -77,6 +78,10 @@ public class ListTypeConverterTest {
         assertThat(listTypeConverter.convert(null, field, null)).isEmpty();
         listTypeConverter.setKeepNullList(true);
         assertThat(listTypeConverter.convert(null, field, null)).isNull();
+
+        List<AddressTo> listWithNull = new ArrayList<AddressTo>();
+        listWithNull.add(null);
+        assertThat(listTypeConverter.convert(listWithNull, field, null)).isEqualTo(listWithNull);
     }
 
     @Test

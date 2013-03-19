@@ -25,7 +25,11 @@ public class ToDomainTypeConverter extends AbstractToDomainTypeConverter {
     }
 
     @Override
-    public Object doConvert(JTransfo jTransfo, Object toObject, SyntheticField domainField) throws JTransfoException {
-        return jTransfo.convert(toObject);
+    public Object doConvert(JTransfo jTransfo, Object toObject, SyntheticField domainField, String... tags)
+            throws JTransfoException {
+        if (null == toObject) {
+            return null;
+        }
+        return jTransfo.convertTo(toObject, jTransfo.getDomainClass(toObject.getClass()), tags);
     }
 }

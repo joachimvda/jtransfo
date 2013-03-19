@@ -58,32 +58,39 @@ public abstract class AbstractListTypeConverter implements TypeConverter<List, L
      * @param jTransfo jTransfo instance in use
      * @param toObject transfer object
      * @param domainObjectType domain object type
+     * @param tags tags which indicate which fields can be converted based on {@link MapOnly} annotations.
      * @return domain object
      * @throws JTransfoException oops, cannot convert
      */
-    public abstract Object doConvertOne(JTransfo jTransfo, Object toObject, Class<?> domainObjectType)
+    public abstract Object doConvertOne(JTransfo jTransfo, Object toObject, Class<?> domainObjectType, String... tags)
             throws JTransfoException;
 
     @Override
-    public List convert(List toObjects, SyntheticField domainField, Object domainObject) throws JTransfoException {
+    public List convert(List toObjects, SyntheticField domainField, Object domainObject, String... tags)
+            throws JTransfoException {
         if (null == toObjects) {
             return getNullList();
         }
         List<Object> res = newList(domainField, domainObject);
         for (Object to : toObjects) {
-            res.add(doConvertOne(jTransfo, to, jTransfo.getDomainClass(to.getClass())));
+            if (null == to) {
+                res.add(null);
+            } else {
+                res.add(doConvertOne(jTransfo, to, jTransfo.getDomainClass(to.getClass()), tags));
+            }
         }
         return sort(res);
     }
 
     @Override
-    public List reverse(List domainObjects, SyntheticField toField, Object toObject) throws JTransfoException {
+    public List reverse(List domainObjects, SyntheticField toField, Object toObject, String... tags)
+            throws JTransfoException {
         if (null == domainObjects) {
             return getNullList();
         }
         List<Object> res = newList(toField, toObject);
         for (Object domain : domainObjects) {
-            res.add(jTransfo.convertTo(domain, jTransfo.getToSubType(toType, domain)));
+            res.add(jTransfo.convertTo(domain, jTransfo.getToSubType(toType, domain), tags));
         }
         return sort(res);
     }

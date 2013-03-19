@@ -294,7 +294,7 @@ public class AbstractListTypeConverterTest {
         }
 
         @Override
-        public Object doConvertOne(JTransfo jTransfo, Object toObject, Class<?> domainObjectType)
+        public Object doConvertOne(JTransfo jTransfo, Object toObject, Class<?> domainObjectType, String... tags)
                 throws JTransfoException {
 
             if (toObject instanceof AddressTo) {

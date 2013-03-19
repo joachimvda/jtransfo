@@ -26,7 +26,8 @@ public class DateDateMidnightConverter implements TypeConverter<Date, DateMidnig
     }
 
     @Override
-    public DateMidnight convert(Date object, SyntheticField domainField, Object domainObject) throws JTransfoException {
+    public DateMidnight convert(Date object, SyntheticField domainField, Object domainObject, String... tags)
+            throws JTransfoException {
         if (null == object) {
             return null;
         }
@@ -34,7 +35,8 @@ public class DateDateMidnightConverter implements TypeConverter<Date, DateMidnig
     }
 
     @Override
-    public Date reverse(DateMidnight object, SyntheticField toField, Object toObject) throws JTransfoException {
+    public Date reverse(DateMidnight object, SyntheticField toField, Object toObject, String... tags)
+            throws JTransfoException {
         if (null == object) {
             return null;
         }

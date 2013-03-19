@@ -68,9 +68,18 @@ public class ToDomainTypeConverterTest {
         SimpleBaseTo source = new SimpleBaseTo();
         SyntheticField field = mock(SyntheticField.class);
         when(field.getType()).thenReturn((Class) SimpleBaseDomain.class);
-        typeConverter.convert(source, field, null);
+        String[] tags = new String[] { "a", "b", "c" };
+        typeConverter.convert(source, field, null, tags);
 
-        verify(jTransfo).convert(source);
+        verify(jTransfo).convertTo(source, SimpleBaseDomain.class, tags);
+    }
+
+    @Test
+    public void testConvertNull() throws Exception {
+        SyntheticField field = mock(SyntheticField.class);
+        when(field.getType()).thenReturn((Class) SimpleBaseDomain.class);
+        String[] tags = new String[] { "a", "b", "c" };
+        assertThat(typeConverter.convert(null, field, null, tags)).isNull();
     }
 
     @Test
@@ -80,9 +89,10 @@ public class ToDomainTypeConverterTest {
         when(reflectionHelper.newInstance(any(Class.class))).thenReturn(target);
         SyntheticField field = mock(SyntheticField.class);
         when(field.getType()).thenReturn((Class) SimpleBaseTo.class);
-        typeConverter.reverse(source, field, null);
+        String[] tags = new String[] { "a", "b", "c" };
+        typeConverter.reverse(source, field, null, tags);
 
-        verify(jTransfo).convert(source, target);
+        verify(jTransfo).convert(source, target, tags);
     }
 
     @Test

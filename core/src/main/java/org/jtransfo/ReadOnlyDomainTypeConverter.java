@@ -19,7 +19,8 @@ public class ReadOnlyDomainTypeConverter extends AbstractToDomainTypeConverter i
     private String name = "readOnlyDomain";
 
     @Override
-    public Object doConvert(JTransfo jTransfo, Object toObject, SyntheticField domainField) throws JTransfoException {
+    public Object doConvert(JTransfo jTransfo, Object toObject, SyntheticField domainField, String... tags)
+            throws JTransfoException {
         Class<?> domainType = domainField.getType();
         // only use object finder
         if (null != toObject) {

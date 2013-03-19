@@ -33,10 +33,12 @@ public interface TypeConverter<TO_TYPE, DOMAIN_TYPE> {
      * @param object object to convert
      * @param domainField target domain field
      * @param domainObject target domain object
+     * @param tags tags which indicate which fields can be converted based on {@link MapOnly} annotations.
      * @return converted object
      * @throws JTransfoException problem during type conversion
      */
-    DOMAIN_TYPE convert(TO_TYPE object, SyntheticField domainField, Object domainObject) throws JTransfoException;
+    DOMAIN_TYPE convert(TO_TYPE object, SyntheticField domainField, Object domainObject, String... tags)
+            throws JTransfoException;
 
     /**
      * Convert a domain object field value to the value for the transfer object.
@@ -44,9 +46,11 @@ public interface TypeConverter<TO_TYPE, DOMAIN_TYPE> {
      * @param object object to convert
      * @param toField target transfer object field
      * @param toObject target transfer object
+     * @param tags tags which indicate which fields can be converted based on {@link MapOnly} annotations.
      * @return converted object
      * @throws JTransfoException problem during type conversion
      */
-    TO_TYPE reverse(DOMAIN_TYPE object, SyntheticField toField, Object toObject) throws JTransfoException;
+    TO_TYPE reverse(DOMAIN_TYPE object, SyntheticField toField, Object toObject, String... tags)
+            throws JTransfoException;
 
 }

@@ -34,7 +34,8 @@ public class StringEnumTypeConverter<ENUM_TYPE extends Enum> implements TypeConv
     }
 
     @Override
-    public ENUM_TYPE convert(String object, SyntheticField domainField, Object domainObject) throws JTransfoException {
+    public ENUM_TYPE convert(String object, SyntheticField domainField, Object domainObject, String... tags)
+            throws JTransfoException {
         if (null == object || 0 == object.length()) {
             return null;
         }
@@ -43,7 +44,8 @@ public class StringEnumTypeConverter<ENUM_TYPE extends Enum> implements TypeConv
     }
 
     @Override
-    public String reverse(ENUM_TYPE object, SyntheticField toField, Object toObject) throws JTransfoException {
+    public String reverse(ENUM_TYPE object, SyntheticField toField, Object toObject, String... tags)
+            throws JTransfoException {
         if (null == object) {
             return null;
         }

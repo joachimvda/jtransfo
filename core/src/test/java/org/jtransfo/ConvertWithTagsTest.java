@@ -184,12 +184,12 @@ public class ConvertWithTagsTest {
             return false;
         }
 
-        public AddressDomain convert(AddressTo object, SyntheticField domainField, Object domainObject)
+        public AddressDomain convert(AddressTo object, SyntheticField domainField, Object domainObject, String... tags)
                 throws JTransfoException {
             return addresses[2];
         }
 
-        public AddressTo reverse(AddressDomain object, SyntheticField toField, Object toObject)
+        public AddressTo reverse(AddressDomain object, SyntheticField toField, Object toObject, String... tags)
                 throws JTransfoException {
             return new AddressTo(2L);
         }
