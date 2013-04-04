@@ -83,7 +83,7 @@ public class AccessorSyntheticField implements SyntheticField {
             } catch (InvocationTargetException ite) {
                 throw new JTransfoException("Trying to use " + getter.getName() + " on object of type " +
                         object.getClass().getName() + " while expected type is " +
-                        getter.getDeclaringClass().getName());
+                        getter.getDeclaringClass().getName(), ite.getCause());
             }
         } else {
             // @todo first time, log warning about not using getter (not public, wrong name or wrong type)
@@ -106,7 +106,7 @@ public class AccessorSyntheticField implements SyntheticField {
             } catch (InvocationTargetException ite) {
                 throw new JTransfoException("Trying to use " + setter.getName() + " on object of type " +
                         object.getClass().getName() + " while expected type is " +
-                        setter.getDeclaringClass().getName());
+                        setter.getDeclaringClass().getName(), ite.getCause());
             }
         } else {
             // @todo first time, log warning about not using getter (not public, wrong name or wrong type)
