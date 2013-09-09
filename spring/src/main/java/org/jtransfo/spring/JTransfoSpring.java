@@ -13,8 +13,8 @@ import org.jtransfo.ObjectFinder;
 import org.jtransfo.TypeConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
+import javax.annotation.PostConstruct;
 
 /**
  * Spring implementation of {@link org.jtransfo.JTransfo}.
