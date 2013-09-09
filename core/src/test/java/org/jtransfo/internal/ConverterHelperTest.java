@@ -79,7 +79,8 @@ public class ConverterHelperTest {
         assertThat(res[0]).isEqualTo(f2);
 
         exception.expect(JTransfoException.class);
-        exception.expectMessage("Cannot find getter getBla on class org.jtransfo.object.SimpleExtendedDomain.");
+        exception.expectMessage("Cannot find getter from [getBla, isBla, hasBla] on class " +
+                "org.jtransfo.object.SimpleExtendedDomain.");
 
         converterHelper.findField(fields, "bla", new String[0], SimpleExtendedDomain.class, false);
     }
@@ -101,7 +102,8 @@ public class ConverterHelperTest {
         assertThat(res[1]).isEqualTo(f3);
 
         exception.expect(JTransfoException.class);
-        exception.expectMessage("Cannot find getter getBla on class org.jtransfo.object.PersonDomain.");
+        exception.expectMessage("Cannot find getter from [getBla, isBla, hasBla] on " +
+                "class org.jtransfo.object.PersonDomain.");
 
         converterHelper.findField(fields, "id", new String[]{"bla"}, PersonDomain.class, false);
     }
