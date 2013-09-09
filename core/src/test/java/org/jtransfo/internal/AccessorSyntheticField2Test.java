@@ -58,7 +58,8 @@ public class AccessorSyntheticField2Test {
     @Test
     public void testConstructNoAccessors() throws Exception {
         exception.expect(JTransfoException.class);
-        exception.expectMessage("Cannot find getter getAhum on class org.jtransfo.object.ReadOnlyGetterDomain.");
+        exception.expectMessage("Cannot find getter from [getAhum, isAhum, hasAhum] on class " +
+                "org.jtransfo.object.ReadOnlyGetterDomain.");
 
         new AccessorSyntheticField(reflectionHelper, ReadOnlyGetterDomain.class, "ahum", false);
     }

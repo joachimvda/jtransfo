@@ -112,4 +112,14 @@ public class AccessorSyntheticFieldTest {
     public void testGetType() throws Exception {
         assertThat(accessorSyntheticField.getType()).isEqualTo(String.class);
     }
+
+    @Test
+    public void testGetGetterNameAlternatives() throws Exception {
+        assertThat(accessorSyntheticField.getGetterNameAlternatives("bla")).
+                containsExactly("getBla", "isBla", "hasBla");
+        assertThat(accessorSyntheticField.getGetterNameAlternatives("isBla")).
+                containsExactly("getIsBla", "isBla", "isIsBla");
+        assertThat(accessorSyntheticField.getGetterNameAlternatives("hasBla")).
+                containsExactly("getHasBla", "isHasBla", "hasBla");
+    }
 }
