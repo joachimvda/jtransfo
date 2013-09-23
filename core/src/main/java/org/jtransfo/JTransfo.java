@@ -16,6 +16,11 @@ import java.util.List;
 public interface JTransfo {
 
     /**
+     * Default tag which is activated when not tags are specified in the convert call.
+     */
+    String DEFAULT_TAG_WHEN_NO_TAGS = "§#noTags";
+
+    /**
      * Fill the target object with the values from the source object.
      * <p/>
      * This will write all values from the transfer object, other fields are not touched.

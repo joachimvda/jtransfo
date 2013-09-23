@@ -11,6 +11,7 @@ package org.jtransfo;
 import org.jtransfo.internal.ConverterHelper;
 import org.jtransfo.internal.NewInstanceObjectFinder;
 import org.jtransfo.internal.ReflectionHelper;
+import org.jtransfo.object.PersonTo;
 import org.jtransfo.object.SimpleClassDomain;
 import org.jtransfo.object.SimpleClassNameTo;
 import org.jtransfo.object.SimpleClassTypeTo;
@@ -300,6 +301,31 @@ public class JTransfoImplTest {
     @Test
     public void testConvertListNull() {
         assertThat(jTransfo.convertList(null, SimpleClassNameTo.class)).isNull();
+    }
+
+    @Test
+    public void testConvert_passTags() throws Exception {
+        ConvertSourceTarget cst = mock(ConvertSourceTarget.class);
+        ReflectionTestUtils.setField(jTransfo, "convertInterceptorChain", cst);
+        Object source = new PersonTo(); // real object, need annotation
+        Object target = mock(Object.class);
+        String[] tags = new String[] { "bla" };
+
+        jTransfo.convert(source, target, tags);
+
+        verify(cst).convert(source, target, false, tags);
+    }
+
+    @Test
+    public void testConvert_noTags() throws Exception {
+        ConvertSourceTarget cst = mock(ConvertSourceTarget.class);
+        ReflectionTestUtils.setField(jTransfo, "convertInterceptorChain", cst);
+        Object source = new PersonTo(); // real object, need annotation
+        Object target = mock(Object.class);
+
+        jTransfo.convert(source, target);
+
+        verify(cst).convert(source, target, false, JTransfo.DEFAULT_TAG_WHEN_NO_TAGS);
     }
 
     private interface NeedsJTransfoTypeConverter extends TypeConverter, NeedsJTransfo {

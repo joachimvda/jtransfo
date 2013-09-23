@@ -24,6 +24,8 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class JTransfoImpl implements JTransfo, ConvertSourceTarget {
 
+    private static final String[] DEFAULT_TAGS_WHEN_NO_TAGS = {JTransfo.DEFAULT_TAG_WHEN_NO_TAGS};
+
     private ToHelper toHelper = new ToHelper();
     private ConverterHelper converterHelper = new ConverterHelper();
     private Map<Class, ToConverter> converters = new ConcurrentHashMap<Class, ToConverter>();
@@ -187,6 +189,9 @@ public class JTransfoImpl implements JTransfo, ConvertSourceTarget {
                 throw new JTransfoException(String.format("Neither source nor target are annotated with DomainClass " +
                         "on classes %s and %s.", source.getClass().getName(), target.getClass().getName()));
             }
+        }
+        if (0 == tags.length) {
+            tags = DEFAULT_TAGS_WHEN_NO_TAGS;
         }
 
         return convertInterceptorChain.convert(source, target, targetIsTo, tags);
