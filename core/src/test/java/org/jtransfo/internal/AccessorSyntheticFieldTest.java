@@ -17,6 +17,7 @@ import org.junit.rules.ExpectedException;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 
 import static org.fest.assertions.Assertions.assertThat;
@@ -71,7 +72,31 @@ public class AccessorSyntheticFieldTest {
         when(domain.getA()).thenThrow(new JTransfoException("xxx"));
 
         exception.expect(JTransfoException.class);
-        exception.expectMessage("Trying to use getA on object of type org.jtransfo.object.SimpleBaseDomain");
+        exception.expectMessage("InvocationTargetException trying to use getA on object of type " +
+                "org.jtransfo.object.SimpleBaseDomain");
+        exception.expectMessage(". Expected type is org.jtransfo.object.SimpleBaseDomain. Cause is: xxx");
+
+        accessorSyntheticField.get(domain);
+    }
+
+    @Test
+    public void testGetInvocationTargetException2() throws Exception {
+        when(domain.getA()).thenThrow(new IOException("zzz"));
+
+        exception.expect(JTransfoException.class);
+        exception.expectMessage("InvocationTargetException trying to use getA on object of type " +
+                "org.jtransfo.object.SimpleBaseDomain");
+        exception.expectMessage(". Expected type is org.jtransfo.object.SimpleBaseDomain. Cause is: zzz");
+
+        accessorSyntheticField.get(domain);
+    }
+
+    @Test
+    public void testGetInvocationTargetException3() throws Exception {
+        when(domain.getA()).thenThrow(new IllegalStateException("yyy"));
+
+        exception.expect(IllegalStateException.class);
+        exception.expectMessage("yyy");
 
         accessorSyntheticField.get(domain);
     }
@@ -98,7 +123,31 @@ public class AccessorSyntheticFieldTest {
         doThrow(new JTransfoException("xxx")).when(domain).setA("bla");
 
         exception.expect(JTransfoException.class);
-        exception.expectMessage("Trying to use setA on object of type org.jtransfo.object.SimpleBaseDomain");
+        exception.expectMessage("InvocationTargetException trying to use setA on object of type " +
+                "org.jtransfo.object.SimpleBaseDomain");
+        exception.expectMessage(". Expected type is org.jtransfo.object.SimpleBaseDomain. Cause is: xxx");
+
+        accessorSyntheticField.set(domain, "bla");
+    }
+
+    @Test
+    public void testSetInvocationTargetException2() throws Exception {
+        doThrow(new IOException("zzz")).when(domain).setA("bla");
+
+        exception.expect(JTransfoException.class);
+        exception.expectMessage("InvocationTargetException trying to use setA on object of type " +
+                "org.jtransfo.object.SimpleBaseDomain");
+        exception.expectMessage(". Expected type is org.jtransfo.object.SimpleBaseDomain. Cause is: zzz");
+
+        accessorSyntheticField.set(domain, "bla");
+    }
+
+    @Test
+    public void testSetInvocationTargetException3() throws Exception {
+        doThrow(new IllegalStateException("yyy")).when(domain).setA("bla");
+
+        exception.expect(IllegalStateException.class);
+        exception.expectMessage("yyy");
 
         accessorSyntheticField.set(domain, "bla");
     }

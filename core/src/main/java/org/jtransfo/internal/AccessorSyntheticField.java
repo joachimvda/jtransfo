@@ -22,8 +22,8 @@ import java.util.Locale;
  */
 public class AccessorSyntheticField implements SyntheticField {
 
-    private static final String GET_SET_ITO = "Trying to use %s on object of type %s while " +
-            "expected type is %s.";
+    private static final String GET_SET_ITO = "InvocationTargetException trying to use %s on object of type %s. " +
+            "Expected type is %s. Cause is: %s";
 
     private String name;
     private Field field;
@@ -93,8 +93,11 @@ public class AccessorSyntheticField implements SyntheticField {
             try {
                 return getter.invoke(object);
             } catch (InvocationTargetException ite) {
+                if (ite.getCause() instanceof RuntimeException && !(ite.getCause() instanceof JTransfoException)) {
+                    throw (RuntimeException) ite.getCause();
+                }
                 throw new JTransfoException(String.format(GET_SET_ITO, getter.getName(), object.getClass().getName(),
-                        getter.getDeclaringClass().getName()), ite.getCause());
+                        getter.getDeclaringClass().getName(), ite.getCause().getMessage()), ite.getCause());
             }
         } else {
             // @todo first time, log warning about not using getter (not public, wrong name or wrong type)
@@ -115,8 +118,11 @@ public class AccessorSyntheticField implements SyntheticField {
             try {
                 setter.invoke(object, value);
             } catch (InvocationTargetException ite) {
+                if (ite.getCause() instanceof RuntimeException && !(ite.getCause() instanceof JTransfoException)) {
+                    throw (RuntimeException) ite.getCause();
+                }
                 throw new JTransfoException(String.format(GET_SET_ITO, setter.getName(), object.getClass().getName(),
-                        setter.getDeclaringClass().getName()), ite.getCause());
+                        setter.getDeclaringClass().getName(), ite.getCause().getMessage()), ite.getCause());
             }
         } else {
             // @todo first time, log warning about not using getter (not public, wrong name or wrong type)

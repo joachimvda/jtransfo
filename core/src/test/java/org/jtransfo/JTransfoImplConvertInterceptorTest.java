@@ -13,6 +13,8 @@ import org.jtransfo.object.SimpleExtendedTo;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
+
 import static org.fest.assertions.Assertions.assertThat;
 
 /**
@@ -61,7 +63,11 @@ public class JTransfoImplConvertInterceptorTest {
             T res = next.convert(source, target, isTargetTo, tags);
             if (res instanceof SimpleExtendedDomain) {
                 SimpleExtendedDomain sed = (SimpleExtendedDomain) res;
-                sed.setA(sed.getA() + adder);
+                try {
+                    sed.setA(sed.getA() + adder);
+                } catch (IOException ioe) {
+                    System.out.println("Unexpected " + ioe);
+                }
             }
             return res;
         }

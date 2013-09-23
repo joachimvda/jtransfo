@@ -10,16 +10,18 @@ package org.jtransfo.object;
 
 import org.jtransfo.JTransfoException;
 
+import java.io.IOException;
+
 public class SimpleBaseDomain {
 
     private String a;
     private String b;
 
-    public String getA() throws JTransfoException {
+    public String getA() throws IOException, JTransfoException, IllegalStateException {
         return a;
     }
 
-    public void setA(String a) throws JTransfoException {
+    public void setA(String a) throws IOException, JTransfoException, IllegalStateException {
         this.a = a;
     }
 
