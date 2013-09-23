@@ -67,6 +67,31 @@ public class JTransfoImplTest {
     }
 
     @Test
+    public void testConvert2NullLeft() {
+        exception.expect(JTransfoException.class);
+        exception.expectMessage("Source and target are required to be not-null.");
+
+        jTransfo.convert("bla", null);
+    }
+
+    @Test
+    public void testConvert2NullRight() {
+        exception.expect(JTransfoException.class);
+        exception.expectMessage("Source and target are required to be not-null.");
+
+        jTransfo.convert(null, "bla");
+    }
+
+    @Test
+    public void testConvert2DomainClass() {
+        exception.expect(JTransfoException.class);
+        exception.expectMessage("Neither source nor target are annotated with DomainClass on classes " +
+                "java.lang.String and java.lang.String.");
+
+        jTransfo.convert("alb", "bla");
+    }
+
+    @Test
     public void testConvertToNull() {
         assertThat(jTransfo.convertTo(null, this.getClass())).isNull();
     }
@@ -183,6 +208,58 @@ public class JTransfoImplTest {
 
         internalObjectFinders = (List<ObjectFinder>) ReflectionTestUtils.getField(jTransfo, "objectFinders");
         assertThat(internalObjectFinders).hasSize(1);
+    }
+
+    @Test
+    public void testGetUpdateConvertInterceptors() throws Exception {
+        ConvertSourceTarget convertInterceptorChain;
+        List<ConvertInterceptor> convertInterceptors = jTransfo.getConvertInterceptors();
+
+        convertInterceptorChain = (ConvertSourceTarget) ReflectionTestUtils.getField(jTransfo, "convertInterceptorChain");
+
+        convertInterceptors.add(new ConvertInterceptor() {
+            @Override
+            public <T> T convert(Object source, T target, boolean isTargetTo, ConvertSourceTarget next,
+                    String... tags) {
+                return next.convert(source, target, isTargetTo, tags);
+            }
+        });
+
+        // no change yet
+        assertThat(ReflectionTestUtils.getField(jTransfo, "convertInterceptorChain")).
+                isEqualTo(convertInterceptorChain);
+
+        jTransfo.updateConvertInterceptors(); // update with changed converters
+
+        // changed now
+        assertThat(ReflectionTestUtils.getField(jTransfo, "convertInterceptorChain")).
+                isNotEqualTo(convertInterceptorChain);
+    }
+
+    @Test
+    public void testGetUpdateConvertInterceptors_newList() throws Exception {
+        ConvertSourceTarget convertInterceptorChain;
+        List<ConvertInterceptor> convertInterceptors = new ArrayList<ConvertInterceptor>();
+
+        convertInterceptorChain = (ConvertSourceTarget) ReflectionTestUtils.getField(jTransfo, "convertInterceptorChain");
+
+        convertInterceptors.add(new ConvertInterceptor() {
+            @Override
+            public <T> T convert(Object source, T target, boolean isTargetTo, ConvertSourceTarget next,
+                    String... tags) {
+                return next.convert(source, target, isTargetTo, tags);
+            }
+        });
+
+        // no change yet
+        assertThat(ReflectionTestUtils.getField(jTransfo, "convertInterceptorChain")).
+                isEqualTo(convertInterceptorChain);
+
+        jTransfo.updateConvertInterceptors(convertInterceptors); // update with changed converters
+
+        // changed now
+        assertThat(ReflectionTestUtils.getField(jTransfo, "convertInterceptorChain")).
+                isNotEqualTo(convertInterceptorChain);
     }
 
     @Test

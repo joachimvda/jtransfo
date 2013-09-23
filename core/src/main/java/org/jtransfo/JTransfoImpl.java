@@ -8,6 +8,7 @@
 
 package org.jtransfo;
 
+import org.jtransfo.internal.ConvertInterceptorChainPiece;
 import org.jtransfo.internal.ConverterHelper;
 import org.jtransfo.internal.LockableList;
 import org.jtransfo.internal.NewInstanceObjectFinder;
@@ -21,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * jTransfo main access point standard implementation.
  */
-public class JTransfoImpl implements JTransfo {
+public class JTransfoImpl implements JTransfo, ConvertSourceTarget {
 
     private ToHelper toHelper = new ToHelper();
     private ConverterHelper converterHelper = new ConverterHelper();
@@ -29,6 +30,8 @@ public class JTransfoImpl implements JTransfo {
     private List<ObjectFinder> modifyableObjectFinders = new ArrayList<ObjectFinder>();
     private LockableList<ObjectFinder> objectFinders = new LockableList<ObjectFinder>();
     private List<TypeConverter> modifyableTypeConverters = new ArrayList<TypeConverter>();
+    private List<ConvertInterceptor> modifyableConvertInterceptors = new ArrayList<ConvertInterceptor>();
+    private ConvertSourceTarget convertInterceptorChain;
 
     /**
      * Constructor.
@@ -40,6 +43,8 @@ public class JTransfoImpl implements JTransfo {
         modifyableTypeConverters.add(new NoConversionTypeConverter());
         modifyableTypeConverters.add(new ToDomainTypeConverter(this));
         updateTypeConverters();
+
+        updateConvertInterceptors();
     }
 
     /**
@@ -126,6 +131,50 @@ public class JTransfoImpl implements JTransfo {
         objectFinders = newList;
     }
 
+    /**
+     * Get the list of {@link ConvertInterceptor}s to allow customization.
+     * <p/>
+     * The elements are tried in reverse order (from end to start of list).
+     * <p/>
+     * You are explicitly allowed to change this list, but beware to do this from one thread only.
+     * <p/>
+     * Changes in the list are not used until you call {@link #updateObjectFinders()}.
+     *
+     * @return list of object finders
+     */
+    public List<ConvertInterceptor> getConvertInterceptors() {
+        return modifyableConvertInterceptors;
+    }
+
+    /**
+     * Update the list of convert interceptors which is used based on the internal list
+     * (see {@link #getConvertInterceptors()}.
+     */
+    public void updateConvertInterceptors() {
+        updateConvertInterceptors(null);
+    }
+
+    /**
+     * Update the list of convert interceptors which is used.
+     * <p/>
+     * When null is passed, this updates the changes to the internal list (see {@link #getConvertInterceptors()}.
+     * Alternatively, you can pass the new list explicitly.
+     *
+     * @param newConvertInterceptors new list of convert interceptors
+     */
+    public void updateConvertInterceptors(List<ConvertInterceptor> newConvertInterceptors) {
+        if (null != newConvertInterceptors) {
+            modifyableConvertInterceptors.clear();
+            modifyableConvertInterceptors.addAll(newConvertInterceptors);
+
+        }
+        ConvertSourceTarget chainPart = this; // actual conversion at the end of the list
+        for (int i = modifyableConvertInterceptors.size() - 1; i >= 0; i--) {
+            chainPart = new ConvertInterceptorChainPiece(modifyableConvertInterceptors.get(i), chainPart);
+        }
+        convertInterceptorChain = chainPart;
+    }
+
     @Override
     public <T> T convert(Object source, T target, String... tags) {
         if (null == source || null == target) {
@@ -135,17 +184,21 @@ public class JTransfoImpl implements JTransfo {
         if (!toHelper.isTo(source)) {
             targetIsTo = true;
             if (!toHelper.isTo(target)) {
-                throw new JTransfoException("Neither source nor target are annotated with DomainClass on classes " +
-                        source.getClass().getName() + " and " + target.getClass().getName() + ".");
+                throw new JTransfoException(String.format("Neither source nor target are annotated with DomainClass " +
+                        "on classes %s and %s.", source.getClass().getName(), target.getClass().getName()));
             }
         }
 
+        return convertInterceptorChain.convert(source, target, targetIsTo, tags);
+    }
+
+    @Override
+    public <T> T convert(Object source, T target, boolean targetIsTo, String... tags) {
         List<Converter> converters = targetIsTo ? getToToConverters(target.getClass()) :
                 getToDomainConverters(source.getClass());
         for (Converter converter : converters) {
             converter.convert(source, target, tags);
         }
-
         return target;
     }
 
@@ -231,4 +284,5 @@ public class JTransfoImpl implements JTransfo {
         }
         return toConverter;
     }
+
 }
