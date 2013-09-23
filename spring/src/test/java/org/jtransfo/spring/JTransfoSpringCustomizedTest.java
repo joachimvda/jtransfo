@@ -11,15 +11,19 @@ package org.jtransfo.spring;
 import org.jtransfo.JTransfo;
 import org.jtransfo.object.AddressDomain;
 import org.jtransfo.object.AddressTo;
-import org.jtransfo.object.PersonDomain;
-import org.jtransfo.object.PersonTo;
+import org.jtransfo.spring.domain.PersonDomain;
+import org.jtransfo.spring.domain.PersonTo;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.Date;
+
+import javax.validation.ConstraintViolationException;
 
 import static org.fest.assertions.Assertions.assertThat;
 
@@ -32,8 +36,11 @@ public class JTransfoSpringCustomizedTest {
     @Autowired
     private JTransfo jTransfo;
 
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
+
     @Test
-    public void  testWithFinderAndConverterToDomain() throws Exception {
+    public void  testWithFinderAndConverterAndInterceptorsToDomain() throws Exception {
         PersonTo to = new PersonTo();
         to.setGender("MALE");
         to.setLastChanged(new Date());
@@ -45,7 +52,23 @@ public class JTransfoSpringCustomizedTest {
         assertThat(domain.getAddress().getId()).isEqualTo(3L);
         assertThat(domain.getAddress().getAddress()).isNotNull();
         assertThat(domain.getAddress().getAddress()).isEqualTo("Address 3");
-        assertThat(domain.getLastChanged()).isNull();
+        assertThat(domain.getLastChanged()).isNotNull();
+        assertThat(domain.getLastChanged().getTime()).isGreaterThan(System.currentTimeMillis() - 5000); // less than 5s
+        assertThat(domain.getExtra()).isEqualTo("Extra sleep.");
+    }
+
+    @Test
+    public void  testValidation() throws Exception {
+        PersonTo to = new PersonTo();
+        to.setGender("MALE");
+        to.setLastChanged(new Date());
+        to.setName(null); // fails validation !
+        to.setAddress(new AddressTo(3L));
+
+        exception.expect(ConstraintViolationException.class);
+        exception.expectMessage("interpolatedMessage='may not be null'");
+
+        jTransfo.convert(to);
     }
 
     @Test
