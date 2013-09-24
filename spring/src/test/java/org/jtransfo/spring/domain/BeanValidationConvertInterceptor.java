@@ -31,12 +31,12 @@ public class BeanValidationConvertInterceptor implements ConvertInterceptor {
         T res = next.convert(source, target, isTargetTo, tags);
         if (!isTargetTo) { // only validate on the domain objects, not on transfer objects
             BindingResult bindingResult = new MapBindingResult(new HashMap(), "");
-            validator.validate(target, bindingResult);
+            validator.validate(res, bindingResult);
             if (bindingResult.hasErrors()) {
                 Set<ConstraintViolation<?>> violations = new HashSet<ConstraintViolation<?>>();
                 for (ObjectError error : bindingResult.getAllErrors()) {
                     violations.add(new ConstraintViolationImpl(error.getDefaultMessage(), error.getDefaultMessage(),
-                            target.getClass(), target, target, target,
+                            res.getClass(), res, res, res,
                             PathImpl.createPathFromString(error.getObjectName()),
                             null, null));
                 }
