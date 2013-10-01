@@ -56,29 +56,32 @@ public class ConverterHelper {
             if (!isTransient && (null == notMapped)) {
                 MappedBy mappedBy = field.getAnnotation(MappedBy.class);
 
-                String domainFieldName = field.getName();
-                String[] domainFieldPath = new String[0];
-                boolean readOnlyField = false;
-                if (null != mappedBy) {
-                    if (!MappedBy.DEFAULT_FIELD.equals(mappedBy.field())) {
-                        domainFieldName = mappedBy.field();
+                boolean isStatic = (0 != (field.getModifiers() & Modifier.STATIC));
+                if (null != mappedBy || !isStatic) {
+                    String domainFieldName = field.getName();
+                    String[] domainFieldPath = new String[0];
+                    boolean readOnlyField = (0 != (field.getModifiers() & Modifier.FINAL)); // final -> read-only
+                    if (null != mappedBy) {
+                        if (!MappedBy.DEFAULT_FIELD.equals(mappedBy.field())) {
+                            domainFieldName = mappedBy.field();
+                        }
+                        if (!MappedBy.DEFAULT_PATH.equals(mappedBy.path())) {
+                            domainFieldPath = mappedBy.path().split("\\.");
+                        }
+                        readOnlyField = mappedBy.readOnly();
                     }
-                    if (!MappedBy.DEFAULT_PATH.equals(mappedBy.path())) {
-                        domainFieldPath = mappedBy.path().split("\\.");
+                    SyntheticField[] domainField;
+                    try {
+                        domainField = findField(domainFields, domainFieldName, domainFieldPath, domainClass,
+                                readOnlyField);
+                    } catch (JTransfoException jte) {
+                        throw new JTransfoException(String.format("Cannot determine mapping for field %s in class " +
+                                "%s. The field %s in class %s %scannot be found.", field.getName(), toClass.getName(),
+                                domainFieldName, domainClass.getName(), withPath(domainFieldPath)), jte);
                     }
-                    readOnlyField = mappedBy.readOnly();
-                }
-                SyntheticField[] domainField;
-                try {
-                    domainField = findField(domainFields, domainFieldName, domainFieldPath, domainClass, readOnlyField);
-                } catch (JTransfoException jte) {
-                    throw new JTransfoException(
-                            "Cannot determine mapping for field " + field.getName() + " in class " + toClass.getName() +
-                                    ". The field " + domainFieldName + " in class " + domainClass.getName() + " " +
-                                    withPath(domainFieldPath) + "cannot be found.", jte);
-                }
 
-                buildConverters(field, domainField, converter, mappedBy);
+                    buildConverters(field, domainField, converter, mappedBy);
+                }
             }
         }
 
@@ -94,7 +97,9 @@ public class ConverterHelper {
         SyntheticField sField = new SimpleSyntheticField(field);
         List<MapOnly> mapOnlies = getMapOnlies(field);
         if (null == mapOnlies) {
-            converter.getToTo().add(new ToToConverter(sField, domainField, typeConverter));
+            if (0 == (field.getModifiers() & Modifier.FINAL)) { // cannot write final fields
+                converter.getToTo().add(new ToToConverter(sField, domainField, typeConverter));
+            }
             if (null == mappedBy || !mappedBy.readOnly()) {
                 converter.getToDomain().add(new ToDomainConverter(sField, domainField, typeConverter));
             }
