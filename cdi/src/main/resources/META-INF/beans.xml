@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!--
+  ~ This file is part of jTransfo, a library for converting to and from transfer objects.
+  ~ Copyright (c) PROGS bvba, Belgium
+  ~
+  ~ The program is available in open source according to the Apache License, Version 2.0.
+  ~ For full licensing details, see LICENSE.txt in the project root.
+  -->
+<beans xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://docs.jboss.org/cdi/beans_1_0.xsd">
+</beans>
