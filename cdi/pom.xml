@@ -27,6 +27,7 @@
             <groupId>org.jtransfo</groupId>
             <artifactId>jtransfo-core</artifactId>
             <type>test-jar</type>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
