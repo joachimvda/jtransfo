@@ -14,10 +14,11 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jtransfo.JTransfo;
-import org.jtransfo.object.AddressDomain;
-import org.jtransfo.object.AddressTo;
 import org.jtransfo.cdi.domain.PersonDomain;
 import org.jtransfo.cdi.domain.PersonTo;
+import org.jtransfo.object.AddressDomain;
+import org.jtransfo.object.AddressTo;
+import org.jtransfo.object.Gender;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -59,6 +60,7 @@ public class JTransfoCdiCustomizedTest {
 
         PersonDomain domain = (PersonDomain) jTransfo.convert(to);
         assertThat(domain.getName()).isEqualTo(NAME);
+        assertThat(domain.getGender()).isEqualTo(Gender.MALE);
         assertThat(domain.getAddress().getId()).isEqualTo(3L);
         assertThat(domain.getAddress().getAddress()).isNotNull();
         assertThat(domain.getAddress().getAddress()).isEqualTo("Address 3");
@@ -68,7 +70,7 @@ public class JTransfoCdiCustomizedTest {
     }
 
     @Test
-    public void  testWithFinderAndConverterToTo() throws Exception {
+    public void testWithFinderAndConverterToTo() throws Exception {
         PersonDomain domain = new PersonDomain();
         domain.setName(NAME);
         Date now = new Date();
