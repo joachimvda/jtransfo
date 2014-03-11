@@ -19,14 +19,25 @@ import com.google.inject.Inject;
 
 /**
  * Guice implementation of {@link org.jtransfo.JTransfo}.
+ * 
+ * See the {@link ExampleModule} on how you could configure this.
  */
 public class JTransfoGuice extends JTransfoImpl {
 
+    /**
+     * 
+     * Constructor for the Guice dependency injection.
+     * 
+     * @param objectFinders a {@link List} of {@link ObjectFinder} that needs to be added to the JTransfo
+     * @param typeConverters a {@link List} of {@link TypeConverter} that needs to be added to the JTransfo
+     * @param convertInterceptors a {@link List} of {@link ConvertInterceptor} that needs 
+     *              to be added to the JTransfo
+     */
     @Inject
     public JTransfoGuice(List<ObjectFinder> objectFinders,
-    		List<TypeConverter> typeConverters,
-    		List<ConvertInterceptor> convertInterceptors) {
-    	super();
+            @SuppressWarnings("rawtypes") List<TypeConverter> typeConverters,
+            List<ConvertInterceptor> convertInterceptors) {
+        super();
         if (null != typeConverters) {
             getTypeConverters().addAll(typeConverters);
             updateTypeConverters();
