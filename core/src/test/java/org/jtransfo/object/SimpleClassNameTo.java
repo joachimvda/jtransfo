@@ -13,13 +13,13 @@ import org.jtransfo.DomainClass;
 @DomainClass("org.jtransfo.object.SimpleClassDomain")
 public class SimpleClassNameTo {
 
-	private String bla;
+    private String bla;
 
-	public String getBla() {
-		return bla;
-	}
+    public String getBla() {
+        return bla;
+    }
 
-	public void setBla(String bla) {
-		this.bla = bla;
-	}
+    public void setBla(String bla) {
+        this.bla = bla;
+    }
 }
