@@ -45,37 +45,29 @@ public class JTransfoCdi extends JTransfoImpl {
      */
     @PostConstruct
     protected void postConstruct() {
-        System.out.println("!============ typeconverters are " + typeConverters);
         if (null != typeConverters) {
             for (TypeConverter typeConverter : typeConverters) {
-                System.out.println("!============ adding typeconverter " + typeConverter);
                 getTypeConverters().add(typeConverter);
             }
             updateTypeConverters();
         }
 
-        System.out.println("!============ objectFinders are " + objectFinders);
         if (null != objectFinders) {
             for (ObjectFinder objectFinder : objectFinders) {
-                System.out.println("!============ adding objectFinder " + objectFinder);
                 getObjectFinders().add(objectFinder);
             }
             updateObjectFinders();
         }
 
-        System.out.println("!============ convertInterceptors are " + convertInterceptors);
         if (null != convertInterceptors) {
             List<ConvertInterceptor> orderedInterceptors = new ArrayList<ConvertInterceptor>();
             for (ConvertInterceptor convertInterceptor : convertInterceptors) {
-                System.out.println("!============ adding convertInterceptor " + convertInterceptor);
                 orderedInterceptors.add(convertInterceptor);
             }
             Collections.sort(orderedInterceptors, new AnnotationAwareOrderComparator());
             getConvertInterceptors().addAll(orderedInterceptors);
             updateConvertInterceptors();
         }
-        System.out.println("!============ done initializing");
-
     }
 
     /**
