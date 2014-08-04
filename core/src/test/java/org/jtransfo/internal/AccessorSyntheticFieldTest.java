@@ -20,7 +20,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.io.IOException;
 import java.lang.reflect.Field;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;

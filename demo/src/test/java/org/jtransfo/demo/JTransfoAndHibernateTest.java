@@ -26,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"applicationContext.xml"})
@@ -60,7 +60,7 @@ public class JTransfoAndHibernateTest {
         assertThat(address.getCountry()).isEqualTo("BE");
         List<VoiceContactTo> voiceContacts = to.getVoiceContacts();
         assertThat(voiceContacts).isNotNull();
-        assertThat(voiceContacts).hasSize(2).onProperty("type").contains("work", "private, skype");
+        assertThat(voiceContacts).hasSize(2).extracting("type").contains("work", "private, skype");
         for (Object obj : voiceContacts) {
             assertThat(obj).isInstanceOf(VoiceContactTo.class); // verify that list content was converted
         }
@@ -95,7 +95,7 @@ public class JTransfoAndHibernateTest {
         assertThat(person.getAddress().getPostalCode()).isEqualTo("zzz");
         assertThat(person.getAddress().getLocation()).isEqualTo("Batheaston");
         assertThat(person.getAddress().getCountry()).isEqualTo(Country.GB);
-        assertThat(person.getVoiceContacts()).hasSize(1).onProperty("type").contains("home");
+        assertThat(person.getVoiceContacts()).hasSize(1).extracting("type").contains("home");
         for (Object obj : person.getVoiceContacts()) {
             assertThat(obj).isInstanceOf(VoiceContact.class); // verify that list content was converted
         }

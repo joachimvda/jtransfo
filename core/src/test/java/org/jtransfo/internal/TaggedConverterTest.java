@@ -8,7 +8,6 @@
 
 package org.jtransfo.internal;
 
-import org.fest.assertions.MapAssert;
 import org.jtransfo.Converter;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,8 +15,8 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Map;
 
-import static org.fest.assertions.Assertions.assertThat;
-import static org.fest.assertions.MapAssert.entry;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.data.MapEntry.entry;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -46,7 +45,7 @@ public class TaggedConverterTest {
         Map<String, Converter> res = (Map<String, Converter>)
                 ReflectionTestUtils.getField(taggedConverter, "converters");
 
-        assertThat(res).hasSize(2).includes(entry("zzz", c1), entry("key", c2));
+        assertThat(res).hasSize(2).contains(entry("zzz", c1), entry("key", c2));
     }
 
     @Test

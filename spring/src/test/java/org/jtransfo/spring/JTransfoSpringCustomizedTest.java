@@ -25,7 +25,7 @@ import java.util.Date;
 
 import javax.validation.ConstraintViolationException;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"classpath:org/jtransfo/spring/jTransfoContext.xml", "testContext.xml"})

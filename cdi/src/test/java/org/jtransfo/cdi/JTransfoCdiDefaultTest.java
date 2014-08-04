@@ -21,7 +21,7 @@ import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(Arquillian.class)
 public class JTransfoCdiDefaultTest {

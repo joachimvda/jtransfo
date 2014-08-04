@@ -19,7 +19,7 @@ import org.junit.rules.ExpectedException;
 
 import java.lang.reflect.Field;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class ToToConverterTest {
 

@@ -22,7 +22,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test for using jTransfo when the transfer objects have an abstract base class and inheritance.
@@ -67,7 +67,7 @@ public class InheritedAbstractBaseClassTest {
         assertThat(((FemaleHumanTo) gt.getLeader()).getHairColourCount()).isEqualTo(3);
         
         assertThat(gt.getSlaves()).hasSize(2).
-                onProperty("name").contains("male slave", "female slave");
+                extracting("name").contains("male slave", "female slave");
         assertThat(gt.getSlaves().get(0)).isInstanceOf(MaleHumanTo.class);
         assertThat(((MaleHumanTo) gt.getSlaves().get(0)).getWeeklyPubVisits()).isEqualTo(0);
         assertThat(gt.getSlaves().get(1)).isInstanceOf(FemaleHumanTo.class);
@@ -100,7 +100,7 @@ public class InheritedAbstractBaseClassTest {
         assertThat(((FemaleHumanDomain) gd.getLeader()).getHairColourCount()).isEqualTo(3);
 
         assertThat(gd.getSlaves()).hasSize(2).
-                onProperty("name").contains("male slave", "female slave");
+                extracting("name").contains("male slave", "female slave");
         assertThat(gd.getSlaves().get(0)).isInstanceOf(MaleHumanDomain.class);
         assertThat(((MaleHumanDomain) gd.getSlaves().get(0)).getWeeklyPubVisits()).isEqualTo(0);
         assertThat(gd.getSlaves().get(1)).isInstanceOf(FemaleHumanDomain.class);

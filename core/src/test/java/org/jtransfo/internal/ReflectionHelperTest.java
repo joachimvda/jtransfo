@@ -19,7 +19,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class ReflectionHelperTest {
 
@@ -52,7 +52,7 @@ public class ReflectionHelperTest {
     public void testGetFields() throws Exception {
         List<Field> fields = reflectionHelper.getFields(SimpleExtendedDomain.class);
         assertThat(fields).hasSize(4).
-                onProperty("name").contains("a", "b", "c", "i");
+                extracting("name").contains("a", "b", "c", "i");
     }
 
     @Test
@@ -79,7 +79,7 @@ public class ReflectionHelperTest {
     public void testGetSyntheticFields() throws Exception {
         List<SyntheticField> fields = reflectionHelper.getSyntheticFields(SimpleExtendedDomain.class);
         assertThat(fields).hasSize(4).
-                onProperty("name").contains("a", "b", "c", "i");
+                extracting("name").contains("a", "b", "c", "i");
     }
 
     @Test
