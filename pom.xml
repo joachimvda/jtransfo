@@ -176,7 +176,7 @@
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
-                <version>0.12.0</version>
+                <version>1.14.4</version>
             </dependency>
 
             <dependency>
