@@ -69,6 +69,12 @@
         <property name="checkFormat" value="IllegalThrowsCheck"/>
     </module>
 
+    <module name="SuppressionCommentFilter">
+        <property name="offCommentFormat" value="CHECKSTYLE EMPTY_BLOCK\: OFF"/>
+        <property name="onCommentFormat" value="CHECKSTYLE EMPTY_BLOCK\: ON"/>
+        <property name="checkFormat" value="EmptyBlock"/>
+    </module>
+
     <module name="TreeWalker">
 
         <property name="cacheFile" value="./checkstyle.cache"/>

@@ -14,6 +14,7 @@ import org.jtransfo.internal.LockableList;
 import org.jtransfo.internal.NewInstanceObjectFinder;
 import org.jtransfo.internal.ToHelper;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +48,23 @@ public class JTransfoImpl implements JTransfo, ConvertSourceTarget {
         updateTypeConverters();
 
         updateConvertInterceptors();
+
+        // CHECKSTYLE EMPTY_BLOCK: OFF
+        try {
+            ClassLoader cl = Thread.currentThread().getContextClassLoader();
+            Class<?> plugin = cl.loadClass("org.jtransfo.JTransfoJrebelPlugin");
+            Method setInstance = plugin.getMethod("setInstance", JTransfoImpl.class);
+            Method preInit = plugin.getMethod("preinit");
+            if (null != setInstance && null != preInit) {
+                Object instance = plugin.newInstance();
+                setInstance.invoke(instance, this);
+                preInit.invoke(instance);
+            }
+            System.out.println("jRebel reload support for jTransfo loaded.");
+        } catch (Throwable ex) {
+            // JRebel not found - will not reload directory service automatically.
+        }
+        // CHECKSTYLE EMPTY_BLOCK: ON
     }
 
     /**
@@ -270,6 +288,13 @@ public class JTransfoImpl implements JTransfo, ConvertSourceTarget {
     @Override
     public Class<?> getToSubType(Class<?> toType, Object domainObject) {
         return toHelper.getToSubType(toType, domainObject);
+    }
+
+    /**
+     * Clear cache with converters. Needed when classes are reloaded by something like jRebel or spring reloaded.
+     */
+    public void clearCaches() {
+        converters.clear();
     }
 
     private List<Converter> getToToConverters(Class toClass) {
