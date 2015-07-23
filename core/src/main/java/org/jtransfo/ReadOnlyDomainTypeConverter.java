@@ -16,6 +16,7 @@ import org.jtransfo.internal.SyntheticField;
  */
 public class ReadOnlyDomainTypeConverter extends AbstractToDomainTypeConverter implements Named {
 
+
     private String name = "readOnlyDomain";
 
     @Override
@@ -24,7 +25,7 @@ public class ReadOnlyDomainTypeConverter extends AbstractToDomainTypeConverter i
         Class<?> domainType = domainField.getType();
         // only use object finder
         if (null != toObject) {
-            domainType = jTransfo.getDomainClass(toObject.getClass());
+            domainType = jTransfo.getDomainClass(jTransfo.getObjectClass(toObject));
         }
         return jTransfo.findTarget(toObject, domainType);
     }

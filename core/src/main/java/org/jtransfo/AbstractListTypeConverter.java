@@ -76,7 +76,7 @@ public abstract class AbstractListTypeConverter implements TypeConverter<List, L
             if (null == to) {
                 res.add(null);
             } else {
-                res.add(doConvertOne(jTransfo, to, jTransfo.getDomainClass(to.getClass()), tags));
+                res.add(doConvertOne(jTransfo, to, jTransfo.getDomainClass(jTransfo.getObjectClass(to)), tags));
             }
         }
         return sort(res);

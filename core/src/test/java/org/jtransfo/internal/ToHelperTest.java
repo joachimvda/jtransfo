@@ -10,6 +10,7 @@ package org.jtransfo.internal;
 
 import org.jtransfo.DomainClass;
 import org.jtransfo.JTransfoException;
+import org.jtransfo.SimpleObjectClassDeterminator;
 import org.jtransfo.object.AbstractHumanTo;
 import org.jtransfo.object.FemaleHumanDomain;
 import org.jtransfo.object.FemaleHumanTo;
@@ -31,7 +32,7 @@ public class ToHelperTest {
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
-    private ToHelper toHelper = new ToHelper();
+    private ToHelper toHelper = new ToHelper(new SimpleObjectClassDeterminator());
 
     @Test
     public void isToTest() throws Exception {
@@ -50,21 +51,24 @@ public class ToHelperTest {
     public void testGetNoDomainClass() throws Exception {
         exception.expect(JTransfoException.class);
         exception.expectMessage(" not annotated with DomainClass.");
-        assertThat(toHelper.getDomainClass(NoDomain.class)).isNull();
+
+        toHelper.getDomainClass(NoDomain.class);
     }
 
     @Test
     public void noClassDomainClassAnnotationTest() throws Exception {
         exception.expect(JTransfoException.class);
         exception.expectMessage(" DomainClass annotation does not specify class.");
-        assertThat(toHelper.getDomainClass(NoClassTo.class)).isNull();
+
+        toHelper.getDomainClass(NoClassTo.class);
     }
 
     @Test
     public void unknownClassDomainClassAnnotationTest() throws Exception {
         exception.expect(JTransfoException.class);
         exception.expectMessage(" DomainClass org.jtransfo.UnknownClass not found.");
-        assertThat(toHelper.getDomainClass(UnknownClassTo.class)).isNull();
+
+        toHelper.getDomainClass(UnknownClassTo.class);
     }
 
     @Test

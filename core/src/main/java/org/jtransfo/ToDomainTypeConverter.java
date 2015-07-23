@@ -30,6 +30,6 @@ public class ToDomainTypeConverter extends AbstractToDomainTypeConverter {
         if (null == toObject) {
             return null;
         }
-        return jTransfo.convertTo(toObject, jTransfo.getDomainClass(toObject.getClass()), tags);
+        return jTransfo.convertTo(toObject, jTransfo.getDomainClass(jTransfo.getObjectClass(toObject)), tags);
     }
 }

@@ -51,6 +51,7 @@ public class ToDomainTypeConverterTest {
         when(jTransfo.getDomainClass(SimpleBaseTo.class)).thenReturn((Class) SimpleBaseDomain.class);
         when(jTransfo.getDomainClass(SimpleExtendedTo.class)).thenReturn((Class) SimpleExtendedDomain.class);
         when(jTransfo.getToSubType(eq(SimpleBaseTo.class), anyObject())).thenReturn((Class) SimpleBaseTo.class);
+        when(jTransfo.getObjectClass(any(SimpleBaseTo.class))).thenReturn(SimpleBaseTo.class);
     }
 
     @Test
