@@ -50,6 +50,7 @@
         <module>spring</module>
         <module>cdi</module>
         <module>joda-time</module>
+        <module>hibernate</module>
         <module>demo</module>
     </modules>
 
@@ -75,6 +76,21 @@
                 <groupId>org.jtransfo</groupId>
                 <artifactId>jtransfo-spring</artifactId>
                 <type>test-jar</type>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jtransfo</groupId>
+                <artifactId>jtransfo-cdi</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jtransfo</groupId>
+                <artifactId>jtransfo-hibernate</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jtransfo</groupId>
+                <artifactId>jtransfo-joda-time</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -144,6 +160,11 @@
                 <version>1.9.5</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-core</artifactId>
+                <version>3.6.8.Final</version>
+            </dependency>
             <dependency>
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-entitymanager</artifactId>
