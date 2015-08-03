@@ -10,8 +10,8 @@ package org.jtransfo.cdi;
 
 import org.jtransfo.ConvertInterceptor;
 import org.jtransfo.JTransfoImpl;
-import org.jtransfo.ObjectClassDeterminator;
 import org.jtransfo.ObjectFinder;
+import org.jtransfo.ObjectReplacer;
 import org.jtransfo.TypeConverter;
 
 import java.util.ArrayList;
@@ -42,7 +42,7 @@ public class JTransfoCdi extends JTransfoImpl {
     private Instance<ConvertInterceptor> convertInterceptors;
 
     @Inject
-    private Instance<ObjectClassDeterminator> objectClassDeterminators;
+    private Instance<ObjectReplacer> objectReplacers;
 
     /**
      * Get object finders and type converters from Spring configuration.
@@ -73,16 +73,14 @@ public class JTransfoCdi extends JTransfoImpl {
             updateConvertInterceptors();
         }
 
-        if (null != objectClassDeterminators) {
-            List<ObjectClassDeterminator> orderedInterceptors = new ArrayList<ObjectClassDeterminator>();
-            for (ObjectClassDeterminator objectClassDeterminator : objectClassDeterminators) {
-                if (!(objectClassDeterminator instanceof JTransfoCdi)) { // do not include myself
-                    orderedInterceptors.add(objectClassDeterminator);
-                }
+        if (null != objectReplacers) {
+            List<ObjectReplacer> orderedInterceptors = new ArrayList<ObjectReplacer>();
+            for (ObjectReplacer objectClassDeterminator : objectReplacers) {
+                orderedInterceptors.add(objectClassDeterminator);
             }
             Collections.sort(orderedInterceptors, new AnnotationAwareOrderComparator());
-            getObjectClassDeterminators().addAll(orderedInterceptors);
-            updateObjectClassDeterminators();
+            getObjectReplacers().addAll(orderedInterceptors);
+            updateObjectReplacers();
         }
 
     }

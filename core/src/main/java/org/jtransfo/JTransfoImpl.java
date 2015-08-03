@@ -35,6 +35,8 @@ public class JTransfoImpl implements JTransfo, ConvertSourceTarget {
     private List<TypeConverter> modifyableTypeConverters = new ArrayList<TypeConverter>();
     private List<ConvertInterceptor> modifyableConvertInterceptors = new ArrayList<ConvertInterceptor>();
     private ConvertSourceTarget convertInterceptorChain;
+    private List<ObjectReplacer> modifyableObjectReplacers = new ArrayList<ObjectReplacer>();
+    private LockableList<ObjectReplacer> objectReplacers = new LockableList<ObjectReplacer>();
 
     /**
      * Constructor.
@@ -152,13 +154,56 @@ public class JTransfoImpl implements JTransfo, ConvertSourceTarget {
     }
 
     /**
+     * Get the list of {@link ObjectReplacer}s to allow customization.
+     * <p/>
+     * The elements are tried in order (from start to end of list).
+     * <p/>
+     * You are explicitly allowed to change this list, but beware to do this from one thread only.
+     * <p/>
+     * Changes in the list are not used until you call {@link #updateObjectReplacers()}.
+     *
+     * @return list of object replacers
+     */
+    public List<ObjectReplacer> getObjectReplacers() {
+        return modifyableObjectReplacers;
+    }
+
+    /**
+     * Update the list of object replacers which is used based on the internal list
+     * (see {@link #getObjectReplacers()}.
+     */
+    public void updateObjectReplacers() {
+        updateObjectReplacers(null);
+    }
+
+    /**
+     * Update the list of object replacers which is used.
+     * <p/>
+     * When null is passed, this updates the changes to the internal list (see {@link #getObjectReplacers()}.
+     * Alternatively, you can pass the new list explicitly.
+     *
+     * @param newObjectReplacers new list of type converters
+     */
+    public void updateObjectReplacers(List<ObjectReplacer> newObjectReplacers) {
+        if (null != newObjectReplacers) {
+            modifyableObjectReplacers.clear();
+            modifyableObjectReplacers.addAll(newObjectReplacers);
+
+        }
+        LockableList<ObjectReplacer> newList = new LockableList<ObjectReplacer>();
+        newList.addAll(modifyableObjectReplacers);
+        newList.lock();
+        objectReplacers = newList;
+    }
+
+    /**
      * Get the list of {@link ConvertInterceptor}s to allow customization.
      * <p/>
      * The elements are tried in reverse order (from end to start of list).
      * <p/>
      * You are explicitly allowed to change this list, but beware to do this from one thread only.
      * <p/>
-     * Changes in the list are not used until you call {@link #updateObjectFinders()}.
+     * Changes in the list are not used until you call {@link #updateConvertInterceptors()}.
      *
      * @return list of object finders
      */
@@ -200,6 +245,7 @@ public class JTransfoImpl implements JTransfo, ConvertSourceTarget {
         if (null == source || null == target) {
             throw new JTransfoException("Source and target are required to be not-null.");
         }
+        source = replaceObject(source);
         boolean targetIsTo = false;
         if (!toHelper.isTo(source)) {
             targetIsTo = true;
@@ -217,6 +263,7 @@ public class JTransfoImpl implements JTransfo, ConvertSourceTarget {
 
     @Override
     public <T> T convert(Object source, T target, boolean targetIsTo, String... tags) {
+        source = replaceObject(source);
         List<Converter> converters = targetIsTo ? getToToConverters(target.getClass()) :
                 getToDomainConverters(source.getClass());
         for (Converter converter : converters) {
@@ -230,6 +277,7 @@ public class JTransfoImpl implements JTransfo, ConvertSourceTarget {
         if (null == source) {
             return null;
         }
+        source = replaceObject(source);
         Class<?> domainClass = getDomainClass(source.getClass());
         return convertTo(source,  domainClass);
     }
@@ -240,6 +288,7 @@ public class JTransfoImpl implements JTransfo, ConvertSourceTarget {
         if (null == source) {
             return null;
         }
+        source = replaceObject(source);
         if (isToClass(targetClass)) {
             realTarget = (Class<T>) getToSubType(targetClass, source);
         }
@@ -263,6 +312,7 @@ public class JTransfoImpl implements JTransfo, ConvertSourceTarget {
         if (null == source) {
             return null;
         }
+        source = replaceObject(source);
         int i = objectFinders.size() - 1;
         T target = null;
         while (null == target && i >= 0) {
@@ -287,7 +337,7 @@ public class JTransfoImpl implements JTransfo, ConvertSourceTarget {
 
     @Override
     public Class<?> getToSubType(Class<?> toType, Object domainObject) {
-        return toHelper.getToSubType(toType, domainObject);
+        return toHelper.getToSubType(toType, replaceObject(domainObject));
     }
 
     /**
@@ -313,6 +363,14 @@ public class JTransfoImpl implements JTransfo, ConvertSourceTarget {
             converters.put(toClass, toConverter);
         }
         return toConverter;
+    }
+
+    private Object replaceObject(Object object) {
+        Object res = object;
+        for (ObjectReplacer replacer : objectReplacers) {
+            res = replacer.replaceObject(res);
+        }
+        return res;
     }
 
 }

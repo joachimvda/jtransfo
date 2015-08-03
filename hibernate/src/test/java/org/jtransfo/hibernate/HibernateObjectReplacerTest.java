@@ -13,15 +13,16 @@ import org.junit.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Test for DateDateMidnightConverter.
+ * Test for HibernateObjectReplacer.
  */
-public class HibernateObjectClassDeterminatorTest {
+public class HibernateObjectReplacerTest {
 
-    private HibernateObjectClassDeterminator determinator = new HibernateObjectClassDeterminator();
+    private HibernateObjectReplacer determinator = new HibernateObjectReplacer();
 
     @Test
     public void testNotAProxyCanConvert() throws Exception {
-        assertThat(determinator.getObjectClass(new Object())).isNull();
+        Object object = new Object();
+        assertThat(determinator.replaceObject(object)).isEqualTo(object);
     }
 
     // @todo should also test with a real Hibernate proxy, but don't know how
