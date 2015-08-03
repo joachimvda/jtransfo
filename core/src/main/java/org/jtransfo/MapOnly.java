@@ -17,9 +17,10 @@ import java.lang.annotation.Target;
 /**
  * Annotation which allows security filtering on jTransfo field behaviour. If a field has a MapOnly of MapOnlies
  * annotation then the field will only be copied when one of the tags in the MapOnly or MapOnlies annotation is present.
- * <p/>
  *
+ * <p>
  * By default fields are mapped in both directions between fields of the same name.
+ * </p>
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
@@ -38,17 +39,19 @@ public @interface MapOnly {
 
     /**
      * Fully qualified class name for the type converter.
-     * <p/>
+     * <p>
      * Using this allows you to override the type converter on the {@link MappedBy} annotation.
+     * </p>
      */
     String typeConverter() default MappedBy.DEFAULT_TYPE_CONVERTER;
 
     /**
      * Class to use for type conversion.
-     * <p/>
+     * <p>
      * Using this allows you to override the type converter on the {@link MappedBy} annotation.
-     * <p/>
+     * </p><p>
      * This requires a compile dependency on the domain class. The value has precedence over {@link #typeConverter()}.
+     * </p>
      */
     Class typeConverterClass() default MappedBy.DefaultTypeConverter.class;
 

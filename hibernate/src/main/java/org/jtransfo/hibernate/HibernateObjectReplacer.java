@@ -20,8 +20,9 @@ public class HibernateObjectReplacer implements ObjectReplacer {
 
     /**
      * Convert an object to something jTransfo should convert.
-     * <p/>
+     * <p>
      * If the object is not replaced, the object itself should be returned.
+     * </p>
      *
      * @param object object which may need to be replaced
      * @return replacement object or the object itself

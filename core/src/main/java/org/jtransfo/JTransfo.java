@@ -22,8 +22,9 @@ public interface JTransfo {
 
     /**
      * Fill the target object with the values from the source object.
-     * <p/>
+     * <p>
      * This will write all values from the transfer object, other fields are not touched.
+     * </p>
      *
      * @param source source object. Should not be null.
      * @param target target object. Should not be null.
@@ -36,10 +37,11 @@ public interface JTransfo {
 
     /**
      * Create a new domain object from the source transfer object.
-     * <p/>
+     * <p>
      * When the source is null, the result is also null.
-     * <p/>
+     * </p><p>
      * The object finders are used to build the object to copy to.
+     * </p>
      *
      * @param source source transfer object
      * @return domain object
@@ -48,10 +50,11 @@ public interface JTransfo {
 
     /**
      * Create a new domain object from the source transfer object.
-     * <p/>
+     * <p>
      * When the source is null, the result is also null.
-     * <p/>
+     * </p><p>
      * The object finders are used to build the object to copy to.
+     * </p>
      *
      * @param source source transfer object
      * @param targetClass target class to convert to
@@ -64,8 +67,9 @@ public interface JTransfo {
 
     /**
      * Convert a list of object to the given type. Applies {@link #convertTo(Object, Class, String...)} on each object.
-     * <p/>
+     * <p>
      * When the source is null, the result is also null.
+     * </p>
      *
      * @param source source list of objects
      * @param targetClass target class to convert each object to
@@ -78,10 +82,11 @@ public interface JTransfo {
 
     /**
      * Get the base target (domain) object for the source (transfer) object.
-     * <p/>
+     * <p>
      * When the source is null, the result is also null.
-     * <p/>
+     * </p><p>
      * The object finders are used to build the object to copy to.
+     * </p>
      *
      * @param source source transfer object
      * @param targetClass target class to convert to
@@ -100,8 +105,9 @@ public interface JTransfo {
 
     /**
      * Is the given class a transfer object class?
-     * <p/>
+     * <p>
      * True when there is a {@link DomainClass} annotation on the class.
+     * </p>
      *
      * @param toClass object class to test
      * @return true when object is a transfer object
@@ -110,9 +116,10 @@ public interface JTransfo {
 
     /**
      * Get the correct transfer object type for the given domain object.
-     * <p/>
+     * <p>
      * This searches the DomainClassDelegates (if present) to see of there is a better matching transfer object than
      * the one given as parameter.
+     * </p>
      *
      * @param toType base transfer object type
      * @param domainObject domain object (instance)

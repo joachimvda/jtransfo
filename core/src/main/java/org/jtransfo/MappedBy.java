@@ -18,8 +18,9 @@ import java.lang.annotation.Target;
 
 /**
  * Annotation which indicates how the field in the transfer object should be mapped to a field in the domain object.
- * <p/>
+ * <p>
  * By default fields are mapped in both directions between fields of the same name.
+ * </p>
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
@@ -28,30 +29,34 @@ public @interface MappedBy {
 
     /**
      * Name of the field in the domain class.
-     * <p/>
+     * <p>
      * By default the field is assumed to have the same name in the domain class.
+     * </p>
      */
     String field() default DEFAULT_FIELD;
 
     /**
      * Path to the field when it is transitive.
-     * <p/>
+     * <p>
      * By default the path is empty, meaning that the field is inside the domain object itself.
+     * </p>
      */
     String path() default DEFAULT_PATH;
 
     /**
      * Fully qualified class name for the type converter.
-     * <p/>
+     * <p>
      * Using this allows you to avoid a compile dependency on the class name but makes the connection more brittle
      * when refactoring. The value is ignored if {@link #typeConverterClass()} is set.
+     * </p>
      */
     String typeConverter() default DEFAULT_TYPE_CONVERTER;
 
     /**
      * Class to use for type conversion.
-     * <p/>
+     * <p>
      * This requires a compile dependency on the domain class. The value has precedence over {@link #typeConverter()}.
+     * </p>
      */
     Class typeConverterClass() default DefaultTypeConverter.class;
 

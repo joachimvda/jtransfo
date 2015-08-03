@@ -71,10 +71,11 @@ public class JTransfoImpl implements JTransfo, ConvertSourceTarget {
 
     /**
      * Get the set of type converters which are used by this jTransfo instance.
-     * <p/>
+     * <p>
      * You are explicitly allowed to change this list, but beware to do this from one thread only.
-     * <p/>
+     * </p><p>
      * Changes in the list are not used until you call {@link #updateTypeConverters()}.
+     * </p>
      *
      * @return current list of type converters.
      */
@@ -91,9 +92,10 @@ public class JTransfoImpl implements JTransfo, ConvertSourceTarget {
 
     /**
      * Update the list of type converters which is used.
-     * <p/>
+     * <p>
      * When null is passed, this updates the changes to the internal list (see {@link #getTypeConverters()}.
      * Alternatively, you can pass the new list explicitly.
+     * </p>
      *
      * @param newConverters new list of type converters
      */
@@ -113,12 +115,13 @@ public class JTransfoImpl implements JTransfo, ConvertSourceTarget {
 
     /**
      * Get the list of {@link ObjectFinder}s to allow customization.
-     * <p/>
+     * <p>
      * The elements are tried in reverse order (from end to start of list).
-     * <p/>
+     * </p><p>
      * You are explicitly allowed to change this list, but beware to do this from one thread only.
-     * <p/>
+     * </p><p>
      * Changes in the list are not used until you call {@link #updateObjectFinders()}.
+     * </p>
      *
      * @return list of object finders
      */
@@ -135,9 +138,10 @@ public class JTransfoImpl implements JTransfo, ConvertSourceTarget {
 
     /**
      * Update the list of object finders which is used.
-     * <p/>
+     * <p>
      * When null is passed, this updates the changes to the internal list (see {@link #getObjectFinders()}.
      * Alternatively, you can pass the new list explicitly.
+     * </p>
      *
      * @param newObjectFinders new list of type converters
      */
@@ -155,12 +159,13 @@ public class JTransfoImpl implements JTransfo, ConvertSourceTarget {
 
     /**
      * Get the list of {@link ObjectReplacer}s to allow customization.
-     * <p/>
+     * <p>
      * The elements are tried in order (from start to end of list).
-     * <p/>
+     * </p><p>
      * You are explicitly allowed to change this list, but beware to do this from one thread only.
-     * <p/>
+     * </p><p>
      * Changes in the list are not used until you call {@link #updateObjectReplacers()}.
+     * </p>
      *
      * @return list of object replacers
      */
@@ -178,9 +183,10 @@ public class JTransfoImpl implements JTransfo, ConvertSourceTarget {
 
     /**
      * Update the list of object replacers which is used.
-     * <p/>
+     * <p>
      * When null is passed, this updates the changes to the internal list (see {@link #getObjectReplacers()}.
      * Alternatively, you can pass the new list explicitly.
+     * </p>
      *
      * @param newObjectReplacers new list of type converters
      */
@@ -198,12 +204,13 @@ public class JTransfoImpl implements JTransfo, ConvertSourceTarget {
 
     /**
      * Get the list of {@link ConvertInterceptor}s to allow customization.
-     * <p/>
+     * <p>
      * The elements are tried in reverse order (from end to start of list).
-     * <p/>
+     * </p><p>
      * You are explicitly allowed to change this list, but beware to do this from one thread only.
-     * <p/>
+     * </p><p>
      * Changes in the list are not used until you call {@link #updateConvertInterceptors()}.
+     * </p>
      *
      * @return list of object finders
      */
@@ -221,9 +228,10 @@ public class JTransfoImpl implements JTransfo, ConvertSourceTarget {
 
     /**
      * Update the list of convert interceptors which is used.
-     * <p/>
+     * <p>
      * When null is passed, this updates the changes to the internal list (see {@link #getConvertInterceptors()}.
      * Alternatively, you can pass the new list explicitly.
+     * </p>
      *
      * @param newConvertInterceptors new list of convert interceptors
      */

@@ -23,8 +23,9 @@ public class ReflectionHelper {
 
     /**
      * Create a new instance of a class.
-     * <p/>
+     * <p>
      * Provided to allow mocking, making it possible to test the exception handling.
+     * </p>
      *
      * @param clazz class to create new instance of
      * @param <T> type of object to create
@@ -38,8 +39,9 @@ public class ReflectionHelper {
 
     /**
      * Create a new instance of a class given the class name.
-     * <p/>
+     * <p>
      * Provided to allow mocking, making it possible to test the exception handling.
+     * </p>
      *
      * @param className name of class to create new instance of
      * @param <T> type of object to create
@@ -122,8 +124,9 @@ public class ReflectionHelper {
      * Make the given field accessible, explicitly setting it accessible if necessary.
      * The <code>setAccessible(true)</code> method is only called when actually necessary, to avoid unnecessary
      * conflicts with a JVM SecurityManager (if active).
-     * <p/>
+     * <p>
      * This method is borrowed from Spring's ReflectionUtil class.
+     * </p>
      *
      * @param field the field to make accessible
      * @see java.lang.reflect.Field#setAccessible

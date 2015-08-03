@@ -21,8 +21,9 @@ public class ToHelper {
 
     /**
      * Is the given object a transfer object?
-     * <p/>
+     * <p>
      * True when there is a {@link DomainClass} annotation on the class.
+     * </p>
      *
      * @param object object to test
      * @return true when object is a transfer object
@@ -33,8 +34,9 @@ public class ToHelper {
 
     /**
      * Is the given class a transfer object class?
-     * <p/>
+     * <p>
      * True when there is a {@link DomainClass} annotation on the class.
+     * </p>
      *
      * @param toClass object class to test
      * @return true when object is a transfer object
@@ -73,9 +75,10 @@ public class ToHelper {
 
     /**
      * Get the correct transfer object type for the given domain object.
-     * <p/>
+     * <p>
      * This searches the DomainClassDelegates (if present) to see of there is a better matching transfer object than
      * the one given as parameter.
+     * </p>
      *
      * @param toType base transfer object type
      * @param domainObject domain object (instance)

@@ -10,15 +10,17 @@ package org.jtransfo;
 
 /**
  * Allow domain objects to be discovered from the transfer object.
- * <p/>
+ * <p>
  * This is typically used to get the base object from the database.
+ * </p>
  */
 public interface ObjectFinder {
 
     /**
      * Try to get the domain object for the given transfer object.
-     * <p/>
+     * <p>
      * Return null when no domain object found or when it is unknown how to create the object.
+     * </p>
      *
      * @param <T> domain class type
      * @param domainClass type of class needed

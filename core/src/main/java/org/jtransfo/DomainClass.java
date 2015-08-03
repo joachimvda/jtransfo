@@ -24,17 +24,19 @@ public @interface DomainClass {
 
     /**
      * Fully qualified class name for the domain object.
-     * <p/>
+     * <p>
      * Using this allows you to avoid a compile dependency on the class name but makes the connection more brittle
      * when refactoring. The value is ignored if {@link #domainClass()} is set.
+     * </p>
      */
     String value() default DEFAULT_NAME;
 
     /**
      * Class for the domain object.
-     * <p/>
+     * <p>
      * This requires a compile dependency on the domain class. The value has precedence over the {@link #value()}
      * field.
+     * </p>
      */
     Class domainClass() default DefaultClass.class;
 

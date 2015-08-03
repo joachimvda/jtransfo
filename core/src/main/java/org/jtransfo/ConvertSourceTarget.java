@@ -15,8 +15,9 @@ public interface ConvertSourceTarget {
 
     /**
      * Fill the target object with the values from the source object.
-     * <p/>
+     * <p>
      * This will write all values from the transfer object, other fields are not touched.
+     * </p>
      *
      * @param source source object. Should not be null.
      * @param target target object. Should not be null.

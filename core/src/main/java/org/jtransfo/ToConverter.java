@@ -14,8 +14,9 @@ import java.util.List;
 
 /**
  * Set of converters for a TO.
- * <p/>
+ * <p>
  * Note that this class is not thread safe!
+ * </p>
  */
 public class ToConverter {
 

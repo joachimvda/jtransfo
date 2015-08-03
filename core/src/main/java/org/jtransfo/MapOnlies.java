@@ -16,8 +16,9 @@ import java.lang.annotation.Target;
 
 /**
  * Annotation which allows you to put many {@link MapOnly} annotations on a field.
- * <p/>
+ * <p>
  * Note that it is not determined which annotation is used when several annotations contain the same tag.
+ * </p>
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
