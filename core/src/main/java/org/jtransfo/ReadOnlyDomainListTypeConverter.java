@@ -10,10 +10,11 @@ package org.jtransfo;
 
 /**
  * Type converter for converting lists with object of specific type. Can only be used as declared converter.
- * <p />
+ * <p>
  * Similar to {@link ReadOnlyDomainTypeConverter} this does a full conversion from domain to transfer object but will
  * only find the objects and not update the fields when converting to the domain object. This way list membership is
  * updated, but the domain objects remain unmodified.
+ * </p>
  */
 public class ReadOnlyDomainListTypeConverter extends AbstractListTypeConverter {
 
