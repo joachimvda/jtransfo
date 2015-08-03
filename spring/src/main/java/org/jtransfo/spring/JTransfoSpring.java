@@ -10,11 +10,13 @@ package org.jtransfo.spring;
 
 import org.jtransfo.ConvertInterceptor;
 import org.jtransfo.JTransfoImpl;
+import org.jtransfo.ObjectClassDeterminator;
 import org.jtransfo.ObjectFinder;
 import org.jtransfo.TypeConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -32,6 +34,9 @@ public class JTransfoSpring extends JTransfoImpl {
 
     @Autowired(required = false)
     private List<ConvertInterceptor> convertInterceptors;
+
+    @Autowired(required = false)
+    private List<ObjectClassDeterminator> objectClassDeterminators;
 
     /**
      * Get object finders and type converters from Spring configuration.
@@ -54,5 +59,16 @@ public class JTransfoSpring extends JTransfoImpl {
             updateConvertInterceptors();
         }
 
+        if (null != objectClassDeterminators) {
+            List<ObjectClassDeterminator> orderedInterceptors = new ArrayList<ObjectClassDeterminator>();
+            for (ObjectClassDeterminator objectClassDeterminator : objectClassDeterminators) {
+                if (!(objectClassDeterminator instanceof JTransfoSpring)) { // do not include myself
+                    orderedInterceptors.add(objectClassDeterminator);
+                }
+            }
+            Collections.sort(orderedInterceptors, new AnnotationAwareOrderComparator());
+            getObjectClassDeterminators().addAll(orderedInterceptors);
+            updateObjectClassDeterminators();
+        }
     }
 }

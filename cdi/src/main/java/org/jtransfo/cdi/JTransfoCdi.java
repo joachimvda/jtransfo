@@ -10,6 +10,7 @@ package org.jtransfo.cdi;
 
 import org.jtransfo.ConvertInterceptor;
 import org.jtransfo.JTransfoImpl;
+import org.jtransfo.ObjectClassDeterminator;
 import org.jtransfo.ObjectFinder;
 import org.jtransfo.TypeConverter;
 
@@ -40,6 +41,9 @@ public class JTransfoCdi extends JTransfoImpl {
     @Inject
     private Instance<ConvertInterceptor> convertInterceptors;
 
+    @Inject
+    private Instance<ObjectClassDeterminator> objectClassDeterminators;
+
     /**
      * Get object finders and type converters from Spring configuration.
      */
@@ -68,6 +72,19 @@ public class JTransfoCdi extends JTransfoImpl {
             getConvertInterceptors().addAll(orderedInterceptors);
             updateConvertInterceptors();
         }
+
+        if (null != objectClassDeterminators) {
+            List<ObjectClassDeterminator> orderedInterceptors = new ArrayList<ObjectClassDeterminator>();
+            for (ObjectClassDeterminator objectClassDeterminator : objectClassDeterminators) {
+                if (!(objectClassDeterminator instanceof JTransfoCdi)) { // do not include myself
+                    orderedInterceptors.add(objectClassDeterminator);
+                }
+            }
+            Collections.sort(orderedInterceptors, new AnnotationAwareOrderComparator());
+            getObjectClassDeterminators().addAll(orderedInterceptors);
+            updateObjectClassDeterminators();
+        }
+
     }
 
     /**

@@ -9,7 +9,10 @@
 package org.jtransfo.hibernate;
 
 import org.hibernate.proxy.HibernateProxy;
+import org.hibernate.proxy.LazyInitializer;
 import org.jtransfo.ObjectClassDeterminator;
+
+import java.lang.reflect.Field;
 
 /**
  * ObjectClassDeterminator which recognizes Hibernate proxies.
@@ -21,7 +24,20 @@ public class HibernateObjectClassDeterminator implements ObjectClassDeterminator
     @Override
     public Class getObjectClass(Object object) {
         if (object instanceof HibernateProxy) {
-            return ((HibernateProxy) object).getHibernateLazyInitializer().getPersistentClass();
+            LazyInitializer lazyInitializer = ((HibernateProxy) object).getHibernateLazyInitializer();
+            try {
+                // try to avoid initializing all lazy fields by using implementation knowledge
+                Field targetField = lazyInitializer.getClass().getDeclaredField("target");
+                targetField.setAccessible(true);
+                Object target = targetField.get(lazyInitializer);
+                if (null != target) {
+                    return target.getClass();
+                }
+            } catch (Exception ex) {
+                // ignore
+                System.err.println("Cannot get target field for proxy, using default which may be wrong.");
+            }
+            return lazyInitializer.getImplementation().getClass();
         }
         return null;
     }
