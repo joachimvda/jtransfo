@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * jTransfo main access point.
  */
-public interface JTransfo extends ObjectClassDeterminator {
+public interface JTransfo {
 
     /**
      * Default tag which is activated when not tags are specified in the convert call.

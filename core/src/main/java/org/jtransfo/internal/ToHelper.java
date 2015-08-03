@@ -8,11 +8,9 @@
 
 package org.jtransfo.internal;
 
-import lombok.Setter;
 import org.jtransfo.DomainClass;
 import org.jtransfo.DomainClassDelegate;
 import org.jtransfo.JTransfoException;
-import org.jtransfo.ObjectClassDeterminator;
 
 /**
  * Helper for working with transfer objects.
@@ -20,18 +18,6 @@ import org.jtransfo.ObjectClassDeterminator;
 public class ToHelper {
 
     private ReflectionHelper reflectionHelper = new ReflectionHelper();
-
-    @Setter
-    private ObjectClassDeterminator objectClassDeterminator;
-
-    /**
-     * Constructor.
-     *
-     * @param objectClassDeterminator object class determinator
-     */
-    public ToHelper(ObjectClassDeterminator objectClassDeterminator) {
-        this.objectClassDeterminator = objectClassDeterminator;
-    }
 
     /**
      * Is the given object a transfer object?
@@ -42,7 +28,7 @@ public class ToHelper {
      * @return true when object is a transfer object
      */
     public boolean isTo(Object object) {
-        return isToClass(objectClassDeterminator.getObjectClass(object));
+        return isToClass(object.getClass());
     }
 
     /**
@@ -97,11 +83,10 @@ public class ToHelper {
      */
     public  Class<?> getToSubType(Class<?> toType, Object domainObject) {
         DomainClassDelegate domainClassDelegate = toType.getAnnotation(DomainClassDelegate.class);
-        Class objectClass = objectClassDeterminator.getObjectClass(domainObject);
         if (null != domainClassDelegate) {
             for (Class<?> delegate : domainClassDelegate.delegates()) {
                 Class<?> delegateDomain = getDomainClass(delegate);
-                if (delegateDomain.isAssignableFrom(objectClass)) {
+                if (delegateDomain.isInstance(domainObject)) {
                     toType = delegate;
                 }
             }

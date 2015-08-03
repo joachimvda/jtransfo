@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
@@ -41,8 +40,6 @@ public class ReadOnlyDomainListTypeConverterTest {
 
         when(jTransfo.getDomainClass(AddressTo.class)).thenReturn((Class) AddressDomain.class);
         when(jTransfo.getToSubType(eq(AddressTo.class), anyObject())).thenReturn((Class) AddressTo.class);
-        when(jTransfo.getObjectClass(any(AddressDomain.class))).thenReturn(AddressDomain.class);
-        when(jTransfo.getObjectClass(any(AddressTo.class))).thenReturn(AddressTo.class);
 
         listTypeConverter.setJTransfo(jTransfo);
 

@@ -23,11 +23,11 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * jTransfo main access point standard implementation.
  */
-public class JTransfoImpl implements JTransfo, ConvertSourceTarget, ObjectClassDeterminator {
+public class JTransfoImpl implements JTransfo, ConvertSourceTarget {
 
     private static final String[] DEFAULT_TAGS_WHEN_NO_TAGS = {JTransfo.DEFAULT_TAG_WHEN_NO_TAGS};
 
-    private ToHelper toHelper = new ToHelper(this);
+    private ToHelper toHelper = new ToHelper();
     private ConverterHelper converterHelper = new ConverterHelper();
     private Map<Class, ToConverter> converters = new ConcurrentHashMap<Class, ToConverter>();
     private List<ObjectFinder> modifyableObjectFinders = new ArrayList<ObjectFinder>();
@@ -35,10 +35,6 @@ public class JTransfoImpl implements JTransfo, ConvertSourceTarget, ObjectClassD
     private List<TypeConverter> modifyableTypeConverters = new ArrayList<TypeConverter>();
     private List<ConvertInterceptor> modifyableConvertInterceptors = new ArrayList<ConvertInterceptor>();
     private ConvertSourceTarget convertInterceptorChain;
-    private List<ObjectClassDeterminator> modifyableObjectClassDeterminators =
-            new ArrayList<ObjectClassDeterminator>();
-    private LockableList<ObjectClassDeterminator> objectClassDeterminators =
-            new LockableList<ObjectClassDeterminator>();
 
     /**
      * Constructor.
@@ -156,57 +152,13 @@ public class JTransfoImpl implements JTransfo, ConvertSourceTarget, ObjectClassD
     }
 
     /**
-     * Get the list of {@link ObjectClassDeterminator}s to allow customization.
-     * <p/>
-     * The elements are tried in order (from end to start of list).
-     * <p/>
-     * You are explicitly allowed to change this list, but beware to do this from one thread only.
-     * <p/>
-     * Changes in the list are not used until you call {@link #updateObjectClassDeterminators()}.
-     *
-     * @return list of object class determinators
-     */
-    public List<ObjectClassDeterminator> getObjectClassDeterminators() {
-        return modifyableObjectClassDeterminators;
-    }
-
-    /**
-     * Update the list of object class determinators which is used based on the internal list
-     * (see {@link #getObjectClassDeterminators()}.
-     */
-    public void updateObjectClassDeterminators() {
-        updateObjectClassDeterminators(null);
-    }
-
-    /**
-     * Update the list of object class determinators which is used.
-     * <p/>
-     * When null is passed, this updates the changes to the internal list (see {@link #getObjectClassDeterminators()}.
-     * Alternatively, you can pass the new list explicitly.
-     *
-     * @param newObjectClassDeterminators new list of type converters
-     */
-    public void updateObjectClassDeterminators(List<ObjectClassDeterminator> newObjectClassDeterminators) {
-        if (null != newObjectClassDeterminators) {
-            modifyableObjectClassDeterminators.clear();
-            modifyableObjectClassDeterminators.addAll(newObjectClassDeterminators);
-
-        }
-        LockableList<ObjectClassDeterminator> newList = new LockableList<ObjectClassDeterminator>();
-        newList.addAll(modifyableObjectClassDeterminators);
-        newList.lock();
-        objectClassDeterminators = newList;
-        toHelper.setObjectClassDeterminator(this);
-    }
-
-    /**
      * Get the list of {@link ConvertInterceptor}s to allow customization.
      * <p/>
      * The elements are tried in reverse order (from end to start of list).
      * <p/>
      * You are explicitly allowed to change this list, but beware to do this from one thread only.
      * <p/>
-     * Changes in the list are not used until you call {@link #updateConvertInterceptors()}.
+     * Changes in the list are not used until you call {@link #updateObjectFinders()}.
      *
      * @return list of object finders
      */
@@ -253,7 +205,7 @@ public class JTransfoImpl implements JTransfo, ConvertSourceTarget, ObjectClassD
             targetIsTo = true;
             if (!toHelper.isTo(target)) {
                 throw new JTransfoException(String.format("Neither source nor target are annotated with DomainClass " +
-                        "on classes %s and %s.", getObjectClass(source).getName(), getObjectClass(target).getName()));
+                        "on classes %s and %s.", source.getClass().getName(), target.getClass().getName()));
             }
         }
         if (0 == tags.length) {
@@ -265,8 +217,8 @@ public class JTransfoImpl implements JTransfo, ConvertSourceTarget, ObjectClassD
 
     @Override
     public <T> T convert(Object source, T target, boolean targetIsTo, String... tags) {
-        List<Converter> converters = targetIsTo ? getToToConverters(getObjectClass(target)) :
-                getToDomainConverters(getObjectClass(source));
+        List<Converter> converters = targetIsTo ? getToToConverters(target.getClass()) :
+                getToDomainConverters(source.getClass());
         for (Converter converter : converters) {
             converter.convert(source, target, tags);
         }
@@ -278,7 +230,7 @@ public class JTransfoImpl implements JTransfo, ConvertSourceTarget, ObjectClassD
         if (null == source) {
             return null;
         }
-        Class<?> domainClass = getDomainClass(getObjectClass(source));
+        Class<?> domainClass = getDomainClass(source.getClass());
         return convertTo(source,  domainClass);
     }
 
@@ -361,17 +313,6 @@ public class JTransfoImpl implements JTransfo, ConvertSourceTarget, ObjectClassD
             converters.put(toClass, toConverter);
         }
         return toConverter;
-    }
-
-    @Override
-    public Class getObjectClass(Object object) {
-        for (ObjectClassDeterminator determinator : objectClassDeterminators) {
-            Class res = determinator.getObjectClass(object);
-            if (null != res) {
-                return res;
-            }
-        }
-        return object.getClass();
     }
 
 }
