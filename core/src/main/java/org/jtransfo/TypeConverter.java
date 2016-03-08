@@ -8,6 +8,8 @@
 
 package org.jtransfo;
 
+import java.lang.reflect.Type;
+
 import org.jtransfo.internal.SyntheticField;
 
 /**
@@ -25,7 +27,7 @@ public interface TypeConverter<TO_TYPE, DOMAIN_TYPE> {
      * @param realDomainType real class for the type in the domain object
      * @return true is this type converter can handle the type conversions
      */
-    boolean canConvert(Class<?> realToType, Class<?> realDomainType);
+    boolean canConvert(Type realToType, Type realDomainType);
 
     /**
      * Convert a transfer object field value to the value for the domain object.

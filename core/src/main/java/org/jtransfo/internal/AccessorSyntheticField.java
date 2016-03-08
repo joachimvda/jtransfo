@@ -13,6 +13,7 @@ import org.jtransfo.JTransfoException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -149,6 +150,19 @@ public class AccessorSyntheticField implements SyntheticField {
             return field.getType();
         } else {
             return getter.getReturnType();
+        }
+    }
+
+    /**
+     * Get field generic type.
+     * 
+     * @return field generic type
+     */
+    public Type getGenericType() {
+        if (null != field) {
+            return field.getGenericType();
+        } else {
+            return getter.getGenericReturnType();
         }
     }
 

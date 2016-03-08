@@ -31,6 +31,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -397,7 +398,7 @@ public class ConverterHelperTest {
     private class DefaultTypeConverter implements TypeConverter<Object, Object> {
 
         @Override
-        public boolean canConvert(Class<?> realToType, Class<?> realDomainType) {
+        public boolean canConvert(Type realToType, Type realDomainType) {
             return false;
         }
 

@@ -10,6 +10,7 @@ package org.jtransfo;
 
 import org.jtransfo.internal.SyntheticField;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -48,7 +49,7 @@ public abstract class AbstractListTypeConverter implements TypeConverter<List, L
     }
 
     @Override
-    public boolean canConvert(Class<?> realToType, Class<?> realDomainType) {
+    public boolean canConvert(Type realToType, Type realDomainType) {
         return false;  // never use automatically
     }
 
