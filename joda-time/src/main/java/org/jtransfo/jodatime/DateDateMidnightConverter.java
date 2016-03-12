@@ -13,6 +13,7 @@ import org.jtransfo.JTransfoException;
 import org.jtransfo.TypeConverter;
 import org.jtransfo.internal.SyntheticField;
 
+import java.lang.reflect.Type;
 import java.util.Date;
 
 /**
@@ -21,7 +22,7 @@ import java.util.Date;
 public class DateDateMidnightConverter implements TypeConverter<Date, DateMidnight> {
 
     @Override
-    public boolean canConvert(Class<?> realToType, Class<?> realDomainType) {
+    public boolean canConvert(Type realToType, Type realDomainType) {
         return Date.class.equals(realToType) && DateMidnight.class.equals(realDomainType);
     }
 

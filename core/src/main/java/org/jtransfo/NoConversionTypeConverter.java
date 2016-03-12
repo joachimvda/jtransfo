@@ -8,6 +8,8 @@
 
 package org.jtransfo;
 
+import java.lang.reflect.Type;
+
 import org.jtransfo.internal.SyntheticField;
 
 /**
@@ -16,8 +18,8 @@ import org.jtransfo.internal.SyntheticField;
 public class NoConversionTypeConverter implements TypeConverter<Object, Object> {
 
     @Override
-    public boolean canConvert(Class<?> realToType, Class<?> realDomainType) {
-        return realToType.getName().equals(realDomainType.getName());
+    public boolean canConvert(Type realToType, Type realDomainType) {
+        return realToType.equals(realDomainType);
     }
 
     @Override

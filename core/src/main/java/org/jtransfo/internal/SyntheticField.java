@@ -8,6 +8,8 @@
 
 package org.jtransfo.internal;
 
+import java.lang.reflect.Type;
+
 /**
  * Abstraction of a {@link java.lang.reflect.Field} which allows different handling of the field accessors.
  */
@@ -46,4 +48,11 @@ public interface SyntheticField {
      * @return field type
      */
     Class<?> getType();
+
+    /**
+     * Get field generic type.
+     * 
+     * @return field generic type
+     */
+    Type getGenericType();
 }

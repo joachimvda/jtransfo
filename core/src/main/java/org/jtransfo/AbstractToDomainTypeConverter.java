@@ -8,6 +8,9 @@
 
 package org.jtransfo;
 
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+
 import org.jtransfo.internal.ReflectionHelper;
 import org.jtransfo.internal.SyntheticField;
 
@@ -27,9 +30,11 @@ public abstract class AbstractToDomainTypeConverter implements TypeConverter<Obj
     }
 
     @Override
-    public boolean canConvert(Class<?> realToType, Class<?> realDomainType) {
+    public boolean canConvert(Type realToType, Type realDomainType) {
+        Class<?> toType = getClass(realToType);
+        Class<?> domainType = getClass(realDomainType);
         // TO type should be marked with @DomainClass and domain should match declared
-        return jTransfo.isToClass(realToType) && realDomainType.isAssignableFrom(jTransfo.getDomainClass(realToType));
+        return jTransfo.isToClass(toType) && domainType.isAssignableFrom(jTransfo.getDomainClass(toType));
     }
 
     /**
@@ -65,5 +70,9 @@ public abstract class AbstractToDomainTypeConverter implements TypeConverter<Obj
         } catch (IllegalAccessException ie) {
             throw new JTransfoException(CANNOT_CREATE_INSTANCE_OF + realToType.getName() + '.', ie);
         }
+    }
+
+    private Class<?> getClass(Type type) {
+        return  (type instanceof Class ? (Class<?>) type : (Class<?>) ((ParameterizedType) type).getRawType());
     }
 }

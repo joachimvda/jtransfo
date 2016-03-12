@@ -20,6 +20,7 @@ import org.jtransfo.TypeConverter;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -91,8 +92,8 @@ public class ConverterHelper {
     private void buildConverters(Field field, SyntheticField[] domainField, ToConverter converter, MappedBy mappedBy) {
         TypeConverter typeConverter = getDeclaredTypeConverter(mappedBy);
         if (null == typeConverter) {
-            typeConverter = getDefaultTypeConverter(field.getType(),
-                    domainField[domainField.length - 1].getType());
+            typeConverter = getDefaultTypeConverter(field.getGenericType(),
+                    domainField[domainField.length - 1].getGenericType());
         }
         SyntheticField sField = new SimpleSyntheticField(field);
         List<MapOnly> mapOnlies = getMapOnlies(field);
@@ -308,7 +309,7 @@ public class ConverterHelper {
      * @param domainField domain object field class
      * @return type converter
      */
-    protected TypeConverter getDefaultTypeConverter(Class<?> toField, Class<?> domainField) {
+    protected TypeConverter getDefaultTypeConverter(Type toField, Type domainField) {
         for (TypeConverter typeConverter : typeConvertersInOrder) {
             if (typeConverter.canConvert(toField, domainField)) {
                 return typeConverter;

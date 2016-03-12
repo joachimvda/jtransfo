@@ -15,6 +15,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.lang.reflect.Type;
 
 /**
  * Annotation which indicates how the field in the transfer object should be mapped to a field in the domain object.
@@ -88,7 +89,7 @@ public @interface MappedBy {
     class DefaultTypeConverter implements TypeConverter<Object, Object> {
 
         @Override
-        public boolean canConvert(Class<?> realToType, Class<?> realDomainType) {
+        public boolean canConvert(Type realToType, Type realDomainType) {
             return false;
         }
 

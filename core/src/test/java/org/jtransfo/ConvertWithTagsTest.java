@@ -9,6 +9,7 @@ import org.jtransfo.object.TaggedPersonTo;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.lang.reflect.Type;
 import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -180,7 +181,7 @@ public class ConvertWithTagsTest {
             return "always2";
         }
 
-        public boolean canConvert(Class<?> realToType, Class<?> realDomainType) {
+        public boolean canConvert(Type realToType, Type realDomainType) {
             return false;
         }
 
