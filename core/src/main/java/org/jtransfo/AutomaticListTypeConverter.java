@@ -1,16 +1,32 @@
+/*
+ * This file is part of jTransfo, a library for converting to and from transfer objects.
+ * Copyright (c) PROGS bvba, Belgium
+ *
+ * The program is available in open source according to the Apache License, Version 2.0.
+ * For full licensing details, see LICENSE.txt in the project root.
+ */
+
 package org.jtransfo;
+
+import org.jtransfo.internal.SyntheticField;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jtransfo.internal.SyntheticField;
-
+/**
+ * Converter lists, automatically detecting the entry type from the generic parameter.
+ */
 public class AutomaticListTypeConverter implements TypeConverter<List<?>, List<?>> {
 
     private final JTransfo jTransfo;
 
+    /**
+     * Constructor.
+     *
+     * @param jTransfo reference to jTransfo instance
+     */
     public AutomaticListTypeConverter(JTransfoImpl jTransfo) {
         this.jTransfo = jTransfo;
     }
@@ -28,11 +44,13 @@ public class AutomaticListTypeConverter implements TypeConverter<List<?>, List<?
             return false;
         }
         // TO type should be marked with @DomainClass and domain should match declared
-        return jTransfo.isToClass(paramRealToType) && paramRealDomainType.isAssignableFrom(jTransfo.getDomainClass(paramRealToType));
+        return jTransfo.isToClass(paramRealToType)
+                && paramRealDomainType.isAssignableFrom(jTransfo.getDomainClass(paramRealToType));
     }
 
     @Override
-    public List<?> convert(List<?> toObjects, SyntheticField domainField, Object domainObject, String... tags) throws JTransfoException {
+    public List<?> convert(List<?> toObjects, SyntheticField domainField, Object domainObject, String... tags)
+            throws JTransfoException {
         if (toObjects == null) {
             return null;
         }
@@ -44,7 +62,8 @@ public class AutomaticListTypeConverter implements TypeConverter<List<?>, List<?
     }
 
     @Override
-    public List<?> reverse(List<?> domainObjects, SyntheticField toField, Object toObject, String... tags) throws JTransfoException {
+    public List<?> reverse(List<?> domainObjects, SyntheticField toField, Object toObject, String... tags)
+            throws JTransfoException {
         if (domainObjects == null) {
             return null;
         }
