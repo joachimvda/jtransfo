@@ -27,7 +27,7 @@ public class AutomaticListTypeConverter implements TypeConverter<List<?>, List<?
      *
      * @param jTransfo reference to jTransfo instance
      */
-    public AutomaticListTypeConverter(JTransfoImpl jTransfo) {
+    public AutomaticListTypeConverter(JTransfo jTransfo) {
         this.jTransfo = jTransfo;
     }
 
