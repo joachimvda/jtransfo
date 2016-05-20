@@ -12,23 +12,39 @@ import org.jtransfo.internal.SyntheticField;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Converter lists, automatically detecting the entry type from the generic parameter.
  */
-public class AutomaticListTypeConverter implements TypeConverter<List<?>, List<?>> {
+public class AutomaticListTypeConverter extends AbstractListTypeConverter {
 
-    private final JTransfo jTransfo;
+    private static final String NAME = "automaticList";
 
     /**
-     * Constructor.
+     * No-arguments constructor, jTransfo instance needs to be injected explicitly.
+     */
+    public AutomaticListTypeConverter() {
+        super(NAME, Object.class);
+    }
+
+    /**
+     * Constructor which defined custom name.
      *
-     * @param jTransfo reference to jTransfo instance
+     * @param name name
+     */
+    public AutomaticListTypeConverter(String name) {
+        super(name, Object.class);
+    }
+
+    /**
+     * Constructor which injects jTransfo instance.
+     *
+     * @param jTransfo jTransfo instance for nested conversions
      */
     public AutomaticListTypeConverter(JTransfo jTransfo) {
-        this.jTransfo = jTransfo;
+        super(NAME, Object.class);
+        super.setJTransfo(jTransfo);
     }
 
     @Override
@@ -44,35 +60,31 @@ public class AutomaticListTypeConverter implements TypeConverter<List<?>, List<?
             return false;
         }
         // TO type should be marked with @DomainClass and domain should match declared
-        return jTransfo.isToClass(paramRealToType)
-                && paramRealDomainType.isAssignableFrom(jTransfo.getDomainClass(paramRealToType));
+        return getJTransfo().isToClass(paramRealToType)
+                && paramRealDomainType.isAssignableFrom(getJTransfo().getDomainClass(paramRealToType));
+    }
+
+    /**
+     * Do the actual conversion of one object.
+     *
+     * @param jTransfo jTransfo instance in use
+     * @param toObject transfer object
+     * @param domainObjectType domain object type
+     * @param tags tags which indicate which fields can be converted based on {@link MapOnly} annotations.
+     * @return domain object
+     * @throws JTransfoException oops, cannot convert
+     */
+    public Object doConvertOne(JTransfo jTransfo, Object toObject, Class<?> domainObjectType, String... tags)
+            throws JTransfoException {
+        return jTransfo.convertTo(toObject, domainObjectType, tags);
     }
 
     @Override
-    public List<?> convert(List<?> toObjects, SyntheticField domainField, Object domainObject, String... tags)
+    public Object doReverseOne(
+            JTransfo jTransfo, Object domainObject, SyntheticField toField, Class<?> toType, String... tags)
             throws JTransfoException {
-        if (toObjects == null) {
-            return null;
-        }
-        List<Object> result = new ArrayList<Object>();
-        for (Object o : toObjects) {
-            result.add(jTransfo.convertTo(o, jTransfo.getDomainClass(o.getClass()), tags));
-        }
-        return result;
-    }
-
-    @Override
-    public List<?> reverse(List<?> domainObjects, SyntheticField toField, Object toObject, String... tags)
-            throws JTransfoException {
-        if (domainObjects == null) {
-            return null;
-        }
-        List<Object> result = new ArrayList<Object>();
         Class<?> clazz = getParamType(toField.getGenericType());
-        for (Object o : domainObjects) {
-            result.add(jTransfo.convertTo(o, jTransfo.getToSubType(clazz, o), tags));
-        }
-        return result;
+        return jTransfo.convertTo(domainObject, jTransfo.getToSubType(clazz, domainObject), tags);
     }
 
     private Class<?> getClass(Type type) {

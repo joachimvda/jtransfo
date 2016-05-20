@@ -1,10 +1,5 @@
 package org.jtransfo;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import org.jtransfo.object.AbstractHumanDomain;
 import org.jtransfo.object.AbstractHumanTo;
 import org.jtransfo.object.FemaleHumanDomain;
@@ -16,7 +11,12 @@ import org.jtransfo.object.MaleHumanTo;
 import org.junit.Before;
 import org.junit.Test;
 
-public class AutomaticListConverterTest {
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+public class AutomaticListTypeConverterTest {
 
     private JTransfo jTransfo;
 

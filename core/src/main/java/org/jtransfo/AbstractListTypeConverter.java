@@ -48,6 +48,15 @@ public abstract class AbstractListTypeConverter implements TypeConverter<List, L
         this.jTransfo = jTransfo;
     }
 
+    /**
+     * Get the configured jTransfo instance.
+     *
+     * @return jTransfo instance
+     */
+    protected JTransfo getJTransfo() {
+        return jTransfo;
+    }
+
     @Override
     public boolean canConvert(Type realToType, Type realDomainType) {
         return false;  // never use automatically
@@ -83,6 +92,24 @@ public abstract class AbstractListTypeConverter implements TypeConverter<List, L
         return sort(res);
     }
 
+    /**
+     * Do the actual reverse conversion of one object.
+     *
+     * @param jTransfo jTransfo instance in use
+     * @param domainObject domain object
+     * @param toField field definition on the transfer object
+     * @param toType configured to type for list
+     * @param tags tags which indicate which fields can be converted based on {@link MapOnly} annotations.
+     * @return domain object
+     * @throws JTransfoException oops, cannot convert
+     */
+    public Object doReverseOne(
+            JTransfo jTransfo, Object domainObject, SyntheticField toField, Class<?> toType, String... tags)
+            throws JTransfoException {
+        return jTransfo.convertTo(domainObject, jTransfo.getToSubType(toType, domainObject), tags);
+    }
+
+
     @Override
     public List reverse(List domainObjects, SyntheticField toField, Object toObject, String... tags)
             throws JTransfoException {
@@ -91,7 +118,7 @@ public abstract class AbstractListTypeConverter implements TypeConverter<List, L
         }
         List<Object> res = newList(toField, toObject);
         for (Object domain : domainObjects) {
-            res.add(jTransfo.convertTo(domain, jTransfo.getToSubType(toType, domain), tags));
+            res.add(doReverseOne(jTransfo, domain, toField, toType, tags));
         }
         return sort(res);
     }
