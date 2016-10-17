@@ -10,3 +10,4 @@ target
 *.ear
 *~
 checkstyle.cache
+*.versionsBackup
