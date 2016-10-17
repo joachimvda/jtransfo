@@ -95,8 +95,6 @@ public class AutomaticListTypeConverter extends AbstractListTypeConverter {
         if (type instanceof ParameterizedType) {
             ParameterizedType p = (ParameterizedType) type;
             return (Class<?>) p.getActualTypeArguments()[0];
-        } else  if (type instanceof Class) { // try to provide a sensible default, should not be needed
-            return (Class<?>) type;
         } else {
             return null;
         }

@@ -26,6 +26,13 @@ public class AutomaticListTypeConverterTest {
     }
 
     @Test
+    public void testCanConvert() throws Exception {
+        AutomaticListTypeConverter typeConverter = new AutomaticListTypeConverter(jTransfo);
+
+        assertThat(typeConverter.canConvert(List.class, List.class)).isFalse();
+    }
+
+    @Test
     public void testConvertDomainObject() throws Exception {
         HouseDomain hd = new HouseDomain();
         MaleHumanDomain owner = new MaleHumanDomain();

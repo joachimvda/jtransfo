@@ -195,7 +195,6 @@ public class JTransfoImpl implements JTransfo, ConvertSourceTarget {
         if (null != newObjectReplacers) {
             modifyableObjectReplacers.clear();
             modifyableObjectReplacers.addAll(newObjectReplacers);
-
         }
         LockableList<ObjectReplacer> newList = new LockableList<ObjectReplacer>();
         newList.addAll(modifyableObjectReplacers);
