@@ -27,6 +27,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static org.jtransfo.MappedBy.DEFAULT_FIELD;
+import static org.jtransfo.MappedBy.DEFAULT_PATH;
+
 /**
  * Helper class for building the converters for a pair of classes.
  */
@@ -59,29 +62,7 @@ public class ConverterHelper {
 
                 boolean isStatic = (0 != (field.getModifiers() & Modifier.STATIC));
                 if (null != mappedBy || !isStatic) {
-                    String domainFieldName = field.getName();
-                    String[] domainFieldPath = new String[0];
-                    boolean readOnlyField = (0 != (field.getModifiers() & Modifier.FINAL)); // final -> read-only
-                    if (null != mappedBy) {
-                        if (!MappedBy.DEFAULT_FIELD.equals(mappedBy.field())) {
-                            domainFieldName = mappedBy.field();
-                        }
-                        if (!MappedBy.DEFAULT_PATH.equals(mappedBy.path())) {
-                            domainFieldPath = mappedBy.path().split("\\.");
-                        }
-                        readOnlyField = mappedBy.readOnly();
-                    }
-                    SyntheticField[] domainField;
-                    try {
-                        domainField = findField(domainFields, domainFieldName, domainFieldPath, domainClass,
-                                readOnlyField);
-                    } catch (JTransfoException jte) {
-                        throw new JTransfoException(String.format("Cannot determine mapping for field %s in class " +
-                                "%s. The field %s in class %s %scannot be found.", field.getName(), toClass.getName(),
-                                domainFieldName, domainClass.getName(), withPath(domainFieldPath)), jte);
-                    }
-
-                    buildConverters(field, domainField, converter, mappedBy);
+                    buildConverters(field, domainFields, domainClass, converter, mappedBy);
                 }
             }
         }
@@ -89,20 +70,54 @@ public class ConverterHelper {
         return converter;
     }
 
-    private void buildConverters(Field field, SyntheticField[] domainField, ToConverter converter, MappedBy mappedBy) {
-        TypeConverter typeConverter = getDeclaredTypeConverter(mappedBy);
-        if (null == typeConverter) {
-            typeConverter = getDefaultTypeConverter(field.getGenericType(),
-                    domainField[domainField.length - 1].getGenericType());
+    private SyntheticField[] getDomainField(Field field, List<SyntheticField> domainFields, Class domainClass,
+            String fieldParam, String pathParam, boolean readOnlyParam) {
+        String domainFieldName = field.getName();
+        String[] domainFieldPath = new String[0];
+        boolean readOnlyField = (0 != (field.getModifiers() & Modifier.FINAL)) || readOnlyParam; // final -> read-only
+        if (!MappedBy.DEFAULT_FIELD.equals(fieldParam)) {
+            domainFieldName = fieldParam;
         }
+        if (!MappedBy.DEFAULT_PATH.equals(pathParam)) {
+            domainFieldPath = pathParam.split("\\.");
+        }
+        SyntheticField[] domainField;
+        try {
+            domainField = findField(domainFields, domainFieldName, domainFieldPath, domainClass,
+                    readOnlyField);
+        } catch (JTransfoException jte) {
+            throw new JTransfoException(String.format("Cannot determine mapping for field %s in class " +
+                            "%s. The field %s in class %s %scannot be found.", field.getName(), field.getDeclaringClass().getName(),
+                    domainFieldName, domainClass.getName(), withPath(domainFieldPath)), jte);
+        }
+        return domainField;
+    }
+
+    private SyntheticField[] getDomainField(Field field, List<SyntheticField> domainFields, Class domainClass, MappedBy mappedBy) {
+        if (null == mappedBy) {
+            return getDomainField(field, domainFields, domainClass, MappedBy.DEFAULT_FIELD, MappedBy.DEFAULT_PATH, false);
+        } else {
+            return getDomainField(field, domainFields, domainClass, mappedBy.field(), mappedBy.path(), mappedBy.readOnly());
+        }
+    }
+
+    private void buildConverters(Field field, List<SyntheticField> domainFields, Class domainClass, ToConverter converter, MappedBy mappedBy) {
         SyntheticField sField = new SimpleSyntheticField(field);
         List<MapOnly> mapOnlies = getMapOnlies(field);
         if (null == mapOnlies) {
-            if (0 == (field.getModifiers() & Modifier.FINAL)) { // cannot write final fields
-                converter.getToTo().add(new ToToConverter(sField, domainField, typeConverter));
-            }
-            if (null == mappedBy || !mappedBy.readOnly()) {
-                converter.getToDomain().add(new ToDomainConverter(sField, domainField, typeConverter));
+            SyntheticField[] domainField = getDomainField(field, domainFields, domainClass, mappedBy);
+            if (null != domainField) { // is null when mappedBy.notMapped
+                TypeConverter typeConverter = getDeclaredTypeConverter(mappedBy);
+                if (null == typeConverter) {
+                    typeConverter = getDefaultTypeConverter(field.getGenericType(),
+                            domainField[domainField.length - 1].getGenericType());
+                }
+                if (0 == (field.getModifiers() & Modifier.FINAL)) { // cannot write final fields
+                    converter.getToTo().add(new ToToConverter(sField, domainField, typeConverter));
+                }
+                if (null == mappedBy || !mappedBy.readOnly()) {
+                    converter.getToDomain().add(new ToDomainConverter(sField, domainField, typeConverter));
+                }
             }
         } else {
             TaggedConverter toTo = new TaggedConverter();
@@ -111,15 +126,26 @@ public class ConverterHelper {
             converter.getToDomain().add(toDomain);
 
             for (MapOnly mapOnly : mapOnlies) {
+                // determine new domain field if path or field declare on mapOnly
+                SyntheticField[] mapOnlyDomainField = null;
+                if (!DEFAULT_PATH.equals(mapOnly.path()) || !DEFAULT_FIELD.equals(mapOnly.field())) {
+                    mapOnlyDomainField = getDomainField(field, domainFields, domainClass, mapOnly.field(), mapOnly.path(), mapOnly.readOnly());
+                }
+                if (null == mapOnlyDomainField) {
+                    mapOnlyDomainField = getDomainField(field, domainFields, domainClass, mappedBy);
+                }
+                TypeConverter typeConverter = getDeclaredTypeConverter(mappedBy);
+                if (null == typeConverter) {
+                    typeConverter = getDefaultTypeConverter(field.getGenericType(), mapOnlyDomainField[mapOnlyDomainField.length - 1].getGenericType());
+                }
                 TypeConverter moTypeConverter = getDeclaredTypeConverter(mapOnly, typeConverter);
-                ToToConverter ttc = new ToToConverter(sField, domainField, moTypeConverter);
+                ToToConverter ttc = new ToToConverter(sField, mapOnlyDomainField, moTypeConverter);
                 toTo.addConverters(mapOnly.value(), ttc);
                 if (!mapOnly.readOnly()) {
-                    ToDomainConverter tdc = new ToDomainConverter(sField, domainField, moTypeConverter);
+                    ToDomainConverter tdc = new ToDomainConverter(sField, mapOnlyDomainField, moTypeConverter);
                     toDomain.addConverters(mapOnly.value(), tdc);
                 }
             }
-            // for now, not mapped at all
         }
     }
 

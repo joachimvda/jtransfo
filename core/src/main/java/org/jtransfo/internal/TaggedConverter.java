@@ -10,6 +10,7 @@ package org.jtransfo.internal;
 
 import org.jtransfo.Converter;
 import org.jtransfo.JTransfoException;
+import org.jtransfo.MapOnly;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,7 +36,7 @@ public class TaggedConverter implements Converter {
 
     @Override
     public void convert(Object source, Object target, String... tags) throws JTransfoException {
-        Converter converter = converters.get("*");
+        Converter converter = converters.get(MapOnly.ALWAYS);
         if (null != converter) {
             converter.convert(source, target, tags);
         }

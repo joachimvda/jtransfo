@@ -9,6 +9,7 @@
 package org.jtransfo.internal;
 
 import org.jtransfo.Converter;
+import org.jtransfo.MapOnly;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -53,7 +54,7 @@ public class TaggedConverterTest {
         Converter starConverter = mock(Converter.class);
         Converter converter = mock(Converter.class);
         taggedConverter.addConverters(new String[] {TAG}, converter);
-        taggedConverter.addConverters(new String[] {"*"}, starConverter);
+        taggedConverter.addConverters(new String[] {MapOnly.ALWAYS}, starConverter);
         Object source = mock(Object.class);
         Object target = mock(Object.class);
 
