@@ -15,9 +15,10 @@ import java.lang.reflect.Type;
 
 /**
  * Type converter for representing enums as string in the transfer object.
- * <p/>
+ * <p>
  * This one automaticall converts between String ans any enum.
  * If you only want String-enum type conversion for specific enums, use {@link StringEnumTypeConverter}.
+ * </p>
  */
 public class AutomaticStringEnumTypeConverter implements TypeConverter<String, Enum> {
 
