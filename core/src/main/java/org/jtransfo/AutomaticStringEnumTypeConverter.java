@@ -16,43 +16,30 @@ import java.lang.reflect.Type;
 /**
  * Type converter for representing enums as string in the transfer object.
  * <p/>
- * This one needs to be configured for each enum which needs to be converted.
- * If you want this to apply for all enums, use {@link AutomaticStringEnumTypeConverter}.
- *
- * @param <ENUM_TYPE> enum type to convert with
+ * This one automaticall converts between String ans any enum.
+ * If you only want String-enum type conversion for specific enums, use {@link StringEnumTypeConverter}.
  */
-public class StringEnumTypeConverter<ENUM_TYPE extends Enum> implements TypeConverter<String, ENUM_TYPE> {
-
-    private final Class<ENUM_TYPE> enumClass;
-
-    /**
-     * Construct a new type converter for the given enum type.
-     *
-     * @param enumClass enum type class
-     */
-    public StringEnumTypeConverter(Class<ENUM_TYPE> enumClass) {
-        this.enumClass = enumClass;
-    }
+public class AutomaticStringEnumTypeConverter implements TypeConverter<String, Enum> {
 
     @Override
     public boolean canConvert(Type realToType, Type realDomainType) {
         Class<?> toType = getClass(realToType);
         Class<?> domainType = getClass(realDomainType);
-        return String.class.isAssignableFrom(toType) && enumClass.isAssignableFrom(domainType);
+        return String.class.isAssignableFrom(toType) && Enum.class.isAssignableFrom(domainType);
     }
 
     @Override
-    public ENUM_TYPE convert(String object, SyntheticField domainField, Object domainObject, String... tags)
+    public Enum convert(String object, SyntheticField domainField, Object domainObject, String... tags)
             throws JTransfoException {
         if (null == object || 0 == object.length()) {
             return null;
         }
 
-        return (ENUM_TYPE) Enum.valueOf(enumClass, object);
+        return Enum.valueOf((Class<Enum>) domainField.getType(), object);
     }
 
     @Override
-    public String reverse(ENUM_TYPE object, SyntheticField toField, Object toObject, String... tags)
+    public String reverse(Enum object, SyntheticField toField, Object toObject, String... tags)
             throws JTransfoException {
         if (null == object) {
             return null;
