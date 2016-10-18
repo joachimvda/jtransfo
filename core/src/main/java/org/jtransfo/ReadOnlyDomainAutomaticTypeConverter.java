@@ -52,7 +52,7 @@ public class ReadOnlyDomainAutomaticTypeConverter
     public Object reverse(Object domainObject, SyntheticField toField, Object toObject, String... tags)
             throws JTransfoException {
         if (List.class.isAssignableFrom(toField.getType())) {
-            return rodListTypeConverter.convert((List<?>) domainObject, toField, toObject, tags);
+            return rodListTypeConverter.reverse((List<?>) domainObject, toField, toObject, tags);
         }
         return super.reverse(domainObject, toField, toObject, tags);
     }

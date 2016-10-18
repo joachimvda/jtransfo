@@ -328,6 +328,12 @@ public class JTransfoImplTest {
         verify(cst).convert(source, target, false, JTransfo.DEFAULT_TAG_WHEN_NO_TAGS);
     }
 
+    @Test
+    public void clearCaches() throws Exception {
+        jTransfo.clearCaches();
+        // just to check it does not fail
+    }
+
     private interface NeedsJTransfoTypeConverter extends TypeConverter, NeedsJTransfo {
     }
 }

@@ -57,7 +57,7 @@ public class ReadOnlyDomainAutomaticTypeConverterTest {
     @Before
     public void setUp() throws Exception {
         typeConverter = new ReadOnlyDomainAutomaticTypeConverter();
-        ((ReadOnlyDomainAutomaticTypeConverter) typeConverter).setJTransfo(jTransfo);
+        typeConverter.setJTransfo(jTransfo);
 
         when(jTransfo.getDomainClass(AddressTo.class)).thenReturn((Class) AddressDomain.class);
         when(jTransfo.getToSubType(eq(AddressTo.class), anyObject())).thenReturn((Class) AddressTo.class);
@@ -74,7 +74,6 @@ public class ReadOnlyDomainAutomaticTypeConverterTest {
         when(jTransfo.getToSubType(eq(SimpleBaseTo.class), anyObject())).thenReturn((Class) SimpleBaseTo.class);
         when(domainField.getType()).thenReturn((Class) SimpleBaseDomain.class);
         when(toField.getType()).thenReturn((Class) SimpleBaseTo.class);
-
     }
 
     @Test
@@ -188,14 +187,41 @@ public class ReadOnlyDomainAutomaticTypeConverterTest {
         List<AddressDomain> addresses = new ArrayList<AddressDomain>();
         addresses.add(ad1);
         addresses.add(ad2);
+        List<AddressTo> resList = new ArrayList<AddressTo>();
+        Object to = new Object();
+        when(listField.get(to)).thenReturn(resList);
 
-        List<AddressTo> res = (List) typeConverter.reverse(addresses, listField, null);
+        List<AddressTo> res = (List) typeConverter.reverse(addresses, listField, to);
 
         assertThat(res).isNotNull();
         assertThat(res).hasSize(2);
-        verify(jTransfo).findTarget(ad1, null);
-        verify(jTransfo).findTarget(ad2, null);
+        verify(jTransfo).convertTo(ad1, AddressTo.class);
+        verify(jTransfo).convertTo(ad2, AddressTo.class);
+        assertThat(res).isEqualTo(resList);
+    }
 
+    @Test
+    public void testReverseList_new() throws Exception {
+        AddressDomain ad1 = new AddressDomain();
+        ad1.setId(1L);
+        AddressDomain ad2 = new AddressDomain();
+        ad2.setId(2L);
+        List<AddressDomain> addresses = new ArrayList<AddressDomain>();
+        addresses.add(ad1);
+        addresses.add(ad2);
+        List<AddressTo> resList = new ArrayList<AddressTo>();
+        Object to = new Object();
+        when(listField.get(to)).thenReturn(resList);
+        typeConverter.setAlwaysNewList(true);
+        typeConverter.setSortList(true);
+
+        List<AddressTo> res = (List) typeConverter.reverse(addresses, listField, to);
+
+        assertThat(res).isNotNull();
+        assertThat(res).hasSize(2);
+        verify(jTransfo).convertTo(ad1, AddressTo.class);
+        verify(jTransfo).convertTo(ad2, AddressTo.class);
+        assertThat(res).isNotEqualTo(resList);
     }
 
     @Test

@@ -17,14 +17,14 @@ import org.junit.rules.ExpectedException;
 
 import java.io.IOException;
 
+import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
 /**
  * Test which verifies that the convert interceptors work.
  */
 public class JTransfoImplObjectReplacerTest {
-
-    int determinatorCounter;
 
     private JTransfo jTransfo;
 
@@ -38,9 +38,15 @@ public class JTransfoImplObjectReplacerTest {
 
         impl.getObjectReplacers().add(new MyObjectReplacer());
         impl.updateObjectReplacers();
+    }
 
-        determinatorCounter = 0;
-        assertThat(determinatorCounter).isEqualTo(0);
+    @Test
+    public void testAdditionalReplacer() throws Exception {
+        ObjectReplacer mockReplacer = mock(ObjectReplacer.class);
+
+        ((JTransfoImpl) jTransfo).updateObjectReplacers(singletonList(mockReplacer));
+
+        assertThat(((JTransfoImpl) jTransfo).getObjectReplacers()).contains(mockReplacer);
     }
 
     @Test
@@ -65,7 +71,6 @@ public class JTransfoImplObjectReplacerTest {
 
         assertThat(res).isNotNull();
         assertThat(res.getA()).isEqualTo("aaa"); // XZ added by interceptors
-        assertThat(determinatorCounter).isEqualTo(0);
     }
 
 
