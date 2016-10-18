@@ -27,9 +27,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static org.jtransfo.MappedBy.DEFAULT_FIELD;
-import static org.jtransfo.MappedBy.DEFAULT_PATH;
-
 /**
  * Helper class for building the converters for a pair of classes.
  */
@@ -87,21 +84,26 @@ public class ConverterHelper {
                     readOnlyField);
         } catch (JTransfoException jte) {
             throw new JTransfoException(String.format("Cannot determine mapping for field %s in class " +
-                            "%s. The field %s in class %s %scannot be found.", field.getName(), field.getDeclaringClass().getName(),
+                            "%s. The field %s in class %s %scannot be found.",
+                    field.getName(), field.getDeclaringClass().getName(),
                     domainFieldName, domainClass.getName(), withPath(domainFieldPath)), jte);
         }
         return domainField;
     }
 
-    private SyntheticField[] getDomainField(Field field, List<SyntheticField> domainFields, Class domainClass, MappedBy mappedBy) {
+    private SyntheticField[] getDomainField(Field field, List<SyntheticField> domainFields, Class domainClass,
+            MappedBy mappedBy) {
         if (null == mappedBy) {
-            return getDomainField(field, domainFields, domainClass, MappedBy.DEFAULT_FIELD, MappedBy.DEFAULT_PATH, false);
+            return getDomainField(field, domainFields, domainClass,
+                    MappedBy.DEFAULT_FIELD, MappedBy.DEFAULT_PATH, false);
         } else {
-            return getDomainField(field, domainFields, domainClass, mappedBy.field(), mappedBy.path(), mappedBy.readOnly());
+            return getDomainField(field, domainFields, domainClass,
+                    mappedBy.field(), mappedBy.path(), mappedBy.readOnly());
         }
     }
 
-    private void buildConverters(Field field, List<SyntheticField> domainFields, Class domainClass, ToConverter converter, MappedBy mappedBy) {
+    private void buildConverters(Field field, List<SyntheticField> domainFields, Class domainClass,
+            ToConverter converter, MappedBy mappedBy) {
         SyntheticField sField = new SimpleSyntheticField(field);
         List<MapOnly> mapOnlies = getMapOnlies(field);
         if (null == mapOnlies) {
@@ -128,15 +130,17 @@ public class ConverterHelper {
             for (MapOnly mapOnly : mapOnlies) {
                 // determine new domain field if path or field declare on mapOnly
                 SyntheticField[] mapOnlyDomainField = null;
-                if (!DEFAULT_PATH.equals(mapOnly.path()) || !DEFAULT_FIELD.equals(mapOnly.field())) {
-                    mapOnlyDomainField = getDomainField(field, domainFields, domainClass, mapOnly.field(), mapOnly.path(), mapOnly.readOnly());
+                if (!MappedBy.DEFAULT_PATH.equals(mapOnly.path()) || !MappedBy.DEFAULT_FIELD.equals(mapOnly.field())) {
+                    mapOnlyDomainField = getDomainField(field, domainFields, domainClass,
+                            mapOnly.field(), mapOnly.path(), mapOnly.readOnly());
                 }
                 if (null == mapOnlyDomainField) {
                     mapOnlyDomainField = getDomainField(field, domainFields, domainClass, mappedBy);
                 }
                 TypeConverter typeConverter = getDeclaredTypeConverter(mappedBy);
                 if (null == typeConverter) {
-                    typeConverter = getDefaultTypeConverter(field.getGenericType(), mapOnlyDomainField[mapOnlyDomainField.length - 1].getGenericType());
+                    typeConverter = getDefaultTypeConverter(field.getGenericType(),
+                            mapOnlyDomainField[mapOnlyDomainField.length - 1].getGenericType());
                 }
                 TypeConverter moTypeConverter = getDeclaredTypeConverter(mapOnly, typeConverter);
                 ToToConverter ttc = new ToToConverter(sField, mapOnlyDomainField, moTypeConverter);
