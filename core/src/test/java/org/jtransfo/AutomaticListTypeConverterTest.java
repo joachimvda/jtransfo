@@ -23,6 +23,8 @@ public class AutomaticListTypeConverterTest {
     @Before
     public void setup() throws Exception {
         jTransfo = new JTransfoImpl();
+        ((JTransfoImpl) jTransfo).getTypeConverters().add(new AutomaticListTypeConverter());
+        ((JTransfoImpl) jTransfo).updateTypeConverters();
     }
 
     @Test

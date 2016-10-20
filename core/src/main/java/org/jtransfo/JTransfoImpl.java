@@ -45,7 +45,6 @@ public class JTransfoImpl implements JTransfo, ConvertSourceTarget {
         modifyableObjectFinders.add(new NewInstanceObjectFinder());
         updateObjectFinders();
 
-        modifyableTypeConverters.add(new AutomaticListTypeConverter(this));
         modifyableTypeConverters.add(new NoConversionTypeConverter());
         modifyableTypeConverters.add(new ToDomainTypeConverter(this));
         updateTypeConverters();
