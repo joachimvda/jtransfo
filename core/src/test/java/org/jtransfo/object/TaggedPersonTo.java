@@ -29,7 +29,7 @@ public class TaggedPersonTo {
 
     @MapOnly("create")
     @MapOnlies({
-            @MapOnly(value =  MapOnly.ALWAYS, readOnly = true)
+            @MapOnly(value =  "*", readOnly = true)
     })
     @MappedBy(readOnly = true) // should not make a difference, overwritten by the ReadOnlies
     private String gender;

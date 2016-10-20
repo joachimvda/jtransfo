@@ -79,11 +79,11 @@ public class ReadOnlyDomainAutomaticTypeConverterTest {
     @Test
     public void testCanConvertSimple() throws Exception {
         assertThat(typeConverter.canConvert(String.class, String.class)).isFalse();
-        assertThat(typeConverter.canConvert(SimpleBaseTo.class, SimpleBaseDomain.class)).isTrue();
+        assertThat(typeConverter.canConvert(SimpleBaseTo.class, SimpleBaseDomain.class)).isFalse(); // can convert but needs to be declared
         assertThat(typeConverter.canConvert(SimpleBaseTo.class, String.class)).isFalse();
         assertThat(typeConverter.canConvert(SimpleBaseTo.class, SimpleExtendedDomain.class)).isFalse();
-        assertThat(typeConverter.canConvert(SimpleExtendedTo.class, SimpleExtendedDomain.class)).isTrue();
-        assertThat(typeConverter.canConvert(SimpleExtendedTo.class, SimpleBaseDomain.class)).isTrue();
+        assertThat(typeConverter.canConvert(SimpleExtendedTo.class, SimpleExtendedDomain.class)).isFalse(); // can convert but needs to be declared
+        assertThat(typeConverter.canConvert(SimpleExtendedTo.class, SimpleBaseDomain.class)).isFalse(); // can convert but needs to be declared
     }
 
     @Test

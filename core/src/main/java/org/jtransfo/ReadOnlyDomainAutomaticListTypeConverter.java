@@ -8,6 +8,8 @@
 
 package org.jtransfo;
 
+import java.lang.reflect.Type;
+
 /**
  * Type converter for converting lists with object of specific type. Can only be used as declared converter.
  * <p>
@@ -32,6 +34,11 @@ public class ReadOnlyDomainAutomaticListTypeConverter extends AutomaticListTypeC
      */
     public ReadOnlyDomainAutomaticListTypeConverter(String name) {
         super(name);
+    }
+
+    @Override
+    public boolean canConvert(Type realToType, Type realDomainType) {
+        return false; // readOnlyDomain needs to be declared explicitly
     }
 
     @Override

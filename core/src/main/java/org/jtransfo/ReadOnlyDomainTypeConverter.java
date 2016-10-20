@@ -10,6 +10,8 @@ package org.jtransfo;
 
 import org.jtransfo.internal.SyntheticField;
 
+import java.lang.reflect.Type;
+
 /**
  * Type converter which only copies linked objects' fields to the transfer object. For converting transfer object to
  * domain, the linked objects are looked up but the fields are not updated.
@@ -17,6 +19,11 @@ import org.jtransfo.internal.SyntheticField;
 public class ReadOnlyDomainTypeConverter extends AbstractToDomainTypeConverter implements Named {
 
     private String name = "readOnlyDomain";
+
+    @Override
+    public boolean canConvert(Type realToType, Type realDomainType) {
+        return false; // readOnlyDomain needs to be declared explicitly
+    }
 
     @Override
     public Object doConvert(JTransfo jTransfo, Object toObject, SyntheticField domainField, String... tags)

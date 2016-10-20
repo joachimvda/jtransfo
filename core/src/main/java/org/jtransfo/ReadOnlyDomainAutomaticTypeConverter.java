@@ -35,8 +35,7 @@ public class ReadOnlyDomainAutomaticTypeConverter
 
     @Override
     public boolean canConvert(Type realToType, Type realDomainType) {
-        return super.canConvert(realToType, realDomainType)
-                || rodListTypeConverter.canConvert(realToType, realDomainType);
+        return false; // readOnlyDomain needs to be declared explicitly
     }
 
     @Override
