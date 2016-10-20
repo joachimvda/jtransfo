@@ -108,18 +108,16 @@ public class ConverterHelper {
         List<MapOnly> mapOnlies = getMapOnlies(field);
         if (null == mapOnlies) {
             SyntheticField[] domainField = getDomainField(field, domainFields, domainClass, mappedBy);
-            if (null != domainField) { // is null when mappedBy.notMapped
-                TypeConverter typeConverter = getDeclaredTypeConverter(mappedBy);
-                if (null == typeConverter) {
-                    typeConverter = getDefaultTypeConverter(field.getGenericType(),
-                            domainField[domainField.length - 1].getGenericType());
-                }
-                if (0 == (field.getModifiers() & Modifier.FINAL)) { // cannot write final fields
-                    converter.getToTo().add(new ToToConverter(sField, domainField, typeConverter));
-                }
-                if (null == mappedBy || !mappedBy.readOnly()) {
-                    converter.getToDomain().add(new ToDomainConverter(sField, domainField, typeConverter));
-                }
+            TypeConverter typeConverter = getDeclaredTypeConverter(mappedBy);
+            if (null == typeConverter) {
+                typeConverter = getDefaultTypeConverter(field.getGenericType(),
+                        domainField[domainField.length - 1].getGenericType());
+            }
+            if (0 == (field.getModifiers() & Modifier.FINAL)) { // cannot write final fields
+                converter.getToTo().add(new ToToConverter(sField, domainField, typeConverter));
+            }
+            if (null == mappedBy || !mappedBy.readOnly()) {
+                converter.getToDomain().add(new ToDomainConverter(sField, domainField, typeConverter));
             }
         } else {
             TaggedConverter toTo = new TaggedConverter();

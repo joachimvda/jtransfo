@@ -76,5 +76,5 @@ public @interface MapOnly {
     /**
      * Tag which can be used to assure it is always called (handled before the specific cases).
      */
-    String ALWAYS = "";
+    String ALWAYS = "*";
 }
