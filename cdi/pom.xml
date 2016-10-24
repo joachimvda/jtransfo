@@ -12,7 +12,7 @@
     <parent>
         <groupId>org.jtransfo</groupId>
         <artifactId>jtransfo</artifactId>
-        <version>1.4-SNAPSHOT</version>
+        <version>1.4</version>
     </parent>
     <groupId>org.jtransfo</groupId>
     <artifactId>jtransfo-cdi</artifactId>
