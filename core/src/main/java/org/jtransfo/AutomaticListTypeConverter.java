@@ -10,7 +10,6 @@ package org.jtransfo;
 
 import org.jtransfo.internal.SyntheticField;
 
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.List;
 
@@ -49,13 +48,13 @@ public class AutomaticListTypeConverter extends AbstractListTypeConverter {
 
     @Override
     public boolean canConvert(Type realToType, Type realDomainType) {
-        Class<?> toClass = getClass(realToType);
-        Class<?> domainClass = getClass(realDomainType);
+        Class<?> toClass = TypeUtil.getRawClass(realToType);
+        Class<?> domainClass = TypeUtil.getRawClass(realDomainType);
         if (!List.class.isAssignableFrom(toClass) || !List.class.isAssignableFrom(domainClass)) {
             return false;
         }
-        Class<?> paramRealToType = getParamType(realToType);
-        Class<?> paramRealDomainType = getParamType(realDomainType);
+        Class<?> paramRealToType = TypeUtil.getFirstTypeArgument(realToType);
+        Class<?> paramRealDomainType = TypeUtil.getFirstTypeArgument(realDomainType);
         if (paramRealToType == null || paramRealDomainType == null) {
             return false;
         }
@@ -83,20 +82,8 @@ public class AutomaticListTypeConverter extends AbstractListTypeConverter {
     public Object doReverseOne(
             JTransfo jTransfo, Object domainObject, SyntheticField toField, Class<?> toType, String... tags)
             throws JTransfoException {
-        Class<?> clazz = getParamType(toField.getGenericType());
+        Class<?> clazz = TypeUtil.getFirstTypeArgument(toField.getGenericType());
         return jTransfo.convertTo(domainObject, jTransfo.getToSubType(clazz, domainObject), tags);
     }
 
-    private Class<?> getClass(Type type) {
-        return  (type instanceof Class ? (Class<?>) type : (Class<?>) ((ParameterizedType) type).getRawType());
-    }
-
-    private Class<?> getParamType(Type type) {
-        if (type instanceof ParameterizedType) {
-            ParameterizedType p = (ParameterizedType) type;
-            return (Class<?>) p.getActualTypeArguments()[0];
-        } else {
-            return null;
-        }
-    }
 }

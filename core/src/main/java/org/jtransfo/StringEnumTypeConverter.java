@@ -10,7 +10,6 @@ package org.jtransfo;
 
 import org.jtransfo.internal.SyntheticField;
 
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 /**
@@ -37,8 +36,8 @@ public class StringEnumTypeConverter<ENUM_TYPE extends Enum> implements TypeConv
 
     @Override
     public boolean canConvert(Type realToType, Type realDomainType) {
-        Class<?> toType = getClass(realToType);
-        Class<?> domainType = getClass(realDomainType);
+        Class<?> toType = TypeUtil.getRawClass(realToType);
+        Class<?> domainType = TypeUtil.getRawClass(realDomainType);
         return String.class.isAssignableFrom(toType) && enumClass.isAssignableFrom(domainType);
     }
 
@@ -61,7 +60,4 @@ public class StringEnumTypeConverter<ENUM_TYPE extends Enum> implements TypeConv
         return object.name();
     }
 
-    private Class<?> getClass(Type type) {
-        return  (type instanceof Class ? (Class<?>) type : (Class<?>) ((ParameterizedType) type).getRawType());
-    }
 }
