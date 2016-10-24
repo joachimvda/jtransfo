@@ -42,7 +42,7 @@ public final class ToToConverter extends AbstractConverter {
                 value = field.get(value);
             }
         }
-        Object converted = typeConverter.reverse(value, toField, target);
+        Object converted = typeConverter.reverse(value, toField, target, tags);
         toField.set(target, converted);
     }
 
