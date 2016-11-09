@@ -1,5 +1,7 @@
 org.jtransfo
+org.jtransfo.cdi
 org.jtransfo.demo.domain
+org.jtransfo.hibernate
 org.jtransfo.internal
 org.jtransfo.jodatime
 org.jtransfo.spring
