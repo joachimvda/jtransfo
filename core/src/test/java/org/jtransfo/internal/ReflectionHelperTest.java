@@ -39,7 +39,8 @@ public class ReflectionHelperTest {
 
     @Test
     public void testNewInstanceName() throws Exception {
-        assertThat(reflectionHelper.newInstance(REFLECTION_HELPER_CLASS)).isInstanceOf(ReflectionHelper.class);
+        Object instance = reflectionHelper.newInstance(REFLECTION_HELPER_CLASS);
+        assertThat(instance).isInstanceOf(ReflectionHelper.class);
     }
 
     @Test

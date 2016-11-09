@@ -18,10 +18,8 @@ import org.jtransfo.MapOnly;
 @DomainClass(domainClass = PersonDomain.class)
 public class SecretsTo {
 
-    @MapOnlies({
-        @MapOnly(value = "name", field = "name"),
-        @MapOnly(value = MapOnly.ALWAYS, field = "gender")
-    })
+    @MapOnly(value = "name", field = "name")
+    @MapOnly(value = MapOnly.ALWAYS, field = "gender")
     private String genderOrName;
 
     @MapOnlies({

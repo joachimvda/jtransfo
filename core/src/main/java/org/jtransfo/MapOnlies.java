@@ -19,10 +19,12 @@ import java.lang.annotation.Target;
  * <p>
  * Note that it is not determined which annotation is used when several annotations contain the same tag.
  * </p>
+ * @deprecated just use multiple {@link MapOnly} annotations
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 @Documented
+@Deprecated
 public @interface MapOnlies {
 
     /**
