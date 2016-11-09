@@ -20,6 +20,6 @@ public class StringEnumTypeConverterProducer {
 
     @Produces
     public StringEnumTypeConverter<Gender> getGenderTypeConverter() {
-        return new StringEnumTypeConverter<Gender>(Gender.class);
+        return new StringEnumTypeConverter<>(Gender.class);
     }
 }

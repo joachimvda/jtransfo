@@ -79,7 +79,7 @@ public class JTransfoAndHibernateTest {
         addressTo.setPostalCode("zzz");
         addressTo.setLocation("Batheaston");
         addressTo.setCountry(Country.GB.name());
-        List<VoiceContactTo> voiceContacts = new ArrayList<VoiceContactTo>();
+        List<VoiceContactTo> voiceContacts = new ArrayList<>();
         VoiceContactTo vc = new VoiceContactTo();
         vc.setType("home");
         vc.setVoice("+32 3 123 45 78");

@@ -29,14 +29,14 @@ public class JTransfoImpl implements JTransfo, ConvertSourceTarget {
 
     private ToHelper toHelper = new ToHelper();
     private ConverterHelper converterHelper = new ConverterHelper();
-    private Map<Class, ToConverter> converters = new ConcurrentHashMap<Class, ToConverter>();
-    private List<ObjectFinder> modifyableObjectFinders = new ArrayList<ObjectFinder>();
-    private LockableList<ObjectFinder> objectFinders = new LockableList<ObjectFinder>();
-    private List<TypeConverter> modifyableTypeConverters = new ArrayList<TypeConverter>();
-    private List<ConvertInterceptor> modifyableConvertInterceptors = new ArrayList<ConvertInterceptor>();
+    private Map<Class, ToConverter> converters = new ConcurrentHashMap<>();
+    private List<ObjectFinder> modifyableObjectFinders = new ArrayList<>();
+    private LockableList<ObjectFinder> objectFinders = new LockableList<>();
+    private List<TypeConverter> modifyableTypeConverters = new ArrayList<>();
+    private List<ConvertInterceptor> modifyableConvertInterceptors = new ArrayList<>();
     private ConvertSourceTarget convertInterceptorChain;
-    private List<ObjectReplacer> modifyableObjectReplacers = new ArrayList<ObjectReplacer>();
-    private LockableList<ObjectReplacer> objectReplacers = new LockableList<ObjectReplacer>();
+    private List<ObjectReplacer> modifyableObjectReplacers = new ArrayList<>();
+    private LockableList<ObjectReplacer> objectReplacers = new LockableList<>();
 
     /**
      * Constructor.
@@ -151,7 +151,7 @@ public class JTransfoImpl implements JTransfo, ConvertSourceTarget {
             modifyableObjectFinders.addAll(newObjectFinders);
 
         }
-        LockableList<ObjectFinder> newList = new LockableList<ObjectFinder>();
+        LockableList<ObjectFinder> newList = new LockableList<>();
         newList.addAll(modifyableObjectFinders);
         newList.lock();
         objectFinders = newList;
@@ -195,7 +195,7 @@ public class JTransfoImpl implements JTransfo, ConvertSourceTarget {
             modifyableObjectReplacers.clear();
             modifyableObjectReplacers.addAll(newObjectReplacers);
         }
-        LockableList<ObjectReplacer> newList = new LockableList<ObjectReplacer>();
+        LockableList<ObjectReplacer> newList = new LockableList<>();
         newList.addAll(modifyableObjectReplacers);
         newList.lock();
         objectReplacers = newList;
@@ -307,7 +307,7 @@ public class JTransfoImpl implements JTransfo, ConvertSourceTarget {
         if (null == source) {
             return null;
         }
-        List<T> result = new ArrayList<T>();
+        List<T> result = new ArrayList<>();
         for (Object object : source) {
             result.add(convertTo(object, targetClass, tags));
         }

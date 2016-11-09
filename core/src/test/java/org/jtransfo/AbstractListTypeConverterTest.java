@@ -67,7 +67,7 @@ public class AbstractListTypeConverterTest {
         to1.setId(2L);
         AddressTo to2 = new AddressTo();
         to2.setId(1L);
-        List<AddressTo> addresses = new ArrayList<AddressTo>();
+        List<AddressTo> addresses = new ArrayList<>();
         addresses.add(to1);
         addresses.add(to2);
         Object domainObject = new Object();
@@ -90,7 +90,7 @@ public class AbstractListTypeConverterTest {
         to1.setId(2L);
         AddressTo to2 = new AddressTo();
         to2.setId(1L);
-        List<AddressTo> addresses = new ArrayList<AddressTo>();
+        List<AddressTo> addresses = new ArrayList<>();
         addresses.add(to1);
         addresses.add(to2);
         Object domainObject = new Object();
@@ -113,7 +113,7 @@ public class AbstractListTypeConverterTest {
         to1.setId(2L);
         AddressTo to2 = new AddressTo();
         to2.setId(1L);
-        List<AddressTo> addresses = new ArrayList<AddressTo>();
+        List<AddressTo> addresses = new ArrayList<>();
         addresses.add(to1);
         addresses.add(to2);
 
@@ -134,7 +134,7 @@ public class AbstractListTypeConverterTest {
         to1.setId(12L);
         AddressTo to2 = new AddressTo();
         to2.setId(11L);
-        List<AddressTo> addresses = new ArrayList<AddressTo>();
+        List<AddressTo> addresses = new ArrayList<>();
         addresses.add(to1);
         addresses.add(to2);
 
@@ -155,7 +155,7 @@ public class AbstractListTypeConverterTest {
         to1.setId(1L);
         AddressTo to2 = new AddressTo();
         to2.setId(2L);
-        List<AddressTo> addresses = new ArrayList<AddressTo>();
+        List<AddressTo> addresses = new ArrayList<>();
         addresses.add(to1);
         addresses.add(to2);
 
@@ -190,7 +190,7 @@ public class AbstractListTypeConverterTest {
         ad1.setId(1L);
         AddressDomain ad2 = new AddressDomain();
         ad2.setId(2L);
-        List<AddressDomain> addresses = new ArrayList<AddressDomain>();
+        List<AddressDomain> addresses = new ArrayList<>();
         addresses.add(ad1);
         addresses.add(ad2);
         Object toObject = new Object();
@@ -213,7 +213,7 @@ public class AbstractListTypeConverterTest {
         ad1.setId(1L);
         AddressDomain ad2 = new AddressDomain();
         ad2.setId(2L);
-        List<AddressDomain> addresses = new ArrayList<AddressDomain>();
+        List<AddressDomain> addresses = new ArrayList<>();
         addresses.add(ad1);
         addresses.add(ad2);
         Object toObject = new Object();
@@ -235,7 +235,7 @@ public class AbstractListTypeConverterTest {
         ad1.setId(2L);
         AddressDomain ad2 = new AddressDomain();
         ad2.setId(1L);
-        List<AddressDomain> addresses = new ArrayList<AddressDomain>();
+        List<AddressDomain> addresses = new ArrayList<>();
         addresses.add(ad1);
         addresses.add(ad2);
         Object toObject = new Object();
@@ -261,7 +261,7 @@ public class AbstractListTypeConverterTest {
         ad1.setId(2L);
         AddressDomain ad2 = new AddressDomain();
         ad2.setId(1L);
-        List<AddressDomain> addresses = new ArrayList<AddressDomain>();
+        List<AddressDomain> addresses = new ArrayList<>();
         addresses.add(ad1);
         addresses.add(ad2);
         Object toObject = new Object();

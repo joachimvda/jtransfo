@@ -20,7 +20,7 @@ import java.util.Map;
  */
 public class TaggedConverter implements Converter {
 
-    private Map<String, Converter> converters = new HashMap<String, Converter>();
+    private Map<String, Converter> converters = new HashMap<>();
 
     /**
      * Add the converter which should be used for a specific tag.

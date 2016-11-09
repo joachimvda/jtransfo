@@ -78,8 +78,8 @@ public class ReflectionHelper {
      * @return list of fields
      */
     public List<Field> getFields(Class<?> clazz) {
-        List<Field> result = new ArrayList<Field>();
-        Set<String> fieldNames = new HashSet<String>();
+        List<Field> result = new ArrayList<>();
+        Set<String> fieldNames = new HashSet<>();
         Class<?> searchType = clazz;
         while (!Object.class.equals(searchType) && searchType != null) {
             Field[] fields = searchType.getDeclaredFields();
@@ -103,7 +103,7 @@ public class ReflectionHelper {
      * @return list of synthetic fields
      */
     public List<SyntheticField> makeSynthetic(Class<?> clazz, List<Field> fields) {
-        List<SyntheticField> result = new ArrayList<SyntheticField>();
+        List<SyntheticField> result = new ArrayList<>();
         for (Field field : fields) {
             result.add(new AccessorSyntheticField(this, clazz, field));
         }

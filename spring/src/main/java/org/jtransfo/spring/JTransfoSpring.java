@@ -60,7 +60,7 @@ public class JTransfoSpring extends JTransfoImpl {
         }
 
         if (null != objectReplacers) {
-            List<ObjectReplacer> orderedInterceptors = new ArrayList<ObjectReplacer>();
+            List<ObjectReplacer> orderedInterceptors = new ArrayList<>();
             for (ObjectReplacer objectClassDeterminator : objectReplacers) {
                 orderedInterceptors.add(objectClassDeterminator);
             }

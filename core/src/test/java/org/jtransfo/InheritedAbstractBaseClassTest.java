@@ -53,7 +53,7 @@ public class InheritedAbstractBaseClassTest {
         FemaleHumanDomain sd2 = new FemaleHumanDomain();
         sd2.setName("female slave");
         sd2.setHairColourCount(1);
-        List<AbstractHumanDomain> slaves = new ArrayList<AbstractHumanDomain>();
+        List<AbstractHumanDomain> slaves = new ArrayList<>();
         slaves.add(sd1);
         slaves.add(sd2);
         gd.setLeader(ld);
@@ -86,7 +86,7 @@ public class InheritedAbstractBaseClassTest {
         FemaleHumanTo st2 = new FemaleHumanTo();
         st2.setName("female slave");
         st2.setHairColourCount(1);
-        List<AbstractHumanTo> slaves = new ArrayList<AbstractHumanTo>();
+        List<AbstractHumanTo> slaves = new ArrayList<>();
         slaves.add(st1);
         slaves.add(st2);
         gt.setLeader(lt);

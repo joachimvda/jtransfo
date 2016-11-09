@@ -46,7 +46,7 @@ public class AutomaticListTypeConverterTest {
         FemaleHumanDomain id2 = new FemaleHumanDomain();
         id2.setName("female inhabitant");
         id2.setHairColourCount(1);
-        List<AbstractHumanDomain> inhabitants = new ArrayList<AbstractHumanDomain>();
+        List<AbstractHumanDomain> inhabitants = new ArrayList<>();
         inhabitants.add(id1);
         inhabitants.add(id2);
         hd.setOwner(owner);
@@ -79,7 +79,7 @@ public class AutomaticListTypeConverterTest {
         FemaleHumanTo it2 = new FemaleHumanTo();
         it2.setName("female inhabitant");
         it2.setHairColourCount(1);
-        List<AbstractHumanTo> inhabitants = new ArrayList<AbstractHumanTo>();
+        List<AbstractHumanTo> inhabitants = new ArrayList<>();
         inhabitants.add(it1);
         inhabitants.add(it2);
         ht.setOwner(owner);

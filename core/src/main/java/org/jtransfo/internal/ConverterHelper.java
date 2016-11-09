@@ -36,7 +36,7 @@ public class ConverterHelper {
 
     private ReflectionHelper reflectionHelper = new ReflectionHelper();
     private ConcurrentHashMap<String, TypeConverter> typeConverterInstances =
-            new ConcurrentHashMap<String, TypeConverter>();
+            new ConcurrentHashMap<>();
     private List<TypeConverter> typeConvertersInOrder = Collections.emptyList(); // empty list for starters
 
     /**
@@ -164,7 +164,7 @@ public class ConverterHelper {
         if (null == mapOnly && null == mapOnlies) {
             return null;
         }
-        List<MapOnly> res = new ArrayList<MapOnly>();
+        List<MapOnly> res = new ArrayList<>();
         if (null != mapOnly) {
             res.add(mapOnly);
         }
@@ -312,7 +312,7 @@ public class ConverterHelper {
      *      conversion is used.
      */
     public void setTypeConvertersInOrder(Collection<TypeConverter> typeConverters) {
-        LockableList<TypeConverter> newList = new LockableList<TypeConverter>();
+        LockableList<TypeConverter> newList = new LockableList<>();
         newList.addAll(typeConverters);
         newList.lock();
         typeConvertersInOrder = newList;

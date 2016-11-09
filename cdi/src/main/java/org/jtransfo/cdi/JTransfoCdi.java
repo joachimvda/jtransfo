@@ -64,7 +64,7 @@ public class JTransfoCdi extends JTransfoImpl {
         }
 
         if (null != convertInterceptors) {
-            List<ConvertInterceptor> orderedInterceptors = new ArrayList<ConvertInterceptor>();
+            List<ConvertInterceptor> orderedInterceptors = new ArrayList<>();
             for (ConvertInterceptor convertInterceptor : convertInterceptors) {
                 orderedInterceptors.add(convertInterceptor);
             }
@@ -74,7 +74,7 @@ public class JTransfoCdi extends JTransfoImpl {
         }
 
         if (null != objectReplacers) {
-            List<ObjectReplacer> orderedInterceptors = new ArrayList<ObjectReplacer>();
+            List<ObjectReplacer> orderedInterceptors = new ArrayList<>();
             for (ObjectReplacer objectClassDeterminator : objectReplacers) {
                 orderedInterceptors.add(objectClassDeterminator);
             }

@@ -179,7 +179,7 @@ public class AccessorSyntheticField implements SyntheticField {
      */
     protected List<String> getGetterNameAlternatives(String fieldName) {
         String base = capitalize(fieldName);
-        List<String> res = new ArrayList<String>();
+        List<String> res = new ArrayList<>();
         res.add("get" + capitalize(fieldName));
         String alt = "is" + base;
         if (alt.startsWith("isIs")) {

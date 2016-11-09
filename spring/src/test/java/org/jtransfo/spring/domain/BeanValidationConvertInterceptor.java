@@ -33,7 +33,7 @@ public class BeanValidationConvertInterceptor implements ConvertInterceptor {
             BindingResult bindingResult = new MapBindingResult(new HashMap(), "");
             validator.validate(res, bindingResult);
             if (bindingResult.hasErrors()) {
-                Set<ConstraintViolation<?>> violations = new HashSet<ConstraintViolation<?>>();
+                Set<ConstraintViolation<?>> violations = new HashSet<>();
                 for (ObjectError error : bindingResult.getAllErrors()) {
                     violations.add(new ConstraintViolationImpl(error.getDefaultMessage(), error.getDefaultMessage(),
                             res.getClass(), res, res, res,

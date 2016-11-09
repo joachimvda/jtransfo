@@ -66,7 +66,7 @@ public class ReflectionHelperTest {
 
     @Test
     public void testMakeSynthetic() throws Exception {
-        List<Field> orgFields = new ArrayList<Field>();
+        List<Field> orgFields = new ArrayList<>();
         orgFields.add(SimpleExtendedDomain.class.getDeclaredField("b"));
         orgFields.add(SimpleExtendedDomain.class.getDeclaredField("c"));
         List<SyntheticField> fields = reflectionHelper.makeSynthetic(SimpleExtendedDomain.class, orgFields);

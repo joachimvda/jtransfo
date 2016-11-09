@@ -27,7 +27,7 @@ public class LockableListTest {
 
     @Before
     public void setup() {
-        list = new LockableList<Integer>();
+        list = new LockableList<>();
         list.add(0);
         list.add(1);
         list.add(2);

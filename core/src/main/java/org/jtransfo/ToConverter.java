@@ -20,8 +20,8 @@ import java.util.List;
  */
 public class ToConverter {
 
-    private final LockableList<Converter> toTo = new LockableList<Converter>();
-    private final LockableList<Converter> toDomain = new LockableList<Converter>();
+    private final LockableList<Converter> toTo = new LockableList<>();
+    private final LockableList<Converter> toDomain = new LockableList<>();
 
     /**
      * Get list of converters to convert domain to transfer object.

@@ -159,7 +159,7 @@ public class ReadOnlyDomainAutomaticTypeConverterTest {
         to1.setId(1L);
         AddressTo to2 = new AddressTo();
         to2.setId(2L);
-        List<AddressTo> addresses = new ArrayList<AddressTo>();
+        List<AddressTo> addresses = new ArrayList<>();
         addresses.add(to1);
         addresses.add(to2);
 
@@ -184,10 +184,10 @@ public class ReadOnlyDomainAutomaticTypeConverterTest {
         ad1.setId(1L);
         AddressDomain ad2 = new AddressDomain();
         ad2.setId(2L);
-        List<AddressDomain> addresses = new ArrayList<AddressDomain>();
+        List<AddressDomain> addresses = new ArrayList<>();
         addresses.add(ad1);
         addresses.add(ad2);
-        List<AddressTo> resList = new ArrayList<AddressTo>();
+        List<AddressTo> resList = new ArrayList<>();
         Object to = new Object();
         when(listField.get(to)).thenReturn(resList);
 
@@ -206,10 +206,10 @@ public class ReadOnlyDomainAutomaticTypeConverterTest {
         ad1.setId(1L);
         AddressDomain ad2 = new AddressDomain();
         ad2.setId(2L);
-        List<AddressDomain> addresses = new ArrayList<AddressDomain>();
+        List<AddressDomain> addresses = new ArrayList<>();
         addresses.add(ad1);
         addresses.add(ad2);
-        List<AddressTo> resList = new ArrayList<AddressTo>();
+        List<AddressTo> resList = new ArrayList<>();
         Object to = new Object();
         when(listField.get(to)).thenReturn(resList);
         typeConverter.setAlwaysNewList(true);

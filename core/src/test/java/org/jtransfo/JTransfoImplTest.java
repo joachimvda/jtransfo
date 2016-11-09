@@ -240,7 +240,7 @@ public class JTransfoImplTest {
     @Test
     public void testGetUpdateConvertInterceptors_newList() throws Exception {
         ConvertSourceTarget convertInterceptorChain;
-        List<ConvertInterceptor> convertInterceptors = new ArrayList<ConvertInterceptor>();
+        List<ConvertInterceptor> convertInterceptors = new ArrayList<>();
 
         convertInterceptorChain = (ConvertSourceTarget) ReflectionTestUtils.getField(jTransfo, "convertInterceptorChain");
 
@@ -288,7 +288,7 @@ public class JTransfoImplTest {
     @Test
     public void testConvertList() throws Exception {
         when(reflectionHelper.newInstance(SimpleClassNameTo.class)).thenReturn(new SimpleClassNameTo());
-        List<SimpleClassDomain> list = new ArrayList<SimpleClassDomain>();
+        List<SimpleClassDomain> list = new ArrayList<>();
         list.add(new SimpleClassDomain());
         list.add(new SimpleClassDomain());
 

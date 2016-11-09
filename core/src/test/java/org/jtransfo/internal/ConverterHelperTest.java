@@ -69,7 +69,7 @@ public class ConverterHelperTest {
 
     @Test
     public void testFindField() throws Exception {
-        List<SyntheticField> fields = new ArrayList<SyntheticField>();
+        List<SyntheticField> fields = new ArrayList<>();
         SyntheticField f1 = new SimpleSyntheticField(SimpleExtendedDomain.class.getDeclaredField("b"));
         SyntheticField f2 = new SimpleSyntheticField(SimpleExtendedDomain.class.getDeclaredField("c"));
         fields.add(f1);
@@ -88,7 +88,7 @@ public class ConverterHelperTest {
 
     @Test
     public void testFindFieldTransitive() throws Exception {
-        List<SyntheticField> fields = new ArrayList<SyntheticField>();
+        List<SyntheticField> fields = new ArrayList<>();
         SyntheticField f1 = new SimpleSyntheticField(PersonDomain.class.getDeclaredField("name"));
         SyntheticField f2 = new SimpleSyntheticField(PersonDomain.class.getDeclaredField("address"));
         fields.add(f1);
@@ -237,7 +237,7 @@ public class ConverterHelperTest {
 
     @Test
     public void testGetDefaultTypeConverterNoMatchingConverter() throws Exception {
-        List<TypeConverter> tcs = new ArrayList<TypeConverter>();
+        List<TypeConverter> tcs = new ArrayList<>();
         tcs.add(new DefaultTypeConverter());
         tcs.add(new DefaultTypeConverter());
         ReflectionTestUtils.setField(converterHelper, "typeConvertersInOrder", tcs);

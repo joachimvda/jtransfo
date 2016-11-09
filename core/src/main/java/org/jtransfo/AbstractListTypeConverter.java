@@ -135,7 +135,7 @@ public abstract class AbstractListTypeConverter implements TypeConverter<List, L
         if (null != res) {
             res.clear();
         } else {
-            res = new ArrayList<Object>();
+            res = new ArrayList<>();
         }
         return sort(res);
     }
@@ -150,7 +150,7 @@ public abstract class AbstractListTypeConverter implements TypeConverter<List, L
     }
 
     private List getNullList() {
-        return keepNullList ? null : new ArrayList<Object>();
+        return keepNullList ? null : new ArrayList<>();
     }
 
     /**
