@@ -26,7 +26,7 @@ public class IllegalArgumentExceptionTest {
         to.setValue("123");
 
         exception.expect(JTransfoException.class);
-        exception.expectMessage("Cannot convert TO field value to domain field value, field needs type conversion.");
+        exception.expectMessage("Cannot convert TO field value to domain field value,");
 
         jTransfo.convert(to);
     }
@@ -36,8 +36,8 @@ public class IllegalArgumentExceptionTest {
         IaeSmallValueTo to = new IaeSmallValueTo();
         to.setSmallValue(2);
 
-        exception.expect(IllegalArgumentException.class);
-        exception.expectMessage("Value should be small!");
+        exception.expect(JTransfoException.class);
+        exception.expectMessage("Cannot convert TO field smallValue to domain field smallValue, field cannot be accessed.");
 
         jTransfo.convert(to);
     }

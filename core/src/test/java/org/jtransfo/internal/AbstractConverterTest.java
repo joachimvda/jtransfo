@@ -51,8 +51,8 @@ public class AbstractConverterTest {
     @Test
     public void testConvertIllegalArgumentException() throws Exception {
         doConvertResult = 3;
-        exception.expect(IllegalArgumentException.class);
-        exception.expectMessage("argument");
+        exception.expect(JTransfoException.class);
+        exception.expectMessage("NoAccess");
         abstractConverter.convert(null, null);
     }
 

@@ -52,11 +52,11 @@ public abstract class AbstractConverter implements Converter {
         } catch (IllegalArgumentException iae) {
             if (null != iae.getStackTrace() && iae.getStackTrace().length > 0) {
                 String throwingClass = iae.getStackTrace()[0].getClassName();
-                if (throwingClass.startsWith("sun.reflect.")) {
+                if (throwingClass.startsWith("sun.reflect.") || iae.getMessage().contains("Can not set ")) {
                     throw new JTransfoException(argumentExceptionMessage(), iae);
                 }
             }
-            throw iae;
+            throw new JTransfoException(accessExceptionMessage(), iae);
         }
     }
 
