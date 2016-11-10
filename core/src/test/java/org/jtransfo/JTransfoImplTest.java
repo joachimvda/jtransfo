@@ -15,10 +15,9 @@ import org.jtransfo.object.PersonTo;
 import org.jtransfo.object.SimpleClassDomain;
 import org.jtransfo.object.SimpleClassNameTo;
 import org.jtransfo.object.SimpleClassTypeTo;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -50,10 +49,7 @@ public class JTransfoImplTest {
     @Mock
     private ConverterHelper converterHelper;
 
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
-
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
 
@@ -69,27 +65,29 @@ public class JTransfoImplTest {
 
     @Test
     public void testConvert2NullLeft() {
-        exception.expect(JTransfoException.class);
-        exception.expectMessage("Source and target are required to be not-null.");
+        JTransfoException exc = Assertions.expectThrows(JTransfoException.class, () ->
+                jTransfo.convert("bla", null));
 
-        jTransfo.convert("bla", null);
+        assertThat(exc.getMessage()).isEqualTo("Source and target are required to be not-null.");
     }
 
     @Test
     public void testConvert2NullRight() {
-        exception.expect(JTransfoException.class);
-        exception.expectMessage("Source and target are required to be not-null.");
 
-        jTransfo.convert(null, "bla");
+        JTransfoException exc = Assertions.expectThrows(JTransfoException.class, () ->
+                jTransfo.convert(null, "bla"));
+
+        assertThat(exc.getMessage()).isEqualTo("Source and target are required to be not-null.");
     }
 
     @Test
     public void testConvert2DomainClass() {
-        exception.expect(JTransfoException.class);
-        exception.expectMessage("Neither source nor target are annotated with DomainClass on classes " +
-                "java.lang.String and java.lang.String.");
 
-        jTransfo.convert("alb", "bla");
+        JTransfoException exc = Assertions.expectThrows(JTransfoException.class, () ->
+                jTransfo.convert("alb", "bla"));
+
+        assertThat(exc.getMessage()).isEqualTo("Neither source nor target are annotated with DomainClass on classes " +
+                "java.lang.String and java.lang.String.");
     }
 
     @Test
@@ -106,60 +104,71 @@ public class JTransfoImplTest {
     public void testConvertInstantiationException() throws Exception {
         when(reflectionHelper.newInstance(SimpleClassDomain.class)).thenThrow(new InstantiationException());
 
-        exception.expect(JTransfoException.class);
-        exception.expectMessage("Cannot create instance for domain class org.jtransfo.object.SimpleClassDomain.");
-        jTransfo.convert(new SimpleClassNameTo());
+        JTransfoException exc = Assertions.expectThrows(JTransfoException.class, () ->
+                jTransfo.convert(new SimpleClassNameTo()));
+
+        assertThat(exc.getMessage()).isEqualTo("Cannot create instance for domain class org.jtransfo.object.SimpleClassDomain.");
     }
 
     @Test
     public void testConvertToInstantiationException() throws Exception {
         when(reflectionHelper.newInstance(SimpleClassDomain.class)).thenThrow(new InstantiationException());
 
-        exception.expect(JTransfoException.class);
-        exception.expectMessage("Cannot create instance for domain class org.jtransfo.object.SimpleClassDomain.");
-        jTransfo.convertTo(new SimpleClassNameTo(), SimpleClassDomain.class);
+        JTransfoException exc = Assertions.expectThrows(JTransfoException.class, () ->
+                jTransfo.convertTo(new SimpleClassNameTo(), SimpleClassDomain.class));
+
+        assertThat(exc.getMessage()).isEqualTo("Cannot create instance for domain class org.jtransfo.object.SimpleClassDomain.");
     }
 
     @Test
     public void testFindTargetInstantiationException() throws Exception {
         when(reflectionHelper.newInstance(SimpleClassDomain.class)).thenThrow(new InstantiationException());
 
-        exception.expect(JTransfoException.class);
-        exception.expectMessage("Cannot create instance for domain class org.jtransfo.object.SimpleClassDomain.");
-        jTransfo.findTarget(new SimpleClassNameTo(), SimpleClassDomain.class);
+        JTransfoException exc = Assertions.expectThrows(JTransfoException.class, () ->
+                jTransfo.findTarget(new SimpleClassNameTo(), SimpleClassDomain.class));
+
+        assertThat(exc.getMessage()).isEqualTo("Cannot create instance for domain class org.jtransfo.object.SimpleClassDomain.");
     }
 
     @Test
     public void testConvertIllegalAccessException() throws Exception {
         when(reflectionHelper.newInstance(SimpleClassDomain.class)).thenThrow(new IllegalAccessException());
-        exception.expect(JTransfoException.class);
-        exception.expectMessage("Cannot create instance for domain class org.jtransfo.object.SimpleClassDomain.");
-        jTransfo.convert(new SimpleClassNameTo());
+
+        JTransfoException exc = Assertions.expectThrows(JTransfoException.class, () ->
+                jTransfo.convert(new SimpleClassNameTo()));
+
+        assertThat(exc.getMessage()).isEqualTo("Cannot create instance for domain class org.jtransfo.object.SimpleClassDomain.");
     }
 
     @Test
     public void testConvertToIllegalAccessException() throws Exception {
         when(reflectionHelper.newInstance(SimpleClassDomain.class)).thenThrow(new IllegalAccessException());
-        exception.expect(JTransfoException.class);
-        exception.expectMessage("Cannot create instance for domain class org.jtransfo.object.SimpleClassDomain.");
-        jTransfo.convertTo(new SimpleClassNameTo(), SimpleClassDomain.class);
+
+        JTransfoException exc = Assertions.expectThrows(JTransfoException.class, () ->
+                jTransfo.convertTo(new SimpleClassNameTo(), SimpleClassDomain.class));
+
+        assertThat(exc.getMessage()).isEqualTo("Cannot create instance for domain class org.jtransfo.object.SimpleClassDomain.");
     }
 
     @Test
     public void testFindTargetIllegalAccessException() throws Exception {
         when(reflectionHelper.newInstance(SimpleClassDomain.class)).thenThrow(new IllegalAccessException());
-        exception.expect(JTransfoException.class);
-        exception.expectMessage("Cannot create instance for domain class org.jtransfo.object.SimpleClassDomain.");
-        jTransfo.findTarget(new SimpleClassNameTo(), SimpleClassDomain.class);
+
+        JTransfoException exc = Assertions.expectThrows(JTransfoException.class, () ->
+                jTransfo.findTarget(new SimpleClassNameTo(), SimpleClassDomain.class));
+
+        assertThat(exc.getMessage()).isEqualTo("Cannot create instance for domain class org.jtransfo.object.SimpleClassDomain.");
     }
 
     @Test
     public void testConvertNullTarget() throws Exception {
         when(reflectionHelper.newInstance(SimpleClassDomain.class)).thenReturn(null);
-        exception.expect(JTransfoException.class);
-        exception.expectMessage("Cannot create instance of target class org.jtransfo.object.SimpleClassDomain " +
+
+        JTransfoException exc = Assertions.expectThrows(JTransfoException.class, () ->
+                jTransfo.convert(new SimpleClassNameTo()));
+
+        assertThat(exc.getMessage()).startsWith("Cannot create instance of target class org.jtransfo.object.SimpleClassDomain " +
                 "for source object org.jtransfo.object.SimpleClassNameTo");
-        jTransfo.convert(new SimpleClassNameTo());
     }
 
     @Test
