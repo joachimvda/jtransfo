@@ -6,11 +6,16 @@
  * For full licensing details, see LICENSE.txt in the project root.
  */
 
-package org.jtransfo;
+package org.jtransfo.internal;
 
-import org.jtransfo.internal.ConverterHelper;
-import org.jtransfo.internal.NewInstanceObjectFinder;
-import org.jtransfo.internal.ReflectionHelper;
+import org.jtransfo.ConvertInterceptor;
+import org.jtransfo.ConvertSourceTarget;
+import org.jtransfo.JTransfo;
+import org.jtransfo.JTransfoException;
+import org.jtransfo.NeedsJTransfo;
+import org.jtransfo.NoConversionTypeConverter;
+import org.jtransfo.ObjectFinder;
+import org.jtransfo.TypeConverter;
 import org.jtransfo.object.PersonTo;
 import org.jtransfo.object.SimpleClassDomain;
 import org.jtransfo.object.SimpleClassNameTo;
@@ -55,7 +60,7 @@ public class JTransfoImplTest {
 
         jTransfo = new JTransfoImpl();
 
-        ReflectionTestUtils.setField((jTransfo).getObjectFinders().get(0), "reflectionHelper", reflectionHelper);
+        ReflectionTestUtils.setField(((List) ReflectionTestUtils.getField(jTransfo, "internalObjectFinders")).get(0), "reflectionHelper", reflectionHelper);
     }
 
     @Test
@@ -177,6 +182,7 @@ public class JTransfoImplTest {
 
         List<TypeConverter> converters = jTransfo.getTypeConverters();
         int orgSize = converters.size();
+        int internalSize = ((List) ReflectionTestUtils.getField(jTransfo, "internalTypeConverters")).size();
 
         converters.add(new NoConversionTypeConverter());
         NeedsJTransfoTypeConverter needsJTransfoTypeConverter = mock(NeedsJTransfoTypeConverter.class);
@@ -188,14 +194,14 @@ public class JTransfoImplTest {
         verify(needsJTransfoTypeConverter).setJTransfo(jTransfo);
         ArgumentCaptor<Collection> captor1 = ArgumentCaptor.forClass(Collection.class);
         verify(converterHelper, times(1)).setTypeConvertersInOrder(captor1.capture());
-        assertThat(captor1.getValue().size()).isEqualTo(orgSize + 2);
+        assertThat(captor1.getValue().size()).isEqualTo(orgSize + internalSize + 2);
 
         reset(converterHelper);
         jTransfo.updateTypeConverters((List) Collections.singletonList(new NoConversionTypeConverter()));
 
         ArgumentCaptor<Collection> captor2 = ArgumentCaptor.forClass(Collection.class);
         verify(converterHelper, times(1)).setTypeConvertersInOrder(captor2.capture());
-        assertThat(captor2.getValue().size()).isEqualTo(1);
+        assertThat(captor2.getValue().size()).isEqualTo(internalSize + 1);
     }
 
     @Test
@@ -203,21 +209,22 @@ public class JTransfoImplTest {
         List<ObjectFinder> internalObjectFinders;
         List<ObjectFinder> objectFinders = jTransfo.getObjectFinders();
         int orgSize = objectFinders.size();
+        int internalObjectSize = ((List) ReflectionTestUtils.getField(jTransfo, "internalObjectFinders")).size();
 
         objectFinders.add(new NewInstanceObjectFinder());
 
         internalObjectFinders = (List<ObjectFinder>) ReflectionTestUtils.getField(jTransfo, "objectFinders");
-        assertThat(internalObjectFinders).hasSize(orgSize);
+        assertThat(internalObjectFinders).hasSize(orgSize + internalObjectSize);
 
         jTransfo.updateObjectFinders(); // update with changed converters
 
         internalObjectFinders = (List<ObjectFinder>) ReflectionTestUtils.getField(jTransfo, "objectFinders");
-        assertThat(internalObjectFinders).hasSize(orgSize + 1);
+        assertThat(internalObjectFinders).hasSize(orgSize + internalObjectSize + 1);
 
         jTransfo.updateObjectFinders((List) Collections.singletonList(new NewInstanceObjectFinder()));
 
         internalObjectFinders = (List<ObjectFinder>) ReflectionTestUtils.getField(jTransfo, "objectFinders");
-        assertThat(internalObjectFinders).hasSize(1);
+        assertThat(internalObjectFinders).hasSize(1 + internalObjectSize);
     }
 
     @Test

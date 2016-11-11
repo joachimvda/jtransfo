@@ -12,8 +12,8 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean name="jTransfo" class="org.jtransfo.spring.JTransfoSpring">
-    </bean>
+    <bean name="jTransfoFactory" class="org.jtransfo.spring.JTransfoSpringFactory" />
+    <bean name="jTransfo" factory-bean="jTransfoFactory" factory-method="get" />
 
     <import resource="classpath*:META-INF/jTransfoContext.xml" />
 

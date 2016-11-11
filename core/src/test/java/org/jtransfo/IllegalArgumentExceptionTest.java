@@ -17,7 +17,7 @@ public class IllegalArgumentExceptionTest {
 
     @Before
     public void setUp() throws Exception {
-        jTransfo = new JTransfoImpl();
+        jTransfo = JTransfoFactory.get();
     }
 
     @Test

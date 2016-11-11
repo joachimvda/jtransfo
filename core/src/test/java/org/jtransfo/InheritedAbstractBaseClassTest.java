@@ -33,7 +33,7 @@ public class InheritedAbstractBaseClassTest {
 
     @Before
     public void setup() throws Exception {
-        JTransfoImpl jTransfoImpl = new JTransfoImpl();
+        ConfigurableJTransfo jTransfoImpl = JTransfoFactory.get();
         jTransfo = jTransfoImpl;
 
         ListTypeConverter ltc = new ListTypeConverter("abstractHumanToList", AbstractHumanTo.class);

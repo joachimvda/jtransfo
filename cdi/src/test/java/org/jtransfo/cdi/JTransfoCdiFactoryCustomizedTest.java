@@ -30,7 +30,7 @@ import javax.inject.Inject;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(Arquillian.class)
-public class JTransfoCdiCustomizedTest {
+public class JTransfoCdiFactoryCustomizedTest {
 
     private static final String NAME = "ikke";
 

@@ -6,36 +6,22 @@
  * For full licensing details, see LICENSE.txt in the project root.
  */
 
-package org.jtransfo.cdi;
+package org.jtransfo;
 
-import org.jboss.arquillian.container.test.api.Deployment;
-import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.jtransfo.JTransfo;
 import org.jtransfo.object.SimpleExtendedDomain;
 import org.jtransfo.object.SimpleExtendedTo;
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import javax.inject.Inject;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(Arquillian.class)
-public class JTransfoCdiDefaultTest {
+public class JTransfoSimpleRealTest {
 
-    @Inject
     private JTransfo jTransfo;
 
-    @Deployment
-    public static JavaArchive createDeployment() {
-        JavaArchive jar = ShrinkWrap.create(JavaArchive.class)
-                .addPackage("org.jtransfo.cdi")
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
-        System.out.println(jar.toString(true));
-        return jar;
+    @Before
+    public void setUp() throws Exception {
+        jTransfo = JTransfoFactory.get();
     }
 
     @Test
@@ -73,5 +59,4 @@ public class JTransfoCdiDefaultTest {
         assertThat(res.getC()).isNull(); // read-only in to
         assertThat(res.getI()).isEqualTo(111);
     }
-
 }

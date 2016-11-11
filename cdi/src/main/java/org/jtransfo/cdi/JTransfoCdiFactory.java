@@ -8,8 +8,10 @@
 
 package org.jtransfo.cdi;
 
+import org.jtransfo.ConfigurableJTransfo;
 import org.jtransfo.ConvertInterceptor;
-import org.jtransfo.JTransfoImpl;
+import org.jtransfo.JTransfo;
+import org.jtransfo.JTransfoFactory;
 import org.jtransfo.ObjectFinder;
 import org.jtransfo.ObjectReplacer;
 import org.jtransfo.TypeConverter;
@@ -18,16 +20,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Instance;
+import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 
 /**
  * CDI implementation of {@link org.jtransfo.JTransfo}.
  */
 @ApplicationScoped
-public class JTransfoCdi extends JTransfoImpl {
+public class JTransfoCdiFactory {
 
     @Inject
     private Instance<ObjectFinder> objectFinders;
@@ -35,7 +37,7 @@ public class JTransfoCdi extends JTransfoImpl {
     @Inject
     // the <?, ?> is needed to make this work on all CDI containers
     // specifically WildFly 8.0.0.Final (and possibly the Weld version included) require this or only
-    // TypecConverter<Object, Object> instances are matched.
+    // TypeConverter<Object, Object> instances are matched.
     private Instance<TypeConverter<?, ?>> typeConverters;
 
     @Inject
@@ -45,22 +47,26 @@ public class JTransfoCdi extends JTransfoImpl {
     private Instance<ObjectReplacer> objectReplacers;
 
     /**
-     * Get object finders and type converters from Spring configuration.
+     * Get {@link JTransfo} instance with object finders, object replacers, convert interceptors and
+     * type converters from CDI configuration.
+     *
+     * @return {@link JTransfo} instance
      */
-    @PostConstruct
-    protected void postConstruct() {
+    @Produces
+    public JTransfo get() {
+        ConfigurableJTransfo jTransfo = JTransfoFactory.get();
         if (null != typeConverters) {
             for (TypeConverter typeConverter : typeConverters) {
-                getTypeConverters().add(typeConverter);
+                jTransfo.getTypeConverters().add(typeConverter);
             }
-            updateTypeConverters();
+            jTransfo.updateTypeConverters();
         }
 
         if (null != objectFinders) {
             for (ObjectFinder objectFinder : objectFinders) {
-                getObjectFinders().add(objectFinder);
+                jTransfo.getObjectFinders().add(objectFinder);
             }
-            updateObjectFinders();
+            jTransfo.updateObjectFinders();
         }
 
         if (null != convertInterceptors) {
@@ -69,8 +75,8 @@ public class JTransfoCdi extends JTransfoImpl {
                 orderedInterceptors.add(convertInterceptor);
             }
             Collections.sort(orderedInterceptors, new AnnotationAwareOrderComparator());
-            getConvertInterceptors().addAll(orderedInterceptors);
-            updateConvertInterceptors();
+            jTransfo.getConvertInterceptors().addAll(orderedInterceptors);
+            jTransfo.updateConvertInterceptors();
         }
 
         if (null != objectReplacers) {
@@ -79,10 +85,10 @@ public class JTransfoCdi extends JTransfoImpl {
                 orderedInterceptors.add(objectClassDeterminator);
             }
             Collections.sort(orderedInterceptors, new AnnotationAwareOrderComparator());
-            getObjectReplacers().addAll(orderedInterceptors);
-            updateObjectReplacers();
+            jTransfo.getObjectReplacers().addAll(orderedInterceptors);
+            jTransfo.updateObjectReplacers();
         }
-
+        return jTransfo;
     }
 
     /**

@@ -8,8 +8,10 @@
 
 package org.jtransfo.spring;
 
+import org.jtransfo.ConfigurableJTransfo;
 import org.jtransfo.ConvertInterceptor;
-import org.jtransfo.JTransfoImpl;
+import org.jtransfo.JTransfo;
+import org.jtransfo.JTransfoFactory;
 import org.jtransfo.ObjectFinder;
 import org.jtransfo.ObjectReplacer;
 import org.jtransfo.TypeConverter;
@@ -19,12 +21,11 @@ import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import javax.annotation.PostConstruct;
 
 /**
- * Spring implementation of {@link org.jtransfo.JTransfo}.
+ * Get JTransfo instance which is configured with objects found in the Spring application context.
  */
-public class JTransfoSpring extends JTransfoImpl {
+public class JTransfoSpringFactory {
 
     @Autowired(required = false)
     private List<ObjectFinder> objectFinders;
@@ -39,24 +40,27 @@ public class JTransfoSpring extends JTransfoImpl {
     private List<ObjectReplacer> objectReplacers;
 
     /**
-     * Get object finders and type converters from Spring configuration.
+     * Get {@link JTransfo} instance with object finders, object replacers, convert interceptors and
+     * type converters from Spring configuration.
+     *
+     * @return {@link JTransfo} instance
      */
-    @PostConstruct
-    protected void postConstruct() {
+    public JTransfo get() {
+        ConfigurableJTransfo jTransfo = JTransfoFactory.get();
         if (null != typeConverters) {
-            getTypeConverters().addAll(typeConverters);
-            updateTypeConverters();
+            jTransfo.getTypeConverters().addAll(typeConverters);
+            jTransfo.updateTypeConverters();
         }
 
         if (null != objectFinders) {
-            getObjectFinders().addAll(objectFinders);
-            updateObjectFinders();
+            jTransfo.getObjectFinders().addAll(objectFinders);
+            jTransfo.updateObjectFinders();
         }
 
         if (null != convertInterceptors) {
             Collections.sort(convertInterceptors, new AnnotationAwareOrderComparator());
-            getConvertInterceptors().addAll(convertInterceptors);
-            updateConvertInterceptors();
+            jTransfo.getConvertInterceptors().addAll(convertInterceptors);
+            jTransfo.updateConvertInterceptors();
         }
 
         if (null != objectReplacers) {
@@ -65,8 +69,10 @@ public class JTransfoSpring extends JTransfoImpl {
                 orderedInterceptors.add(objectClassDeterminator);
             }
             Collections.sort(orderedInterceptors, new AnnotationAwareOrderComparator());
-            getObjectReplacers().addAll(orderedInterceptors);
-            updateObjectReplacers();
+            jTransfo.getObjectReplacers().addAll(orderedInterceptors);
+            jTransfo.updateObjectReplacers();
         }
+        return jTransfo;
     }
+
 }

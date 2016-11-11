@@ -6,8 +6,10 @@
  * For full licensing details, see LICENSE.txt in the project root.
  */
 
-package org.jtransfo;
+package org.jtransfo.internal;
 
+import org.jtransfo.DomainClass;
+import org.jtransfo.DomainClassDelegate;
 import org.zeroturnaround.javarebel.ClassEventListener;
 import org.zeroturnaround.javarebel.ClassResourceSource;
 import org.zeroturnaround.javarebel.LoggerFactory;
@@ -60,7 +62,7 @@ public class JTransfoJrebelPlugin implements Plugin {
 
     @Override
     public boolean checkDependencies(ClassLoader classLoader, ClassResourceSource classResourceSource) {
-        return classResourceSource.getClassResource("org.jtransfo.JTransfoImpl") != null;
+        return classResourceSource.getClassResource("org.jtransfo.internal.JTransfoImpl") != null;
     }
 
     @Override

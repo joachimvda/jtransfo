@@ -21,7 +21,7 @@ public class TransitiveFieldTest {
 
     @Before
     public void setup() throws Exception {
-        jTransfo = new JTransfoImpl();
+        jTransfo = JTransfoFactory.get();
     }
 
     @Test

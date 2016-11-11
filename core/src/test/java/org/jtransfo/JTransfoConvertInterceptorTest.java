@@ -20,13 +20,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Test which verifies that the convert interceptors work.
  */
-public class JTransfoImplConvertInterceptorTest {
+public class JTransfoConvertInterceptorTest {
 
     private JTransfo jTransfo;
 
     @Before
     public void setUp() throws Exception {
-        JTransfoImpl impl = new JTransfoImpl();
+        ConfigurableJTransfo impl = JTransfoFactory.get();
         jTransfo = impl;
 
         impl.getConvertInterceptors().add(new MyConvertInterceptor("X"));

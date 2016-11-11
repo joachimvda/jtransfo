@@ -23,7 +23,7 @@ public class StaticFieldConversionTest {
 
     @Before
     public void setUp() throws Exception {
-        JTransfoImpl impl = new JTransfoImpl();
+        ConfigurableJTransfo impl = JTransfoFactory.get();
         jTransfo = impl;
         impl.getTypeConverters().add(new StringEnumTypeConverter(Gender.class));
         impl.updateTypeConverters();

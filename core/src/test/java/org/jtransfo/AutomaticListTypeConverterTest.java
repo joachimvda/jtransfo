@@ -18,13 +18,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class AutomaticListTypeConverterTest {
 
-    private JTransfo jTransfo;
+    private ConfigurableJTransfo jTransfo;
 
     @Before
     public void setup() throws Exception {
-        jTransfo = new JTransfoImpl();
-        ((JTransfoImpl) jTransfo).getTypeConverters().add(new AutomaticListTypeConverter());
-        ((JTransfoImpl) jTransfo).updateTypeConverters();
+        jTransfo = JTransfoFactory.get();
+        jTransfo.getTypeConverters().add(new AutomaticListTypeConverter());
+        jTransfo.updateTypeConverters();
     }
 
     @Test

@@ -24,7 +24,7 @@ import static org.mockito.Mockito.mock;
 /**
  * Test which verifies that the convert interceptors work.
  */
-public class JTransfoImplObjectReplacerTest {
+public class JTransfoObjectReplacerTest {
 
     private JTransfo jTransfo;
 
@@ -33,7 +33,7 @@ public class JTransfoImplObjectReplacerTest {
 
     @Before
     public void setUp() throws Exception {
-        JTransfoImpl impl = new JTransfoImpl();
+        ConfigurableJTransfo impl = JTransfoFactory.get();
         jTransfo = impl;
 
         impl.getObjectReplacers().add(new MyObjectReplacer());
@@ -44,9 +44,9 @@ public class JTransfoImplObjectReplacerTest {
     public void testAdditionalReplacer() throws Exception {
         ObjectReplacer mockReplacer = mock(ObjectReplacer.class);
 
-        ((JTransfoImpl) jTransfo).updateObjectReplacers(singletonList(mockReplacer));
+        ((ConfigurableJTransfo) jTransfo).updateObjectReplacers(singletonList(mockReplacer));
 
-        assertThat(((JTransfoImpl) jTransfo).getObjectReplacers()).contains(mockReplacer);
+        assertThat(((ConfigurableJTransfo) jTransfo).getObjectReplacers()).contains(mockReplacer);
     }
 
     @Test

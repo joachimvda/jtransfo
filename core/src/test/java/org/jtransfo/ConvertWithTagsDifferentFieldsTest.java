@@ -18,7 +18,7 @@ public class ConvertWithTagsDifferentFieldsTest {
 
     @Before
     public void setup() throws Exception {
-        JTransfoImpl impl = new JTransfoImpl();
+        ConfigurableJTransfo impl = JTransfoFactory.get();
         jTransfo = impl;
 
         impl.getTypeConverters().add(new AutomaticStringEnumTypeConverter());

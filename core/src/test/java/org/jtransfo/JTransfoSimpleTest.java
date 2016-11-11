@@ -30,7 +30,7 @@ public class JTransfoSimpleTest {
 
     @Before
     public void setup() {
-        jTransfo = new JTransfoImpl();
+        jTransfo = JTransfoFactory.get();
 
         ConverterHelper converterHelper = new ConverterHelper() {
             @Override

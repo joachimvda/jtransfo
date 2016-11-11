@@ -31,7 +31,7 @@ public class FinderAndConverterTest {
 
     @Before
     public void setup() throws Exception {
-        JTransfoImpl impl = new JTransfoImpl();
+        ConfigurableJTransfo impl = JTransfoFactory.get();
         jTransfo = impl;
 
         AddressDomain[] addresses = new AddressDomain[10];
