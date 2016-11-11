@@ -70,15 +70,58 @@
     </module>
 
     <module name="SuppressionCommentFilter">
-        <property name="offCommentFormat" value="CHECKSTYLE EMPTY_BLOCK\: OFF"/>
-        <property name="onCommentFormat" value="CHECKSTYLE EMPTY_BLOCK\: ON"/>
-        <property name="checkFormat" value="EmptyBlock"/>
+        <property name="offCommentFormat" value="CHECKSTYLE CLONE\: OFF"/>
+        <property name="onCommentFormat" value="CHECKSTYLE CLONE\: ON"/>
+        <property name="checkFormat" value=".*Clone"/>
+    </module>
+
+    <module name="SuppressionCommentFilter">
+        <property name="offCommentFormat" value="CHECKSTYLE INNER_ASSIGNMENT\: OFF"/>
+        <property name="onCommentFormat" value="CHECKSTYLE INNER_ASSIGNMENT\: ON"/>
+        <property name="checkFormat" value="InnerAssignment"/>
+    </module>
+
+    <module name="SuppressionCommentFilter">
+        <property name="offCommentFormat" value="CHECKSTYLE JAVADOC_METHOD\: OFF"/>
+        <property name="onCommentFormat" value="CHECKSTYLE JAVADOC_METHOD\: ON"/>
+        <property name="checkFormat" value="JavadocMethod"/>
+    </module>
+
+    <module name="SuppressionCommentFilter">
+        <property name="offCommentFormat" value="CHECKSTYLE JAVADOC_VARIABLE\: OFF"/>
+        <property name="onCommentFormat" value="CHECKSTYLE JAVADOC_VARIABLE\: ON"/>
+        <property name="checkFormat" value="JavadocVariable"/>
+    </module>
+
+    <module name="SuppressionCommentFilter">
+        <property name="offCommentFormat" value="CHECKSTYLE JAVADOC_STYLE\: OFF"/>
+        <property name="onCommentFormat" value="CHECKSTYLE JAVADOC_STYLE\: ON"/>
+        <property name="checkFormat" value="JavadocStyle"/>
+    </module>
+
+    <module name="SuppressionCommentFilter">
+        <property name="offCommentFormat" value="CHECKSTYLE MEMBER_NAME\: OFF"/>
+        <property name="onCommentFormat" value="CHECKSTYLE MEMBER_NAME\: ON"/>
+        <property name="checkFormat" value="MemberName"/>
+    </module>
+
+    <module name="SuppressionCommentFilter">
+        <property name="offCommentFormat" value="CHECKSTYLE ILLEGAL_IMPORT\: OFF"/>
+        <property name="onCommentFormat" value="CHECKSTYLE ILLEGAL_IMPORT\: ON"/>
+        <property name="checkFormat" value="IllegalImport"/>
+    </module>
+
+    <module name="SuppressionCommentFilter">
+        <property name="offCommentFormat" value="CHECKSTYLE METHOD_NAME\: OFF"/>
+        <property name="onCommentFormat" value="CHECKSTYLE METHOD_NAME\: ON"/>
+        <property name="checkFormat" value="MethodName"/>
     </module>
 
     <module name="TreeWalker">
 
         <property name="cacheFile" value="./checkstyle.cache"/>
         <property name="tabWidth" value="4"/>
+        <property name="fileExtensions" value="java"/>
 
         <!-- needed for SuppressionCommentFilter -->
         <module name="FileContentsHolder"/>
@@ -143,8 +186,6 @@
         <!--<module name="AvoidInlineConditionals"/>-->
         <!-- Checks that if a class defines a covariant method equals, then it defines method equals(java.lang.Object).  -->
         <module name="CovariantEquals"/>
-        <!-- Detect the double-checked locking idiom, a technique that tries to avoid synchronization overhead but is incorrect because of subtle artifacts of the java memory model.  -->
-        <!-- <module name="DoubleCheckedLocking"/> not supported by latest checkstyle -->
         <!-- Detects empty statements (standalone ';'). -->
         <module name="EmptyStatement"/>
         <!-- Checks that any combination of String literals with optional assignment is on the left side of an equals() comparison. -->
@@ -209,8 +250,6 @@
         <module name="IllegalThrows"/>
         <!-- Ensures there is a package declaration and (optionally) in the correct directory. -->
         <module name="PackageDeclaration"/>
-        <!-- Ensures that the setUp(), tearDown()methods are named correctly, have no arguments, return void and are either public or protected. -->
-        <module name="JUnitTestCase"/>
         <!-- Restricts return statements to a specified count (default = 2). -->
         <!--<module name="ReturnCount"/>-->
         <!-- Checks that particular class are never used as types in variable declarations, return values or parameters. -->
@@ -287,6 +326,7 @@
         <module name="JavadocMethod">
             <property name="scope" value="package"/>
             <property name="severity" value="error"/>
+            <property name="allowMissingReturnTag" value="true"/>
         </module>
         <!-- Checks that a variable has Javadoc comment. -->
         <module name="JavadocVariable">
@@ -319,7 +359,7 @@
 
         <!-- Miscellaneous, see http://checkstyle.sourceforge.net/config_misc.html -->
 
-        <!-- A check for TODO comments. -->
+        <!-- A check for TO-DO (in one word) comments. -->
         <module name="TodoComment">
             <property name="severity" value="warning"/>
         </module>
