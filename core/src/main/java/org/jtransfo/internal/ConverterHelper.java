@@ -53,12 +53,21 @@ public class ConverterHelper {
         List<SyntheticField> domainFields = reflectionHelper.getSyntheticFields(domainClass);
         for (Field field : reflectionHelper.getFields(toClass)) {
             boolean isTransient = Modifier.isTransient(field.getModifiers());
-            NotMapped notMapped = field.getAnnotation(NotMapped.class);
-            if (!isTransient && (null == notMapped)) {
-                MappedBy mappedBy = field.getAnnotation(MappedBy.class);
+            List<NotMapped> notMapped = reflectionHelper.getAnnotationWithMeta(field, NotMapped.class);
+            if (!isTransient && (0 == notMapped.size())) {
+                List<MappedBy> mappedBies = reflectionHelper.getAnnotationWithMeta(field, MappedBy.class);
+                if (mappedBies.size() > 1) {
+                    throw new JTransfoException("Field " + field.getName() + " on type " +
+                            field.getDeclaringClass().getName() +
+                            " MappedBy is ambiguous, check your meta-annotations.");
+                }
+                MappedBy mappedBy = null;
+                if (1 == mappedBies.size()) {
+                    mappedBy = mappedBies.get(0);
+                }
 
                 boolean isStatic = (0 != (field.getModifiers() & Modifier.STATIC));
-                if (null != mappedBy || !isStatic) {
+                if (0 != mappedBies.size() || !isStatic) {
                     buildConverters(field, domainFields, domainClass, converter, mappedBy);
                 }
             }
@@ -159,18 +168,14 @@ public class ConverterHelper {
      * @return list of annotations
      */
     protected List<MapOnly> getMapOnlies(Field field) {
-        MapOnly mapOnly = field.getAnnotation(MapOnly.class);
-        MapOnlies mapOnlies = field.getAnnotation(MapOnlies.class);
-        if (null == mapOnly && null == mapOnlies) {
+        List<MapOnly> mapOnly = reflectionHelper.getAnnotationWithMeta(field, MapOnly.class);
+        List<MapOnlies> mapOnlies = reflectionHelper.getAnnotationWithMeta(field, MapOnlies.class);
+        if (0 == mapOnly.size() && 0 == mapOnlies.size()) {
             return null;
         }
         List<MapOnly> res = new ArrayList<>();
-        if (null != mapOnly) {
-            res.add(mapOnly);
-        }
-        if (null != mapOnlies) {
-            Collections.addAll(res, mapOnlies.value());
-        }
+        res.addAll(mapOnly);
+        mapOnlies.forEach(mo -> Collections.addAll(res, mo.value()));
         return res;
     }
 

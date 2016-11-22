@@ -8,6 +8,10 @@
 
 package org.jtransfo.internal;
 
+import org.jtransfo.MappedBy;
+import org.jtransfo.NotMapped;
+import org.jtransfo.ReadOnly;
+import org.jtransfo.object.ReadOnlyAnnotationTo;
 import org.jtransfo.object.SimpleBaseTo;
 import org.jtransfo.object.SimpleClassDomain;
 import org.jtransfo.object.SimpleExtendedDomain;
@@ -103,6 +107,16 @@ public class ReflectionHelperTest {
 
         method = reflectionHelper.getMethod(SimpleBaseTo.class, null, "bla");
         assertThat(method).isNull();
+    }
+
+    @Test
+    public void testGetAnnotationWithMeta() throws Exception {
+        ReadOnlyAnnotationTo to = new ReadOnlyAnnotationTo();
+        Field field = to.getClass().getDeclaredField("twice");
+
+        assertThat(reflectionHelper.getAnnotationWithMeta(field, ReadOnly.class)).hasSize(1);
+        assertThat(reflectionHelper.getAnnotationWithMeta(field, MappedBy.class)).hasSize(1);
+        assertThat(reflectionHelper.getAnnotationWithMeta(field, NotMapped.class)).hasSize(0);
     }
 
 }

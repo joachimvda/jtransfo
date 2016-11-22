@@ -15,19 +15,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation which allows you to put many {@link MapOnly} annotations on a field.
- * <p>
- * Note that it is not determined which annotation is used when several annotations contain the same tag.
- * </p>
+ * More readable shorthand for a field which is read-only-domain.
  */
+@MappedBy(typeConverter = "readOnlyDomain")
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
+@Target({ElementType.FIELD, ElementType.ANNOTATION_TYPE})
 @Documented
-public @interface MapOnlies {
-
-    /**
-     * Tags for which this annotation applies.
-     */
-    MapOnly[] value();
+public @interface ReadOnlyDomain {
 
 }

@@ -26,7 +26,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -52,9 +51,6 @@ public class ConverterHelperTest {
 
     private ConverterHelper converterHelper;
 
-    @Mock
-    private ReflectionHelper reflectionHelper;
-
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
@@ -63,8 +59,6 @@ public class ConverterHelperTest {
         MockitoAnnotations.initMocks(this);
 
         converterHelper = new ConverterHelper();
-
-        ReflectionTestUtils.setField(converterHelper, "reflectionHelper", reflectionHelper);
     }
 
     @Test
@@ -88,6 +82,8 @@ public class ConverterHelperTest {
 
     @Test
     public void testFindFieldTransitive() throws Exception {
+        ReflectionHelper reflectionHelper = mock(ReflectionHelper.class);
+        ReflectionTestUtils.setField(converterHelper, "reflectionHelper", reflectionHelper);
         List<SyntheticField> fields = new ArrayList<>();
         SyntheticField f1 = new SimpleSyntheticField(PersonDomain.class.getDeclaredField("name"));
         SyntheticField f2 = new SimpleSyntheticField(PersonDomain.class.getDeclaredField("address"));
@@ -126,6 +122,8 @@ public class ConverterHelperTest {
 
     @Test
     public void testGetDeclaredTypeConverterAsClass() throws Exception {
+        ReflectionHelper reflectionHelper = mock(ReflectionHelper.class);
+        ReflectionTestUtils.setField(converterHelper, "reflectionHelper", reflectionHelper);
         MappedBy mappedBy = mock(MappedBy.class);
         when(mappedBy.typeConverterClass()).thenReturn(NoConversionTypeConverter.class);
         when(mappedBy.typeConverter()).thenReturn(MappedBy.DEFAULT_TYPE_CONVERTER);
@@ -144,6 +142,8 @@ public class ConverterHelperTest {
 
     @Test
     public void testGetDeclaredTypeConverterAsName() throws Exception {
+        ReflectionHelper reflectionHelper = mock(ReflectionHelper.class);
+        ReflectionTestUtils.setField(converterHelper, "reflectionHelper", reflectionHelper);
         MappedBy mappedBy = mock(MappedBy.class);
         when(mappedBy.typeConverterClass()).thenReturn(MappedBy.DefaultTypeConverter.class);
         when(mappedBy.typeConverter()).thenReturn(NoConversionTypeConverter.class.getName());
@@ -158,6 +158,8 @@ public class ConverterHelperTest {
 
     @Test
     public void testGetDeclaredTypeConverterCnfe() throws Exception {
+        ReflectionHelper reflectionHelper = mock(ReflectionHelper.class);
+        ReflectionTestUtils.setField(converterHelper, "reflectionHelper", reflectionHelper);
         MappedBy mappedBy = mock(MappedBy.class);
         when(mappedBy.typeConverterClass()).thenReturn(MappedBy.DefaultTypeConverter.class);
         when(mappedBy.typeConverter()).thenReturn(NoConversionTypeConverter.class.getName());
@@ -172,6 +174,8 @@ public class ConverterHelperTest {
 
     @Test
     public void testGetDeclaredTypeConverterIe() throws Exception {
+        ReflectionHelper reflectionHelper = mock(ReflectionHelper.class);
+        ReflectionTestUtils.setField(converterHelper, "reflectionHelper", reflectionHelper);
         MappedBy mappedBy = mock(MappedBy.class);
         when(mappedBy.typeConverterClass()).thenReturn(MappedBy.DefaultTypeConverter.class);
         when(mappedBy.typeConverter()).thenReturn(NoConversionTypeConverter.class.getName());
@@ -187,6 +191,8 @@ public class ConverterHelperTest {
 
     @Test
     public void testGetDeclaredTypeConverterIae() throws Exception {
+        ReflectionHelper reflectionHelper = mock(ReflectionHelper.class);
+        ReflectionTestUtils.setField(converterHelper, "reflectionHelper", reflectionHelper);
         MappedBy mappedBy = mock(MappedBy.class);
         when(mappedBy.typeConverterClass()).thenReturn(MappedBy.DefaultTypeConverter.class);
         when(mappedBy.typeConverter()).thenReturn(NoConversionTypeConverter.class.getName());
@@ -202,6 +208,8 @@ public class ConverterHelperTest {
 
     @Test
     public void testGetDeclaredTypeConverterCce() throws Exception {
+        ReflectionHelper reflectionHelper = mock(ReflectionHelper.class);
+        ReflectionTestUtils.setField(converterHelper, "reflectionHelper", reflectionHelper);
         MappedBy mappedBy = mock(MappedBy.class);
         when(mappedBy.typeConverterClass()).thenReturn(MappedBy.DefaultTypeConverter.class);
         when(mappedBy.typeConverter()).thenReturn(NoConversionTypeConverter.class.getName());
@@ -344,6 +352,8 @@ public class ConverterHelperTest {
 
     @Test
     public void testGetDeclaredTypeConverter_withTypeConverter() throws Exception {
+        ReflectionHelper reflectionHelper = mock(ReflectionHelper.class);
+        ReflectionTestUtils.setField(converterHelper, "reflectionHelper", reflectionHelper);
         MapOnly mapOnly = mock(MapOnly.class);
         when(reflectionHelper.newInstance("org.jtransfo.internal.ConverterHelperTest$DefaultTypeConverter")).
                 thenReturn(new DefaultTypeConverter());

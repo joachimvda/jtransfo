@@ -12,6 +12,8 @@ import org.jtransfo.DomainClass;
 import org.jtransfo.DomainClassDelegate;
 import org.jtransfo.JTransfoException;
 
+import java.util.List;
+
 /**
  * Helper for working with transfer objects.
  */
@@ -42,8 +44,8 @@ public class ToHelper {
      * @return true when object is a transfer object
      */
     public boolean isToClass(Class<?> toClass) {
-        DomainClass domainClass = toClass.getAnnotation(DomainClass.class);
-        return null != domainClass;
+        List<DomainClass> domainClasses = reflectionHelper.getAnnotationWithMeta(toClass, DomainClass.class);
+        return 0 != domainClasses.size();
     }
 
     /**
@@ -53,11 +55,16 @@ public class ToHelper {
      * @return domain class as annotated on class
      */
     public Class<?> getDomainClass(Class<?> toClass) {
-        DomainClass domainClass = toClass.getAnnotation(DomainClass.class);
-        if (null == domainClass) {
+        List<DomainClass> domainClasses = reflectionHelper.getAnnotationWithMeta(toClass, DomainClass.class);
+        if (0 == domainClasses.size()) {
             throw new JTransfoException("Transfer object of type " + toClass.getName() +
                     " not annotated with DomainClass.");
         }
+        if (1 < domainClasses.size()) {
+            throw new JTransfoException("Transfer object of type " + toClass.getName() +
+                    " DomainClass is ambiguous, check your meta-annotations.");
+        }
+        DomainClass domainClass = domainClasses.get(0);
         if (DomainClass.DefaultClass.class != domainClass.domainClass()) {
             return domainClass.domainClass();
         }

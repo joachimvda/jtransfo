@@ -18,7 +18,7 @@ import java.lang.annotation.Target;
  * Annotation to specify the domain class on the transfer object.
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
+@Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
 @Documented
 public @interface DomainClass {
 

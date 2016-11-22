@@ -8,6 +8,8 @@
 
 package org.jtransfo.internal;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -15,6 +17,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Helper class for all things class manipulation and reflection.
@@ -156,6 +160,37 @@ public class ReflectionHelper {
             return method;
         } catch (NoSuchMethodException nsme) {
             return null;
+        }
+    }
+
+    /**
+     * Get the annotations of given type which are available on the annotated element. Considers both the annotations
+     * on the element and the meta-annotations (annotations on the annotations).
+     * <p>The result is given in no specific order</p>
+     *
+     * @param element annotated element
+     * @param annotation annotation to find
+     * @param <T> annotation type
+     * @return
+     */
+    public <T extends Annotation> List<T> getAnnotationWithMeta(AnnotatedElement element, Class<T> annotation) {
+        return (List) Stream.of(element.getDeclaredAnnotations())
+                .flatMap(this::addMetaAnnotations)
+                .filter(a -> annotation.isAssignableFrom(a.annotationType()))
+                .collect(Collectors.toList());
+    }
+
+    private Stream<Annotation> addMetaAnnotations(Annotation a) {
+        Set<Annotation> res = new HashSet<>();
+        addMetaAnnotations(res, a);
+        return res.stream();
+    }
+
+    private void addMetaAnnotations(Set<Annotation> set, Annotation annotation) {
+        if (set.add(annotation)) { // set is needed or continues infinitely
+            for (Annotation meta : annotation.annotationType().getDeclaredAnnotations()) {
+                addMetaAnnotations(set, meta);
+            }
         }
     }
 
