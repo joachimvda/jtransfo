@@ -11,19 +11,19 @@ package org.jtransfo;
 import org.jtransfo.internal.SyntheticField;
 
 import java.lang.reflect.Type;
-import java.util.List;
+import java.util.Set;
 
 /**
- * Converter lists, automatically detecting the entry type from the generic parameter.
+ * Converter for sets, automatically detecting the entry type from the generic parameter.
  */
-public class AutomaticListTypeConverter extends AbstractListTypeConverter {
+public class AutomaticSetTypeConverter extends AbstractSetTypeConverter {
 
-    private static final String NAME = "automaticList";
+    private static final String NAME = "automaticSet";
 
     /**
      * No-arguments constructor, jTransfo instance needs to be injected explicitly.
      */
-    public AutomaticListTypeConverter() {
+    public AutomaticSetTypeConverter() {
         super(NAME, Object.class);
     }
 
@@ -32,7 +32,7 @@ public class AutomaticListTypeConverter extends AbstractListTypeConverter {
      *
      * @param name name
      */
-    public AutomaticListTypeConverter(String name) {
+    public AutomaticSetTypeConverter(String name) {
         super(name, Object.class);
     }
 
@@ -41,7 +41,7 @@ public class AutomaticListTypeConverter extends AbstractListTypeConverter {
      *
      * @param jTransfo jTransfo instance for nested conversions
      */
-    public AutomaticListTypeConverter(JTransfo jTransfo) {
+    public AutomaticSetTypeConverter(JTransfo jTransfo) {
         super(NAME, Object.class);
         super.setJTransfo(jTransfo);
     }
@@ -50,7 +50,7 @@ public class AutomaticListTypeConverter extends AbstractListTypeConverter {
     public boolean canConvert(Type realToType, Type realDomainType) {
         Class<?> toClass = TypeUtil.getRawClass(realToType);
         Class<?> domainClass = TypeUtil.getRawClass(realDomainType);
-        if (!List.class.isAssignableFrom(toClass) || !List.class.isAssignableFrom(domainClass)) {
+        if (!Set.class.isAssignableFrom(toClass) || !Set.class.isAssignableFrom(domainClass)) {
             return false;
         }
         Class<?> paramRealToType = TypeUtil.getFirstTypeArgument(realToType);
@@ -59,9 +59,8 @@ public class AutomaticListTypeConverter extends AbstractListTypeConverter {
             return false;
         }
         // TO type should be marked with @DomainClass and domain should match declared
-        return (getJTransfo().isToClass(paramRealToType)
-                && paramRealDomainType.isAssignableFrom(getJTransfo().getDomainClass(paramRealToType)))
-                || (isPrimitiveOrString(paramRealToType) && paramRealDomainType == paramRealToType);
+        return getJTransfo().isToClass(paramRealToType)
+                && paramRealDomainType.isAssignableFrom(getJTransfo().getDomainClass(paramRealToType));
     }
 
     /**

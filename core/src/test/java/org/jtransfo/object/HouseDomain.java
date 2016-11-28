@@ -9,6 +9,7 @@ public class HouseDomain {
 
     private AbstractHumanDomain owner;
     private List<AbstractHumanDomain> inhabitants;
+    private List<String> petNames;
 
     public AbstractHumanDomain getOwner() {
         return owner;
@@ -25,4 +26,13 @@ public class HouseDomain {
     public void setInhabitants(List<AbstractHumanDomain> inhabitants) {
         this.inhabitants = inhabitants;
     }
+
+    public List<String> getPetNames() {
+        return petNames;
+    }
+
+    public void setPetNames(List<String> petNames) {
+        this.petNames = petNames;
+    }
+
 }

@@ -14,6 +14,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * Abstract type converter for converting lists with object of specific type. Can only be used as declared converter.
@@ -26,6 +27,7 @@ public abstract class AbstractListTypeConverter implements TypeConverter<List, L
     private boolean keepNullList;
     private boolean alwaysNewList;
     private boolean sortList;
+    private Supplier<List> emptyListSupplier = ArrayList::new;
 
     /**
      * Construct type converter for converting a list, assign given name and use given transfer object type.
@@ -86,7 +88,11 @@ public abstract class AbstractListTypeConverter implements TypeConverter<List, L
             if (null == to) {
                 res.add(null);
             } else {
-                res.add(doConvertOne(jTransfo, to, jTransfo.getDomainClass(to.getClass()), tags));
+                if (isPrimitiveOrString(to.getClass())) {
+                    res.add(to);
+                } else {
+                    res.add(doConvertOne(jTransfo, to, jTransfo.getDomainClass(to.getClass()), tags));
+                }
             }
         }
         return sort(res);
@@ -118,7 +124,11 @@ public abstract class AbstractListTypeConverter implements TypeConverter<List, L
         }
         List<Object> res = newList(toField, toObject);
         for (Object domain : domainObjects) {
-            res.add(doReverseOne(jTransfo, domain, toField, toType, tags));
+            if (isPrimitiveOrString(domain.getClass())) {
+                res.add(domain);
+            } else {
+                res.add(doReverseOne(jTransfo, domain, toField, toType, tags));
+            }
         }
         return sort(res);
     }
@@ -135,7 +145,7 @@ public abstract class AbstractListTypeConverter implements TypeConverter<List, L
         if (null != res) {
             res.clear();
         } else {
-            res = new ArrayList<>();
+            res = emptyListSupplier.get();
         }
         return sort(res);
     }
@@ -150,7 +160,7 @@ public abstract class AbstractListTypeConverter implements TypeConverter<List, L
     }
 
     private List getNullList() {
-        return keepNullList ? null : new ArrayList<>();
+        return keepNullList ? null : emptyListSupplier.get();
     }
 
     /**
@@ -178,6 +188,25 @@ public abstract class AbstractListTypeConverter implements TypeConverter<List, L
      */
     public void setSortList(boolean sortList) {
         this.sortList = sortList;
+    }
+
+    /**
+     * Define a supplier for empty lists. By default {@link ArrayList} is used but this allows overriding that default.
+     *
+     * @param emptyListSupplier empty list supplier
+     */
+    public void setEmptyListSupplier(Supplier<List> emptyListSupplier) {
+        this.emptyListSupplier = emptyListSupplier;
+    }
+
+    /**
+     * Is the given class a primitive or String type?
+     *
+     * @param clazz class to test
+     * @return true when primitive of String
+     */
+    protected boolean isPrimitiveOrString(Class<?> clazz) {
+        return clazz.isPrimitive() || clazz.isAssignableFrom(String.class);
     }
 
 }

@@ -1,8 +1,8 @@
 package org.jtransfo.object;
 
-import java.util.List;
-
 import org.jtransfo.DomainClass;
+
+import java.util.List;
 
 /**
  * House with owner and inhabitants.
@@ -12,6 +12,7 @@ public class HouseTo {
 
     private AbstractHumanTo owner;
     private List<AbstractHumanTo> inhabitants;
+    private List<String> petNames;
 
     public AbstractHumanTo getOwner() {
         return owner;
@@ -28,4 +29,13 @@ public class HouseTo {
     public void setInhabitants(List<AbstractHumanTo> inhabitants) {
         this.inhabitants = inhabitants;
     }
+
+    public List<String> getPetNames() {
+        return petNames;
+    }
+
+    public void setPetNames(List<String> petNames) {
+        this.petNames = petNames;
+    }
+
 }
