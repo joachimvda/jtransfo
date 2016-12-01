@@ -31,4 +31,10 @@ public class AddressDomain {
     public void setAddress(String address) {
         this.address = address;
     }
+
+    public AddressDomain withId(Long id) {
+        setId(id);
+        return this;
+    }
+
 }

@@ -32,4 +32,10 @@ public class AddressTo {
     public void setId(Long id) {
         this.id = id;
     }
+
+    public AddressTo withId(Long id) {
+        setId(id);
+        return this;
+    }
+
 }
