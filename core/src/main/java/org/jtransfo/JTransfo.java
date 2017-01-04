@@ -90,10 +90,11 @@ public interface JTransfo {
      *
      * @param source source transfer object
      * @param targetClass target class to convert to
+     * @param tags tags which indicate how objects need to be found
      * @param <T> type of object for target
      * @return domain object
      */
-    <T> T findTarget(Object source, Class<T> targetClass);
+    <T> T findTarget(Object source, Class<T> targetClass, String... tags);
 
     /**
      * Get domain class for transfer object.

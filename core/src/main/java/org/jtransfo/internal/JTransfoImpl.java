@@ -253,7 +253,7 @@ public class JTransfoImpl implements JTransfo, ConfigurableJTransfo, ConvertSour
         if (isToClass(targetClass)) {
             realTarget = (Class<T>) getToSubType(targetClass, source);
         }
-        return (T) convert(source, findTarget(source, realTarget), tags);
+        return (T) convert(source, findTarget(source, realTarget, tags), tags);
     }
 
     @Override
@@ -269,7 +269,7 @@ public class JTransfoImpl implements JTransfo, ConfigurableJTransfo, ConvertSour
     }
 
     @Override
-    public <T> T findTarget(Object source, Class<T> targetClass) {
+    public <T> T findTarget(Object source, Class<T> targetClass, String... tags) {
         if (null == source) {
             return null;
         }
@@ -277,7 +277,7 @@ public class JTransfoImpl implements JTransfo, ConfigurableJTransfo, ConvertSour
         int i = objectFinders.size() - 1;
         T target = null;
         while (null == target && i >= 0) {
-            target = objectFinders.get(i--).getObject(targetClass, source);
+            target = objectFinders.get(i--).getObject(targetClass, source, tags);
         }
         if (null == target) {
             throw new JTransfoException("Cannot create instance of target class " + targetClass.getName() +

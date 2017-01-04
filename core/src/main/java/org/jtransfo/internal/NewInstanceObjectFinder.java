@@ -19,12 +19,10 @@ public class NewInstanceObjectFinder implements ObjectFinder {
     private ReflectionHelper reflectionHelper = new ReflectionHelper();
 
     @Override
-    public <T> T getObject(Class<T> domainClass, Object to) throws JTransfoException {
+    public <T> T getObject(Class<T> domainClass, Object to, String... tags) throws JTransfoException {
         try {
             return reflectionHelper.newInstance(domainClass);
-        } catch (InstantiationException ie) {
-            throw new JTransfoException("Cannot create instance for domain class " + domainClass.getName() + ".", ie);
-        } catch (IllegalAccessException ie) {
+        } catch (InstantiationException | IllegalAccessException ie) {
             throw new JTransfoException("Cannot create instance for domain class " + domainClass.getName() + ".", ie);
         }
     }

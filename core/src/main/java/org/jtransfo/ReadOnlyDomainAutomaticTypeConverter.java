@@ -64,7 +64,7 @@ public class ReadOnlyDomainAutomaticTypeConverter
         if (null != toObject) {
             domainType = jTransfo.getDomainClass(toObject.getClass());
         }
-        return jTransfo.findTarget(toObject, domainType);
+        return jTransfo.findTarget(toObject, domainType, tags);
     }
 
     @Override

@@ -44,7 +44,7 @@ public class ReadOnlyDomainAutomaticListTypeConverter extends AutomaticListTypeC
     @Override
     public Object doConvertOne(JTransfo jTransfo, Object toObject, Class<?> domainObjectType, String... tags)
             throws JTransfoException {
-        return jTransfo.findTarget(toObject, domainObjectType);
+        return jTransfo.findTarget(toObject, domainObjectType, tags);
     }
 
 }

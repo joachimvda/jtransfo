@@ -90,7 +90,7 @@ public class FinderAndConverterTest {
             this.addresses = addresses;
         }
 
-        public <T> T getObject(Class<T> domainClass, Object to) {
+        public <T> T getObject(Class<T> domainClass, Object to, String... tags) {
             if (domainClass.isAssignableFrom(AddressDomain.class) && to instanceof AddressTo) {
                 return (T) addresses[((AddressTo) to).getId().intValue()];
             }

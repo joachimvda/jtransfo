@@ -21,7 +21,7 @@ public class HibernateObjectFinder implements ObjectFinder {
     private SessionFactory sessionFactory;
 
     @Override
-    public <T> T getObject(Class<T> domainClass, Object to) {
+    public <T> T getObject(Class<T> domainClass, Object to, String... tags) {
         if (to instanceof IdentifiedTo) {
             Long id = ((IdentifiedTo) to).getId();
             if (null != id) {
