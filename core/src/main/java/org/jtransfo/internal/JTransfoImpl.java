@@ -8,6 +8,8 @@
 
 package org.jtransfo.internal;
 
+import org.jtransfo.AutomaticListTypeConverter;
+import org.jtransfo.AutomaticSetTypeConverter;
 import org.jtransfo.ConfigurableJTransfo;
 import org.jtransfo.ConvertInterceptor;
 import org.jtransfo.ConvertSourceTarget;
@@ -18,6 +20,7 @@ import org.jtransfo.NeedsJTransfo;
 import org.jtransfo.NoConversionTypeConverter;
 import org.jtransfo.ObjectFinder;
 import org.jtransfo.ObjectReplacer;
+import org.jtransfo.ReadOnlyDomainAutomaticTypeConverter;
 import org.jtransfo.ToConverter;
 import org.jtransfo.ToDomainTypeConverter;
 import org.jtransfo.TypeConverter;
@@ -57,6 +60,13 @@ public class JTransfoImpl implements JTransfo, ConfigurableJTransfo, ConvertSour
 
         internalTypeConverters.add(new NoConversionTypeConverter());
         internalTypeConverters.add(new ToDomainTypeConverter(this));
+        ReadOnlyDomainAutomaticTypeConverter readOnlyDomainAutomaticTypeConverter = new ReadOnlyDomainAutomaticTypeConverter();
+        readOnlyDomainAutomaticTypeConverter.setSortList(true);
+        internalTypeConverters.add(readOnlyDomainAutomaticTypeConverter);
+        internalTypeConverters.add(new AutomaticSetTypeConverter());
+        AutomaticListTypeConverter automaticListTypeConverter = new AutomaticListTypeConverter();
+        automaticListTypeConverter.setSortList(true);
+        internalTypeConverters.add(automaticListTypeConverter);
         updateTypeConverters();
 
         updateConvertInterceptors();
