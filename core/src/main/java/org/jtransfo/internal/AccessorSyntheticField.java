@@ -9,6 +9,8 @@
 package org.jtransfo.internal;
 
 import org.jtransfo.JTransfoException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -23,6 +25,8 @@ import java.util.Locale;
  */
 public class AccessorSyntheticField implements SyntheticField {
 
+    private final Logger log = LoggerFactory.getLogger(AccessorSyntheticField.class);
+
     private static final String GET_SET_ITO = "InvocationTargetException trying to use %s on object of type %s. " +
             "Expected type is %s. Cause is: %s";
 
@@ -30,6 +34,8 @@ public class AccessorSyntheticField implements SyntheticField {
     private Field field;
     private Method getter;
     private Method setter;
+    private boolean getUsingFieldLogged;
+    private boolean setUsingFieldLogged;
 
     /**
      * Constructor, access field using getter and setter if exist.
@@ -101,7 +107,11 @@ public class AccessorSyntheticField implements SyntheticField {
                         getter.getDeclaringClass().getName(), ite.getCause().getMessage()), ite.getCause());
             }
         } else {
-            // @todo first time, log warning about not using getter (not public, wrong name or wrong type)
+            if (!getUsingFieldLogged) {
+                log.warn("Cannot find getter (not public, wrong name or wrong type), "
+                                + "using field to access field {} of {}.", name, field.getType().getName());
+                getUsingFieldLogged = true;
+            }
             return field.get(object);
         }
     }
@@ -126,7 +136,11 @@ public class AccessorSyntheticField implements SyntheticField {
                         setter.getDeclaringClass().getName(), ite.getCause().getMessage()), ite.getCause());
             }
         } else {
-            // @todo first time, log warning about not using getter (not public, wrong name or wrong type)
+            if (!setUsingFieldLogged) {
+                log.warn("Cannot find setter (not public, wrong name or wrong type), "
+                                + "using field to access field {} of {}.", name, field.getType().getName());
+                setUsingFieldLogged = true;
+            }
             field.set(object, value);
         }
     }

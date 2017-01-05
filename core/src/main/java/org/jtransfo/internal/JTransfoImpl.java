@@ -60,7 +60,8 @@ public class JTransfoImpl implements JTransfo, ConfigurableJTransfo, ConvertSour
 
         internalTypeConverters.add(new NoConversionTypeConverter());
         internalTypeConverters.add(new ToDomainTypeConverter(this));
-        ReadOnlyDomainAutomaticTypeConverter readOnlyDomainAutomaticTypeConverter = new ReadOnlyDomainAutomaticTypeConverter();
+        ReadOnlyDomainAutomaticTypeConverter readOnlyDomainAutomaticTypeConverter =
+                new ReadOnlyDomainAutomaticTypeConverter();
         readOnlyDomainAutomaticTypeConverter.setSortList(true);
         internalTypeConverters.add(readOnlyDomainAutomaticTypeConverter);
         internalTypeConverters.add(new AutomaticSetTypeConverter());

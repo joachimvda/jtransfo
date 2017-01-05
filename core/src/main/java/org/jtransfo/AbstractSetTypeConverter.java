@@ -9,6 +9,8 @@
 package org.jtransfo;
 
 import org.jtransfo.internal.SyntheticField;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Type;
 import java.util.HashSet;
@@ -19,6 +21,8 @@ import java.util.function.Supplier;
  * Abstract type converter for {@link Set} objects. You need to define the to object contents for the set.
  */
 public abstract class AbstractSetTypeConverter implements TypeConverter<Set, Set>, Named, NeedsJTransfo {
+
+    private final Logger log = LoggerFactory.getLogger(AbstractSetTypeConverter.class);
 
     private String name;
     private Class<?> toType;
@@ -137,7 +141,8 @@ public abstract class AbstractSetTypeConverter implements TypeConverter<Set, Set
             try {
                 res = (Set<Object>) targetField.get(targetObject);
             } catch (Exception exception) {
-                res = null; // avoid problems in case of exception @todo should be logged
+                log.error("Cannot get field " + targetField.getName() + " from " + targetObject, exception);
+                res = null;
             }
         }
         if (null != res) {

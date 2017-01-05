@@ -9,6 +9,8 @@
 package org.jtransfo;
 
 import org.jtransfo.internal.SyntheticField;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -20,6 +22,8 @@ import java.util.function.Supplier;
  * Abstract type converter for converting lists with object of specific type. Can only be used as declared converter.
  */
 public abstract class AbstractListTypeConverter implements TypeConverter<List, List>, Named, NeedsJTransfo {
+
+    private final Logger log = LoggerFactory.getLogger(AbstractListTypeConverter.class);
 
     private String name;
     private Class<?> toType;
@@ -139,7 +143,8 @@ public abstract class AbstractListTypeConverter implements TypeConverter<List, L
             try {
                 res = (List<Object>) targetField.get(targetObject);
             } catch (Exception exception) {
-                res = null; // avoid problems in case of exception @todo should be logged
+                log.error("Cannot get field " + targetField.getName() + " from " + targetObject, exception);
+                res = null;
             }
         }
         if (null != res) {
