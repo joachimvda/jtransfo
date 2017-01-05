@@ -42,10 +42,8 @@ public class FinderAndConverterTest {
             addresses[i] = ad;
         }
 
-        impl.getTypeConverters().add(new StringEnumTypeConverter(Gender.class));
-        impl.updateTypeConverters();
-        impl.getObjectFinders().add(new AddressFinder(addresses));
-        impl.updateObjectFinders();
+        impl.with(new StringEnumTypeConverter(Gender.class));
+        impl.with(new AddressFinder(addresses));
     }
 
     @Test

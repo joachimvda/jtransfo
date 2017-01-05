@@ -27,6 +27,20 @@ public class AutomaticSetTypeConverterTest {
     }
 
     @Test
+    public void testWithName() throws Exception {
+        AutomaticSetTypeConverter tc = new AutomaticSetTypeConverter("bla");
+
+        assertThat(tc.getName()).isEqualTo("bla");
+    }
+
+    @Test
+    public void testNoExplicitName() throws Exception {
+        AutomaticSetTypeConverter tc = new AutomaticSetTypeConverter();
+
+        assertThat(tc.getName()).isEqualTo("automaticSet");
+    }
+
+    @Test
     public void testCanConvert() throws Exception {
         AutomaticSetTypeConverter typeConverter = new AutomaticSetTypeConverter(jTransfo);
 

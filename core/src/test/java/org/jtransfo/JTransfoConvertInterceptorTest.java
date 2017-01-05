@@ -29,9 +29,8 @@ public class JTransfoConvertInterceptorTest {
         ConfigurableJTransfo impl = JTransfoFactory.get();
         jTransfo = impl;
 
-        impl.getConvertInterceptors().add(new MyConvertInterceptor("X"));
-        impl.getConvertInterceptors().add(new MyConvertInterceptor("z"));
-        impl.updateConvertInterceptors();
+        impl.with(new MyConvertInterceptor("X"));
+        impl.with(new MyConvertInterceptor("z"));
     }
 
     @Test

@@ -36,7 +36,7 @@ public class JTransfoObjectReplacerTest {
         ConfigurableJTransfo impl = JTransfoFactory.get();
         jTransfo = impl;
 
-        impl.getObjectReplacers().add(new MyObjectReplacer());
+        impl.with(new MyObjectReplacer());
         impl.updateObjectReplacers();
     }
 
