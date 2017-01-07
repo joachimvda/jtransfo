@@ -59,8 +59,9 @@ public class AutomaticSetTypeConverter extends AbstractSetTypeConverter {
             return false;
         }
         // TO type should be marked with @DomainClass and domain should match declared
-        return getJTransfo().isToClass(paramRealToType)
-                && paramRealDomainType.isAssignableFrom(getJTransfo().getDomainClass(paramRealToType));
+        return (getJTransfo().isToClass(paramRealToType)
+                && paramRealDomainType.isAssignableFrom(getJTransfo().getDomainClass(paramRealToType)))
+                || (isPrimitiveOrString(paramRealToType) && paramRealDomainType == paramRealToType);
     }
 
     /**
