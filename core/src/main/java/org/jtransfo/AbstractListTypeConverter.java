@@ -85,7 +85,7 @@ public abstract class AbstractListTypeConverter implements TypeConverter<List, L
     public List convert(List toObjects, SyntheticField domainField, Object domainObject, String... tags)
             throws JTransfoException {
         if (null == toObjects) {
-            return getNullList();
+            return getNullList(domainField, domainObject);
         }
         List<Object> res = newList(domainField, domainObject);
         for (Object to : toObjects) {
@@ -124,7 +124,7 @@ public abstract class AbstractListTypeConverter implements TypeConverter<List, L
     public List reverse(List domainObjects, SyntheticField toField, Object toObject, String... tags)
             throws JTransfoException {
         if (null == domainObjects) {
-            return getNullList();
+            return getNullList(toField, toObject);
         }
         List<Object> res = newList(toField, toObject);
         for (Object domain : domainObjects) {
@@ -164,8 +164,8 @@ public abstract class AbstractListTypeConverter implements TypeConverter<List, L
         return list;
     }
 
-    private List getNullList() {
-        return keepNullList ? null : emptyListSupplier.get();
+    private List getNullList(SyntheticField targetField, Object targetObject) {
+        return keepNullList ? null : newList(targetField, targetObject);
     }
 
     /**

@@ -83,7 +83,7 @@ public abstract class AbstractSetTypeConverter implements TypeConverter<Set, Set
     public Set convert(Set toObjects, SyntheticField domainField, Object domainObject, String... tags)
             throws JTransfoException {
         if (null == toObjects) {
-            return getNullSet();
+            return getNullSet(domainField, domainObject);
         }
         Set<Object> res = newSet(domainField, domainObject);
         for (Object to : toObjects) {
@@ -122,7 +122,7 @@ public abstract class AbstractSetTypeConverter implements TypeConverter<Set, Set
     public Set reverse(Set domainObjects, SyntheticField toField, Object toObject, String... tags)
             throws JTransfoException {
         if (null == domainObjects) {
-            return getNullSet();
+            return getNullSet(toField, toObject);
         }
         Set<Object> res = newSet(toField, toObject);
         for (Object domain : domainObjects) {
@@ -153,8 +153,8 @@ public abstract class AbstractSetTypeConverter implements TypeConverter<Set, Set
         return res;
     }
 
-    private Set getNullSet() {
-        return keepNullSet ? null : emptySetSupplier.get();
+    private Set getNullSet(SyntheticField targetField, Object targetObject) {
+        return keepNullSet ? null : newSet(targetField, targetObject);
     }
 
     /**
