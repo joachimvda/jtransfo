@@ -151,10 +151,10 @@ public class ConverterHelper {
                 }
                 TypeConverter moTypeConverter = getDeclaredTypeConverter(mapOnly, typeConverter);
                 ToToConverter ttc = new ToToConverter(sField, mapOnlyDomainField, moTypeConverter);
-                toTo.addConverters(mapOnly.value(), ttc);
+                toTo.addConverters(ttc, mapOnly.value());
                 if (!mapOnly.readOnly()) {
                     ToDomainConverter tdc = new ToDomainConverter(sField, mapOnlyDomainField, moTypeConverter);
-                    toDomain.addConverters(mapOnly.value(), tdc);
+                    toDomain.addConverters(tdc, mapOnly.value());
                 }
             }
         }

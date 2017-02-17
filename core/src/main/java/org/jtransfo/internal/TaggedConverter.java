@@ -17,10 +17,13 @@ import java.util.Map;
 
 /**
  * Converter which delegated to the specified converters for the tags. It will always also handle "*" as first tag.
+ * Tags which start with "!" are treated as "list of tags does not include" and are treated after "*"
+ * but before the matching tags.
  */
 public class TaggedConverter implements Converter {
 
     private Map<String, Converter> converters = new HashMap<>();
+    private Map<String, Converter> notConverters = new HashMap<>();
 
     /**
      * Add the converter which should be used for a specific tag.
@@ -28,9 +31,13 @@ public class TaggedConverter implements Converter {
      * @param tags tags for which the converter applies
      * @param converter converter for the tag
      */
-    public void addConverters(String[] tags, Converter converter) {
+    public void addConverters(Converter converter, String... tags) {
         for (String tag : tags) {
-            converters.put(tag, converter);
+            if (tag.startsWith("!")) {
+                notConverters.put(tag.substring(1), converter);
+            } else {
+                converters.put(tag, converter);
+            }
         }
     }
 
@@ -39,6 +46,13 @@ public class TaggedConverter implements Converter {
         Converter converter = converters.get(MapOnly.ALWAYS);
         if (null != converter) {
             converter.convert(source, target, tags);
+        }
+        if (!notConverters.isEmpty()) {
+            for (Map.Entry<String, Converter> entry : notConverters.entrySet()) {
+                if (!contains(tags, entry.getKey())) {
+                    entry.getValue().convert(source, target, tags);
+                }
+            }
         }
         if (null != tags) {
             for (String tag : tags) {
@@ -49,4 +63,14 @@ public class TaggedConverter implements Converter {
             }
         }
     }
+
+    private boolean contains(String[] tags, String key) {
+        for (String tag : tags) {
+            if (key.equals(tag)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

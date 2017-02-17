@@ -40,8 +40,8 @@ public class TaggedConverterTest {
     public void testAddConverters() throws Exception {
         Converter c1 = mock(Converter.class);
         Converter c2 = mock(Converter.class);
-        taggedConverter.addConverters(new String[] {TAG, "zzz"}, c1);
-        taggedConverter.addConverters(new String[] {TAG}, c2);
+        taggedConverter.addConverters(c1, TAG, "zzz");
+        taggedConverter.addConverters(c2, TAG);
 
         Map<String, Converter> res = (Map<String, Converter>)
                 ReflectionTestUtils.getField(taggedConverter, "converters");
@@ -53,8 +53,8 @@ public class TaggedConverterTest {
     public void testConvert() throws Exception {
         Converter starConverter = mock(Converter.class);
         Converter converter = mock(Converter.class);
-        taggedConverter.addConverters(new String[] {TAG}, converter);
-        taggedConverter.addConverters(new String[] {MapOnly.ALWAYS}, starConverter);
+        taggedConverter.addConverters(converter, TAG);
+        taggedConverter.addConverters(starConverter, MapOnly.ALWAYS);
         Object source = mock(Object.class);
         Object target = mock(Object.class);
 
@@ -67,12 +67,48 @@ public class TaggedConverterTest {
     @Test
     public void testConvert_withTags() throws Exception {
         Converter converter = mock(Converter.class);
-        taggedConverter.addConverters(new String[] {TAG}, converter);
+        taggedConverter.addConverters(converter, TAG);
         Object source = mock(Object.class);
         Object target = mock(Object.class);
 
         taggedConverter.convert(source, target, TAG);
 
         verify(converter).convert(source, target, TAG);
+    }
+
+    @Test
+    public void testConvert_withoutTags() throws Exception {
+        Converter converter = mock(Converter.class);
+        taggedConverter.addConverters(converter, TAG);
+        Object source = mock(Object.class);
+        Object target = mock(Object.class);
+
+        taggedConverter.convert(source, target, "bla");
+
+        verifyNoMoreInteractions(converter);
+    }
+
+    @Test
+    public void testConvert_withNotTags() throws Exception {
+        Converter converter = mock(Converter.class);
+        taggedConverter.addConverters(converter, "!" + TAG);
+        Object source = mock(Object.class);
+        Object target = mock(Object.class);
+
+        taggedConverter.convert(source, target, TAG);
+
+        verifyNoMoreInteractions(converter);
+    }
+
+    @Test
+    public void testConvert_withoutNotTags() throws Exception {
+        Converter converter = mock(Converter.class);
+        taggedConverter.addConverters(converter, "!" + TAG);
+        Object source = mock(Object.class);
+        Object target = mock(Object.class);
+
+        taggedConverter.convert(source, target, "bla");
+
+        verify(converter).convert(source, target, "bla");
     }
 }
