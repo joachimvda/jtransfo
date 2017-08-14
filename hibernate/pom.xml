@@ -72,4 +72,7 @@
         </dependency>
     </dependencies>
 
+    <properties>
+        <automatic.module.name>org.jtransfo.hibernate</automatic.module.name>
+    </properties>
 </project>

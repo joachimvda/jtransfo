@@ -305,6 +305,7 @@
                             <Description>${project.description}</Description>
                             <Version>${project.version}</Version>
                             <License>Apache License v2</License>
+                            <Automatic-Module-Name>${automatic.module.name}</Automatic-Module-Name>
                         </manifestEntries>
                         <compress>true</compress>
                         <index>true</index>
@@ -378,6 +379,7 @@
     <properties>
         <additionalparam>-Xdoclint:none</additionalparam> <!-- avoid javadoc errors from failing the build -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <automatic.module.name>org.jtransfo</automatic.module.name>
     </properties>
 
 </project>

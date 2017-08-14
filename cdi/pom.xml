@@ -14,7 +14,6 @@
         <artifactId>jtransfo</artifactId>
         <version>2.3-SNAPSHOT</version>
     </parent>
-    <groupId>org.jtransfo</groupId>
     <artifactId>jtransfo-cdi</artifactId>
     <description>CDI integration for JTransfo</description>
 
@@ -84,4 +83,7 @@
         </dependency>
     </dependencies>
 
+    <properties>
+        <automatic.module.name>org.jtransfo.cdi</automatic.module.name>
+    </properties>
 </project>
