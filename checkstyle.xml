@@ -8,8 +8,8 @@
   ~ For full licensing details, see LICENSE.txt in the project root.
   -->
 
-<!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.1//EN"
-        "http://www.puppycrawl.com/dtds/configuration_1_1.dtd">
+<!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.3//EN"
+        "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
 
 <module name="Checker">
 
@@ -58,75 +58,71 @@
         <property name="message" value="Author tags are not allowed - consult SCM instead."/>
     </module>
 
-    <module name="SuppressionCommentFilter">
-        <property name="offCommentFormat" value="CHECKSTYLE VISIBILITY MODIFIER\: OFF"/>
-        <property name="onCommentFormat" value="CHECKSTYLE VISIBILITY MODIFIER\: ON"/>
-        <property name="checkFormat" value="VisibilityModifierCheck"/>
-    </module>
-
-    <module name="SuppressionCommentFilter">
-        <property name="offCommentFormat" value="CHECKSTYLE THROWS_THROWABLE\: OFF"/>
-        <property name="onCommentFormat" value="CHECKSTYLE THROWS_THROWABLE\: ON"/>
-        <property name="checkFormat" value="IllegalThrowsCheck"/>
-    </module>
-
-    <module name="SuppressionCommentFilter">
-        <property name="offCommentFormat" value="CHECKSTYLE CLONE\: OFF"/>
-        <property name="onCommentFormat" value="CHECKSTYLE CLONE\: ON"/>
-        <property name="checkFormat" value=".*Clone"/>
-    </module>
-
-    <module name="SuppressionCommentFilter">
-        <property name="offCommentFormat" value="CHECKSTYLE INNER_ASSIGNMENT\: OFF"/>
-        <property name="onCommentFormat" value="CHECKSTYLE INNER_ASSIGNMENT\: ON"/>
-        <property name="checkFormat" value="InnerAssignment"/>
-    </module>
-
-    <module name="SuppressionCommentFilter">
-        <property name="offCommentFormat" value="CHECKSTYLE JAVADOC_METHOD\: OFF"/>
-        <property name="onCommentFormat" value="CHECKSTYLE JAVADOC_METHOD\: ON"/>
-        <property name="checkFormat" value="JavadocMethod"/>
-    </module>
-
-    <module name="SuppressionCommentFilter">
-        <property name="offCommentFormat" value="CHECKSTYLE JAVADOC_VARIABLE\: OFF"/>
-        <property name="onCommentFormat" value="CHECKSTYLE JAVADOC_VARIABLE\: ON"/>
-        <property name="checkFormat" value="JavadocVariable"/>
-    </module>
-
-    <module name="SuppressionCommentFilter">
-        <property name="offCommentFormat" value="CHECKSTYLE JAVADOC_STYLE\: OFF"/>
-        <property name="onCommentFormat" value="CHECKSTYLE JAVADOC_STYLE\: ON"/>
-        <property name="checkFormat" value="JavadocStyle"/>
-    </module>
-
-    <module name="SuppressionCommentFilter">
-        <property name="offCommentFormat" value="CHECKSTYLE MEMBER_NAME\: OFF"/>
-        <property name="onCommentFormat" value="CHECKSTYLE MEMBER_NAME\: ON"/>
-        <property name="checkFormat" value="MemberName"/>
-    </module>
-
-    <module name="SuppressionCommentFilter">
-        <property name="offCommentFormat" value="CHECKSTYLE ILLEGAL_IMPORT\: OFF"/>
-        <property name="onCommentFormat" value="CHECKSTYLE ILLEGAL_IMPORT\: ON"/>
-        <property name="checkFormat" value="IllegalImport"/>
-    </module>
-
-    <module name="SuppressionCommentFilter">
-        <property name="offCommentFormat" value="CHECKSTYLE METHOD_NAME\: OFF"/>
-        <property name="onCommentFormat" value="CHECKSTYLE METHOD_NAME\: ON"/>
-        <property name="checkFormat" value="MethodName"/>
-    </module>
-
     <module name="TreeWalker">
 
         <property name="cacheFile" value="./checkstyle.cache"/>
         <property name="tabWidth" value="4"/>
         <property name="fileExtensions" value="java"/>
 
-        <!-- needed for SuppressionCommentFilter -->
-        <module name="FileContentsHolder"/>
+        <module name="SuppressionCommentFilter">
+            <property name="offCommentFormat" value="CHECKSTYLE VISIBILITY MODIFIER\: OFF"/>
+            <property name="onCommentFormat" value="CHECKSTYLE VISIBILITY MODIFIER\: ON"/>
+            <property name="checkFormat" value="VisibilityModifierCheck"/>
+        </module>
 
+        <module name="SuppressionCommentFilter">
+            <property name="offCommentFormat" value="CHECKSTYLE THROWS_THROWABLE\: OFF"/>
+            <property name="onCommentFormat" value="CHECKSTYLE THROWS_THROWABLE\: ON"/>
+            <property name="checkFormat" value="IllegalThrowsCheck"/>
+        </module>
+
+        <module name="SuppressionCommentFilter">
+            <property name="offCommentFormat" value="CHECKSTYLE CLONE\: OFF"/>
+            <property name="onCommentFormat" value="CHECKSTYLE CLONE\: ON"/>
+            <property name="checkFormat" value=".*Clone"/>
+        </module>
+
+        <module name="SuppressionCommentFilter">
+            <property name="offCommentFormat" value="CHECKSTYLE INNER_ASSIGNMENT\: OFF"/>
+            <property name="onCommentFormat" value="CHECKSTYLE INNER_ASSIGNMENT\: ON"/>
+            <property name="checkFormat" value="InnerAssignment"/>
+        </module>
+
+        <module name="SuppressionCommentFilter">
+            <property name="offCommentFormat" value="CHECKSTYLE JAVADOC_METHOD\: OFF"/>
+            <property name="onCommentFormat" value="CHECKSTYLE JAVADOC_METHOD\: ON"/>
+            <property name="checkFormat" value="JavadocMethod"/>
+        </module>
+
+        <module name="SuppressionCommentFilter">
+            <property name="offCommentFormat" value="CHECKSTYLE JAVADOC_VARIABLE\: OFF"/>
+            <property name="onCommentFormat" value="CHECKSTYLE JAVADOC_VARIABLE\: ON"/>
+            <property name="checkFormat" value="JavadocVariable"/>
+        </module>
+
+        <module name="SuppressionCommentFilter">
+            <property name="offCommentFormat" value="CHECKSTYLE JAVADOC_STYLE\: OFF"/>
+            <property name="onCommentFormat" value="CHECKSTYLE JAVADOC_STYLE\: ON"/>
+            <property name="checkFormat" value="JavadocStyle"/>
+        </module>
+
+        <module name="SuppressionCommentFilter">
+            <property name="offCommentFormat" value="CHECKSTYLE MEMBER_NAME\: OFF"/>
+            <property name="onCommentFormat" value="CHECKSTYLE MEMBER_NAME\: ON"/>
+            <property name="checkFormat" value="MemberName"/>
+        </module>
+
+        <module name="SuppressionCommentFilter">
+            <property name="offCommentFormat" value="CHECKSTYLE ILLEGAL_IMPORT\: OFF"/>
+            <property name="onCommentFormat" value="CHECKSTYLE ILLEGAL_IMPORT\: ON"/>
+            <property name="checkFormat" value="IllegalImport"/>
+        </module>
+
+        <module name="SuppressionCommentFilter">
+            <property name="offCommentFormat" value="CHECKSTYLE METHOD_NAME\: OFF"/>
+            <property name="onCommentFormat" value="CHECKSTYLE METHOD_NAME\: ON"/>
+            <property name="checkFormat" value="MethodName"/>
+        </module>
 
         <!-- annotation checks, see http://checkstyle.sourceforge.net/config_annotation.html -->
 
@@ -148,9 +144,7 @@
         <!-- Checks for empty blocks. -->
         <module name="EmptyBlock"/>
         <!-- Checks the placement of left curly braces on types, methods and other blocks:  -->
-        <module name="LeftCurly">
-            <property name="maxLineLength" value="120"/>
-        </module>
+        <module name="LeftCurly"/>
         <!-- Checks for braces around code blocks. -->
         <module name="NeedBraces"/>
         <!-- Checks the placement of right curly braces. -->
