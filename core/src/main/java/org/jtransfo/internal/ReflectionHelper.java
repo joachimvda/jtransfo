@@ -143,6 +143,25 @@ public class ReflectionHelper {
     }
 
     /**
+     * Make the given method accessible, explicitly setting it accessible if necessary.
+     * The <code>setAccessible(true)</code> method is only called when actually necessary, to avoid unnecessary
+     * conflicts with a JVM SecurityManager (if active).
+     * <p>
+     * This method is borrowed from Spring's ReflectionUtil class.
+     * </p>
+     *
+     * @param method the method to make accessible
+     * @see java.lang.reflect.Method#setAccessible
+     */
+    public void makeAccessible(Method method) {
+        if ((!Modifier.isPublic(method.getModifiers())
+                || !Modifier.isPublic(method.getDeclaringClass().getModifiers())
+                || Modifier.isFinal(method.getModifiers())) && !method.isAccessible()) {
+            method.setAccessible(true);
+        }
+    }
+
+    /**
      * Get method with given name and parameters and given return type.
      *
      * @param type class on which method should be found
@@ -153,9 +172,12 @@ public class ReflectionHelper {
      */
     public Method getMethod(Class<?> type, Class<?> returnType, String name, Class<?>... parameters) {
         try {
-            Method method = type.getMethod(name, parameters);
+            Method method = type.getDeclaredMethod(name, parameters);
             if (null != returnType && !returnType.isAssignableFrom(method.getReturnType())) {
                 method = null;
+            }
+            if (null != method) {
+                makeAccessible(method);
             }
             return method;
         } catch (NoSuchMethodException nsme) {
