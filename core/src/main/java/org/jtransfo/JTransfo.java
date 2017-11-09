@@ -11,7 +11,44 @@ package org.jtransfo;
 import java.util.List;
 
 /**
- * jTransfo main access point.
+ * <p>
+ * jTransfo can be used to convert between transfer objects (TO ot DTO) and domain objects.
+ * </p><p>
+ * You just have to annotate the transfer object with {@link DomainClass} to indicate the domain object
+ * (either the class or the fully qualified class name).
+ * </p><p>
+ * By default all fields are converted, but you can use annotations to configure this:
+ * <ul>
+ *     <li>{@link MappedBy}</li>
+ *     <li>{@link NotMapped}</li>
+ *     <li>{@link MapOnly}</li>
+ *     <li>{@link ReadOnly}</li>
+ *     <li>{@link ReadOnlyDomain}</li>
+ * </ul>
+ * </p><p>
+ * When converting, the fields on the transfer objects are always used directly (as the annotations are on the fields).
+ * For domain objects, the getters and setters are used when they exist (even when private).
+ * </p><p>
+ * When jTransfo needs to determine the object to convert to (when using {@link #convertTo(Object, Class, String...)}
+ * or when converting a nested object which is null in the target) then the {@link ObjectFinder} will be used.
+ * By default this always creates new objects, but you can add custom object finders to allow objects to be retrieved
+ * from the database or whatever behaviour you need.
+ * </p><p>
+ * The conversion itself can be controlled in various ways:
+ * <ul>
+ *     <li>When converting you can pass tags which can configure the conversion. These are considered for
+ *         {@link MapOnly} and in the type converters, interceptors etc</li>
+ *     <li>You can define type converters which are applied aither automatically or declared in the {@link MappedBy}
+ *         or {@link MapOnly} annotations. See {@link TypeConverter}.</li>
+ *     <li>You can add an interceptor to the conversion. This can be used in various way, for example to add
+ *         validation or side-effect like auditing. See {@link ConvertInterceptor}.
+ *     </li>
+ *     <li>You may also want to provide a {@link ObjectReplacer}. This can replace objects just before they are
+ *         converted. This can for example be useful to detect lazy objects and replace them with proper
+ *         implementations. See {@link ObjectReplacer}.
+ *     </li>
+ * </ul>
+ * </p>
  */
 public interface JTransfo {
 
