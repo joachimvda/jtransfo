@@ -8,4 +8,5 @@
 
 module org.jtransfo {
     exports org.jtransfo;
+    //requires org.slf4j;
 }

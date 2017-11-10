@@ -100,7 +100,7 @@ mvn clean install -DargLine="++add-modules=java.xml.bind"
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
-                <version>1.7.5</version>
+                <version>1.7.25</version>
             </dependency>
 
             <dependency>
@@ -290,7 +290,7 @@ mvn clean install -DargLine="++add-modules=java.xml.bind"
                     <jdkToolchain>
                         <version>9</version>
                     </jdkToolchain>
-                    <release></release>
+                    <release>8</release>
                 </configuration>
             </plugin>
             <plugin>
