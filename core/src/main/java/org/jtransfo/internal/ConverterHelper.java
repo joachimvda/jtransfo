@@ -15,6 +15,10 @@ import org.jtransfo.MappedBy;
 import org.jtransfo.Named;
 import org.jtransfo.NoConversionTypeConverter;
 import org.jtransfo.NotMapped;
+import org.jtransfo.PostConvert;
+import org.jtransfo.PostConverter;
+import org.jtransfo.PreConvert;
+import org.jtransfo.PreConverter;
 import org.jtransfo.ToConverter;
 import org.jtransfo.TypeConverter;
 
@@ -22,9 +26,11 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -35,9 +41,10 @@ public class ConverterHelper {
     private static final String DECLARED_TYPE_CONVERTER_CLASS = "Declared TypeConverter class ";
 
     private ReflectionHelper reflectionHelper = new ReflectionHelper();
-    private ConcurrentHashMap<String, TypeConverter> typeConverterInstances =
-            new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, TypeConverter> typeConverterInstances = new ConcurrentHashMap<>();
     private List<TypeConverter> typeConvertersInOrder = Collections.emptyList(); // empty list for starters
+    private ConcurrentHashMap<String, PreConverter> preConverterInstances = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, PostConverter> postConverterInstances = new ConcurrentHashMap<>();
 
     /**
      * Build the descriptor for conversion between given object types.
@@ -48,7 +55,7 @@ public class ConverterHelper {
      * @throws JTransfoException cannot build converter
      */
     public ToConverter getToConverter(Class toClass, Class domainClass) throws JTransfoException {
-        ToConverter converter = new ToConverter();
+        ToConverter converter = withPreConverter(toClass);
 
         List<SyntheticField> domainFields = reflectionHelper.getSyntheticFields(domainClass);
         for (Field field : reflectionHelper.getFields(toClass)) {
@@ -73,6 +80,7 @@ public class ConverterHelper {
             }
         }
 
+        addPostConverter(converter, toClass);
         return converter;
     }
 
@@ -160,6 +168,53 @@ public class ConverterHelper {
         }
     }
 
+    private ToConverter withPreConverter(Class toClass) {
+        List<PreConvert.List> preConvertListAnnotations =
+                reflectionHelper.getAnnotationWithMeta(toClass, PreConvert.List.class);
+        List<PreConvert> preConvertAnnotations = reflectionHelper.getAnnotationWithMeta(toClass, PreConvert.class);
+        preConvertListAnnotations.forEach(list -> preConvertAnnotations.addAll(Arrays.asList(list.value())));
+        if (preConvertAnnotations.isEmpty()) {
+            return new ToConverter();
+        } else {
+            List<PreConverter> preConverters = new ArrayList<>();
+            for (PreConvert ann : preConvertAnnotations) {
+                preConverters.add(
+                        getConverter(ann.value(), ann.converterClass(), preConverterInstances, "preConverter"));
+            }
+            if (preConverters.size() == 1) {
+                return new ToConverter(preConverters.get(0));
+            } else {
+                return new ToConverter(new CombinedPreConverter(preConverters));
+            }
+        }
+    }
+
+    private void addPostConverter(ToConverter converter, Class toClass) {
+        List<PostConvert.List> postConvertListAnnotations =
+                reflectionHelper.getAnnotationWithMeta(toClass, PostConvert.List.class);
+        List<PostConvert> postConvertAnnotations = reflectionHelper.getAnnotationWithMeta(toClass, PostConvert.class);
+        postConvertListAnnotations.forEach(list -> postConvertAnnotations.addAll(Arrays.asList(list.value())));
+        for (PostConvert ann : postConvertAnnotations) {
+            PostConverter postConverter =
+                    getConverter(ann.value(), ann.converterClass(), postConverterInstances, "postConverter");
+            converter.addToDomain(postConverter::postConvertToDomain);
+            converter.addToTo(postConverter::postConvertToTo);
+        }
+    }
+
+    private <C> C getConverter(String converterName, Class converterClass,
+            Map<String, C> converterInstances, String typeForException) {
+        String name = converterName;
+        if (PreConvert.DEFAULT_NAME.equals(name)) {
+            name = converterClass.getName();
+        }
+        C converter = converterInstances.get(name);
+        if (null == converter) {
+            throw new JTransfoException(String.format("Cannot find %s %s.", typeForException, name));
+        }
+        return converter;
+    }
+
     /**
      * Get the @MapOnly definitions which exist on a field, be it an individual {@link MapOnly} annotation or grouped
      * in {@link MapOnlies} or both.
@@ -167,7 +222,7 @@ public class ConverterHelper {
      * @param field field to get annotations for
      * @return list of annotations
      */
-    protected List<MapOnly> getMapOnlies(Field field) {
+    List<MapOnly> getMapOnlies(Field field) {
         List<MapOnly> mapOnly = reflectionHelper.getAnnotationWithMeta(field, MapOnly.class);
         List<MapOnlies> mapOnlies = reflectionHelper.getAnnotationWithMeta(field, MapOnlies.class);
         if (0 == mapOnly.size() && 0 == mapOnlies.size()) {
@@ -185,7 +240,7 @@ public class ConverterHelper {
      * @param path array of path elements
      * @return original path string
      */
-    public String withPath(String[] path) {
+    String withPath(String[] path) {
         StringBuilder sb = new StringBuilder();
         if (path.length > 0) {
             sb.append(" (with path ");
@@ -211,7 +266,7 @@ public class ConverterHelper {
      * @return field with requested name or null when not found
      * @throws JTransfoException cannot find fields
      */
-    protected SyntheticField[] findField(List<SyntheticField> domainFields, String fieldName, String[] path,
+    SyntheticField[] findField(List<SyntheticField> domainFields, String fieldName, String[] path,
             Class<?> type, boolean readOnlyField) throws JTransfoException {
         List<SyntheticField> fields = domainFields;
         SyntheticField[] result = new SyntheticField[path.length + 1];
@@ -249,7 +304,7 @@ public class ConverterHelper {
      * @param typeConverterClassName2  second highest priority type converter name (FQN)
      * @return type converter with highest precedence
      */
-    protected TypeConverter getDeclaredTypeConverter(String typeConverterClassName1, String typeConverterClassName2) {
+    TypeConverter getDeclaredTypeConverter(String typeConverterClassName1, String typeConverterClassName2) {
         String typeConverterClass = typeConverterClassName1;
         if (MappedBy.DefaultTypeConverter.class.getName().equals(typeConverterClass)) {
             typeConverterClass = typeConverterClassName2;
@@ -285,7 +340,7 @@ public class ConverterHelper {
      * @param mappedBy MappedBy annotation
      * @return type converter with highest precedence
      */
-    protected TypeConverter getDeclaredTypeConverter(MappedBy mappedBy) {
+    TypeConverter getDeclaredTypeConverter(MappedBy mappedBy) {
         if (null == mappedBy) {
             return null;
         }
@@ -299,7 +354,7 @@ public class ConverterHelper {
      * @param fallback type converter from MappedBy annotation
      * @return type converter with highest precedence
      */
-    protected TypeConverter getDeclaredTypeConverter(MapOnly mapOnly, TypeConverter fallback) {
+     TypeConverter getDeclaredTypeConverter(MapOnly mapOnly, TypeConverter fallback) {
         if (null != mapOnly) {
             TypeConverter typeConverter = getDeclaredTypeConverter(
                     mapOnly.typeConverterClass().getName(), mapOnly.typeConverter());
@@ -316,7 +371,7 @@ public class ConverterHelper {
      * @param typeConverters ordered list of type converters, the first converter in the list which can do the
      *      conversion is used.
      */
-    public void setTypeConvertersInOrder(Collection<TypeConverter> typeConverters) {
+    void setTypeConvertersInOrder(Collection<TypeConverter> typeConverters) {
         LockableList<TypeConverter> newList = new LockableList<>();
         newList.addAll(typeConverters);
         newList.lock();
@@ -342,13 +397,47 @@ public class ConverterHelper {
      * @param domainField domain object field class
      * @return type converter
      */
-    protected TypeConverter getDefaultTypeConverter(Type toField, Type domainField) {
+    TypeConverter getDefaultTypeConverter(Type toField, Type domainField) {
         for (TypeConverter typeConverter : typeConvertersInOrder) {
             if (typeConverter.canConvert(toField, domainField)) {
                 return typeConverter;
             }
         }
         return new NoConversionTypeConverter(); // default to no type conversion
+    }
+
+    /**
+     * Set the list of type converters. When searching a type conversion, the list is traversed front to back.
+     *
+     * @param preConverters ordered list of type converters, the first converter in the list which can do the
+     *      conversion is used.
+     */
+    void setPreConverters(Collection<PreConverter> preConverters) {
+        for (PreConverter pc : preConverters) {
+            // register using specific name (if any)
+            if (pc instanceof Named) {
+                preConverterInstances.put(((Named) pc).getName(), pc);
+            }
+            // always register using class name
+            preConverterInstances.put(pc.getClass().getName(), pc);
+        }
+    }
+
+    /**
+     * Set the list of type converters. When searching a type conversion, the list is traversed front to back.
+     *
+     * @param postConverters ordered list of type converters, the first converter in the list which can do the
+     *      conversion is used.
+     */
+    void setPostConverters(Collection<PostConverter> postConverters) {
+        for (PostConverter pc : postConverters) {
+            // register using specific name (if any)
+            if (pc instanceof Named) {
+                postConverterInstances.put(((Named) pc).getName(), pc);
+            }
+            // always register using class name
+            postConverterInstances.put(pc.getClass().getName(), pc);
+        }
     }
 
 }

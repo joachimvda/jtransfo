@@ -22,6 +22,23 @@ public class ToConverter {
 
     private final LockableList<Converter> toTo = new LockableList<>();
     private final LockableList<Converter> toDomain = new LockableList<>();
+    private final PreConverter preConverter;
+
+    /**
+     * Constructor without preconverter.
+     */
+    public ToConverter() {
+        this.preConverter = new PreConverter() { };
+    }
+
+    /**
+     * Constructor with a given preconverter.
+     *
+     * @param preConverter preconverter to use
+     */
+    public ToConverter(PreConverter preConverter) {
+        this.preConverter = preConverter;
+    }
 
     /**
      * Get list of converters to convert domain to transfer object.
@@ -69,6 +86,15 @@ public class ToConverter {
     public void lock() {
         toTo.lock();
         toDomain.lock();
+    }
+
+    /**
+     * Get the {@link PreConverter} to use.
+     *
+     * @return pre converter
+     */
+    public PreConverter getPreConverter() {
+        return preConverter;
     }
 
 }

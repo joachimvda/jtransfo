@@ -20,6 +20,8 @@ import org.jtransfo.NeedsJTransfo;
 import org.jtransfo.NoConversionTypeConverter;
 import org.jtransfo.ObjectFinder;
 import org.jtransfo.ObjectReplacer;
+import org.jtransfo.PostConverter;
+import org.jtransfo.PreConverter;
 import org.jtransfo.ReadOnlyDomainAutomaticTypeConverter;
 import org.jtransfo.ToConverter;
 import org.jtransfo.ToDomainTypeConverter;
@@ -46,6 +48,8 @@ public class JTransfoImpl implements JTransfo, ConfigurableJTransfo, ConvertSour
     private LockableList<ObjectFinder> objectFinders = new LockableList<>();
     private List<TypeConverter> modifyableTypeConverters = new ArrayList<>();
     private List<TypeConverter> internalTypeConverters = new ArrayList<>();
+    private List<PreConverter> modifyablePreConverters = new ArrayList<>();
+    private List<PostConverter> modifyablePostConverters = new ArrayList<>();
     private List<ConvertInterceptor> modifyableConvertInterceptors = new ArrayList<>();
     private ConvertSourceTarget convertInterceptorChain;
     private List<ObjectReplacer> modifyableObjectReplacers = new ArrayList<>();
@@ -118,6 +122,59 @@ public class JTransfoImpl implements JTransfo, ConfigurableJTransfo, ConvertSour
             }
         }
         converterHelper.setTypeConvertersInOrder(allConverters);
+    }
+
+    @Override
+    public List<PreConverter> getPreConverters() {
+        return modifyablePreConverters;
+    }
+
+    @Override
+    public void updatePreConverters() {
+        updatePreConverters(null);
+    }
+
+    @Override
+    public void updatePreConverters(List<PreConverter> newConverters) {
+        if (null != newConverters) {
+            modifyablePreConverters.clear();
+            modifyablePreConverters.addAll(newConverters);
+        }
+        ArrayList<PreConverter> allConverters = new ArrayList<>();
+        allConverters.addAll(modifyablePreConverters);
+        for (PreConverter pc : allConverters) {
+            if (pc instanceof NeedsJTransfo) {
+                ((NeedsJTransfo) pc).setJTransfo(this);
+            }
+        }
+        converterHelper.setPreConverters(allConverters);
+    }
+
+    @Override
+    public List<PostConverter> getPostConverters() {
+        return modifyablePostConverters;
+    }
+
+    @Override
+    public void updatePostConverters() {
+        updatePostConverters(null);
+    }
+
+    @Override
+    public void updatePostConverters(List<PostConverter> newConverters) {
+        if (null != newConverters) {
+            modifyablePostConverters.clear();
+            modifyablePostConverters.addAll(newConverters);
+
+        }
+        ArrayList<PostConverter> allConverters = new ArrayList<>();
+        allConverters.addAll(modifyablePostConverters);
+        for (PostConverter pc : allConverters) {
+            if (pc instanceof NeedsJTransfo) {
+                ((NeedsJTransfo) pc).setJTransfo(this);
+            }
+        }
+        converterHelper.setPostConverters(allConverters);
     }
 
     @Override
@@ -236,10 +293,22 @@ public class JTransfoImpl implements JTransfo, ConfigurableJTransfo, ConvertSour
     @Override
     public <T> T convert(Object source, T target, boolean targetIsTo, String... tags) {
         source = replaceObject(source);
-        List<Converter> converters = targetIsTo ? getToToConverters(target.getClass()) :
-                getToDomainConverters(source.getClass());
-        for (Converter converter : converters) {
-            converter.convert(source, target, tags);
+        ToConverter toConverter;
+        List<Converter> converters;
+        PreConverter.Result shouldConvert;
+        if (targetIsTo) {
+            toConverter = getToConverter(target.getClass());
+            converters = toConverter.getToTo();
+            shouldConvert = toConverter.getPreConverter().preConvertToTo(source, target, tags);
+        } else {
+            toConverter = getToConverter(source.getClass());
+            converters = toConverter.getToDomain();
+            shouldConvert = toConverter.getPreConverter().preConvertToDomain(source, target, tags);
+        }
+        if (PreConverter.Result.CONTINUE == shouldConvert) {
+            for (Converter converter : converters) {
+                converter.convert(source, target, tags);
+            }
         }
         return target;
     }
@@ -317,14 +386,6 @@ public class JTransfoImpl implements JTransfo, ConfigurableJTransfo, ConvertSour
      */
     public void clearCaches() {
         converters.clear();
-    }
-
-    private List<Converter> getToToConverters(Class toClass) {
-        return getToConverter(toClass).getToTo();
-    }
-
-    private List<Converter> getToDomainConverters(Class toClass) {
-        return getToConverter(toClass).getToDomain();
     }
 
     private ToConverter getToConverter(Class toClass) {

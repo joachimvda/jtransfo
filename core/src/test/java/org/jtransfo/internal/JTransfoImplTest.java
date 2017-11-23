@@ -15,6 +15,8 @@ import org.jtransfo.JTransfoException;
 import org.jtransfo.NeedsJTransfo;
 import org.jtransfo.NoConversionTypeConverter;
 import org.jtransfo.ObjectFinder;
+import org.jtransfo.PostConverter;
+import org.jtransfo.PreConverter;
 import org.jtransfo.TypeConverter;
 import org.jtransfo.object.PersonTo;
 import org.jtransfo.object.SimpleClassDomain;
@@ -197,11 +199,65 @@ public class JTransfoImplTest {
         assertThat(captor1.getValue().size()).isEqualTo(orgSize + internalSize + 2);
 
         reset(converterHelper);
-        jTransfo.updateTypeConverters((List) Collections.singletonList(new NoConversionTypeConverter()));
+        jTransfo.updateTypeConverters(Collections.singletonList(new NoConversionTypeConverter()));
 
         ArgumentCaptor<Collection> captor2 = ArgumentCaptor.forClass(Collection.class);
         verify(converterHelper, times(1)).setTypeConvertersInOrder(captor2.capture());
         assertThat(captor2.getValue().size()).isEqualTo(internalSize + 1);
+    }
+
+    @Test
+    public void testGetUpdatePreConverters() throws Exception {
+        ReflectionTestUtils.setField(jTransfo, "converterHelper", converterHelper);
+
+        List<PreConverter> converters = jTransfo.getPreConverters();
+        int orgSize = converters.size();
+
+        converters.add(mock(PreConverter.class));
+        NeedsJTransfoPreConverter needsJTransfoPreConverter = mock(NeedsJTransfoPreConverter.class);
+        converters.add(needsJTransfoPreConverter);
+        verifyNoMoreInteractions(converterHelper);
+
+        jTransfo.updatePreConverters(); // update with changed converters
+
+        verify(needsJTransfoPreConverter).setJTransfo(jTransfo);
+        ArgumentCaptor<Collection> captor1 = ArgumentCaptor.forClass(Collection.class);
+        verify(converterHelper, times(1)).setPreConverters(captor1.capture());
+        assertThat(captor1.getValue().size()).isEqualTo(orgSize + 2);
+
+        reset(converterHelper);
+        jTransfo.updatePreConverters(Collections.singletonList(mock(PreConverter.class)));
+
+        ArgumentCaptor<Collection> captor2 = ArgumentCaptor.forClass(Collection.class);
+        verify(converterHelper, times(1)).setPreConverters(captor2.capture());
+        assertThat(captor2.getValue().size()).isEqualTo(1);
+    }
+
+    @Test
+    public void testGetUpdatePostConverters() throws Exception {
+        ReflectionTestUtils.setField(jTransfo, "converterHelper", converterHelper);
+
+        List<PostConverter> converters = jTransfo.getPostConverters();
+        int orgSize = converters.size();
+
+        converters.add(mock(PostConverter.class));
+        NeedsJTransfoPostConverter needsJTransfoPostConverter = mock(NeedsJTransfoPostConverter.class);
+        converters.add(needsJTransfoPostConverter);
+        verifyNoMoreInteractions(converterHelper);
+
+        jTransfo.updatePostConverters(); // update with changed converters
+
+        verify(needsJTransfoPostConverter).setJTransfo(jTransfo);
+        ArgumentCaptor<Collection> captor1 = ArgumentCaptor.forClass(Collection.class);
+        verify(converterHelper, times(1)).setPostConverters(captor1.capture());
+        assertThat(captor1.getValue().size()).isEqualTo(orgSize + 2);
+
+        reset(converterHelper);
+        jTransfo.updatePostConverters(Collections.singletonList(mock(PostConverter.class)));
+
+        ArgumentCaptor<Collection> captor2 = ArgumentCaptor.forClass(Collection.class);
+        verify(converterHelper, times(1)).setPostConverters(captor2.capture());
+        assertThat(captor2.getValue().size()).isEqualTo(1);
     }
 
     @Test
@@ -351,5 +407,11 @@ public class JTransfoImplTest {
     }
 
     private interface NeedsJTransfoTypeConverter extends TypeConverter, NeedsJTransfo {
+    }
+
+    private interface NeedsJTransfoPreConverter extends PreConverter, NeedsJTransfo {
+    }
+
+    private interface NeedsJTransfoPostConverter extends PostConverter, NeedsJTransfo {
     }
 }

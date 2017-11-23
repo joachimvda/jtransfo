@@ -45,7 +45,8 @@ public @interface MappedBy {
     String path() default DEFAULT_PATH;
 
     /**
-     * Fully qualified class name for the type converter.
+     * Name for the type converter, this is either name (when it implements {@link Named} or the
+     * Fully qualified class name.
      * <p>
      * Using this allows you to avoid a compile dependency on the class name but makes the connection more brittle
      * when refactoring. The value is ignored if {@link #typeConverterClass()} is set.

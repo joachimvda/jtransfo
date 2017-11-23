@@ -11,7 +11,7 @@ package org.jtransfo;
 import java.util.List;
 
 /**
- * Extension of the {@JTransfo} interface which also includes the configuration settings
+ * Extension of the {@link JTransfo} interface which also includes the configuration settings
  * which are only needed for configuration/factories, not for normal use.
  */
 public interface ConfigurableJTransfo extends JTransfo {
@@ -200,5 +200,95 @@ public interface ConfigurableJTransfo extends JTransfo {
      * @param newConvertInterceptors new list of convert interceptors
      */
     void updateConvertInterceptors(List<ConvertInterceptor> newConvertInterceptors);
+
+    /**
+     * Get the set of preconverters which are used by this jTransfo instance.
+     * <p>
+     * You are explicitly allowed to change this list, but beware to do this from one thread only.
+     * </p><p>
+     * Changes in the list are not used until you call {@link #updatePreConverters()}.
+     * </p>
+     *
+     * @return current list of type converters.
+     */
+    List<PreConverter> getPreConverters();
+
+    /**
+     * Add the given preconverter to this JTransfo instance.
+     * <p>
+     * This is a shorthand which adds the type converter to the {@link #getPreConverters()} list and
+     * calls {@link #updatePreConverters()}.
+     * </p>
+     *
+     * @param preConverter preconverter
+     * @return this
+     */
+    default ConfigurableJTransfo with(PreConverter preConverter) {
+        getPreConverters().add(preConverter);
+        updatePreConverters();
+        return this;
+    }
+
+    /**
+     * Update the list of preconverters which is used based on the internal list
+     * (see {@link #getPreConverters()}.
+     */
+    void updatePreConverters();
+
+    /**
+     * Update the list of type converters which is used.
+     * <p>
+     * When null is passed, this updates the changes to the internal list (see {@link #getPreConverters()}.
+     * Alternatively, you can pass the new list explicitly.
+     * </p>
+     *
+     * @param newConverters new list of preconverters
+     */
+    void updatePreConverters(List<PreConverter> newConverters);
+
+    /**
+     * Get the set of postconverters which are used by this jTransfo instance.
+     * <p>
+     * You are explicitly allowed to change this list, but beware to do this from one thread only.
+     * </p><p>
+     * Changes in the list are not used until you call {@link #updatePostConverters()}.
+     * </p>
+     *
+     * @return current list of type converters.
+     */
+    List<PostConverter> getPostConverters();
+
+    /**
+     * Add the given postconverter to this JTransfo instance.
+     * <p>
+     * This is a shorthand which adds the type converter to the {@link #getPostConverters()} list and
+     * calls {@link #updatePostConverters()}.
+     * </p>
+     *
+     * @param postConverter postconverter
+     * @return this
+     */
+    default ConfigurableJTransfo with(PostConverter postConverter) {
+        getPostConverters().add(postConverter);
+        updatePostConverters();
+        return this;
+    }
+
+    /**
+     * Update the list of postconverters which is used based on the internal list
+     * (see {@link #getPostConverters()}.
+     */
+    void updatePostConverters();
+
+    /**
+     * Update the list of type converters which is used.
+     * <p>
+     * When null is passed, this updates the changes to the internal list (see {@link #getPostConverters()}.
+     * Alternatively, you can pass the new list explicitly.
+     * </p>
+     *
+     * @param newConverters new list of postconverters
+     */
+    void updatePostConverters(List<PostConverter> newConverters);
 
 }

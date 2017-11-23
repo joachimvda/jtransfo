@@ -11,7 +11,7 @@ package org.jtransfo;
 /**
  * Interceptor which allows additional work to be done when jTransfo converts between objects.
  * <p>
- * The functions like around advice in AOP.
+ * This functions like around advice in AOP.
  * </p><p>
  * The interceptor should be re-entrant. A singleton may be used for all convert invocations.
  * </p><p>
