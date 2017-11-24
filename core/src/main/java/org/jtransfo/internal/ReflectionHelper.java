@@ -8,6 +8,9 @@
 
 package org.jtransfo.internal;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
@@ -24,6 +27,8 @@ import java.util.stream.Stream;
  * Helper class for all things class manipulation and reflection.
  */
 public class ReflectionHelper {
+
+    private final Logger log = LoggerFactory.getLogger(ReflectionHelper.class);
 
     /**
      * Create a new instance of a class.
@@ -67,7 +72,7 @@ public class ReflectionHelper {
      * @return class instance
      * @throws ClassNotFoundException see {@link ClassLoader#loadClass(String)}
      */
-    public <T> Class<T> loadClass(String name) throws ClassNotFoundException {
+    <T> Class<T> loadClass(String name) throws ClassNotFoundException {
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
         if (null == cl) {
             cl = ToHelper.class.getClassLoader();
@@ -81,7 +86,7 @@ public class ReflectionHelper {
      * @param clazz class to find fields for
      * @return list of fields
      */
-    public List<Field> getFields(Class<?> clazz) {
+    List<Field> getFields(Class<?> clazz) {
         List<Field> result = new ArrayList<>();
         Set<String> fieldNames = new HashSet<>();
         Class<?> searchType = clazz;
@@ -106,7 +111,7 @@ public class ReflectionHelper {
      * @param fields fields to convert to synthetic fields
      * @return list of synthetic fields
      */
-    public List<SyntheticField> makeSynthetic(Class<?> clazz, List<Field> fields) {
+    List<SyntheticField> makeSynthetic(Class<?> clazz, List<Field> fields) {
         List<SyntheticField> result = new ArrayList<>();
         for (Field field : fields) {
             result.add(new AccessorSyntheticField(this, clazz, field));
@@ -120,7 +125,7 @@ public class ReflectionHelper {
      * @param clazz class to find fields for
      * @return list of fields
      */
-    public List<SyntheticField> getSyntheticFields(Class<?> clazz) {
+    List<SyntheticField> getSyntheticFields(Class<?> clazz) {
         return makeSynthetic(clazz, getFields(clazz));
     }
 
@@ -135,7 +140,7 @@ public class ReflectionHelper {
      * @param field the field to make accessible
      * @see java.lang.reflect.Field#setAccessible
      */
-    public void makeAccessible(Field field) {
+    void makeAccessible(Field field) {
         if ((!Modifier.isPublic(field.getModifiers()) || !Modifier.isPublic(field.getDeclaringClass().getModifiers()) ||
                 Modifier.isFinal(field.getModifiers())) && !field.isAccessible()) {
             field.setAccessible(true);
@@ -153,7 +158,7 @@ public class ReflectionHelper {
      * @param method the method to make accessible
      * @see java.lang.reflect.Method#setAccessible
      */
-    public void makeAccessible(Method method) {
+    private void makeAccessible(Method method) {
         if ((!Modifier.isPublic(method.getModifiers())
                 || !Modifier.isPublic(method.getDeclaringClass().getModifiers())
                 || Modifier.isFinal(method.getModifiers())) && !method.isAccessible()) {
@@ -170,19 +175,44 @@ public class ReflectionHelper {
      * @param parameters method parameter types
      * @return method or null when method not found
      */
-    public Method getMethod(Class<?> type, Class<?> returnType, String name, Class<?>... parameters) {
+    Method getMethod(Class<?> type, Class<?> returnType, String name, Class<?>... parameters) {
+        Method method = null;
         try {
-            Method method = type.getDeclaredMethod(name, parameters);
+            // first try for public methods
+            method = type.getMethod(name, parameters);
             if (null != returnType && !returnType.isAssignableFrom(method.getReturnType())) {
                 method = null;
             }
+        } catch (NoSuchMethodException nsme) {
+            // ignore
+            log.trace(nsme.getMessage(), nsme);
+        }
+        if (null == method) {
+            method = getNonPublicMethod(type, returnType, name, parameters);
+        }
+        return method;
+    }
+
+    private Method getNonPublicMethod(Class<?> type, Class<?> returnType, String name, Class<?>... parameters) {
+        Method method = null;
+        Class<?> searchType = type;
+        while (null == method && null != searchType && !Object.class.equals(searchType)) {
+            try {
+                method = searchType.getDeclaredMethod(name, parameters);
+                if (null != returnType && !returnType.isAssignableFrom(method.getReturnType())) {
+                    method = null;
+                }
+            } catch (NoSuchMethodException nsme) {
+                // ignore
+                log.trace(nsme.getMessage(), nsme);
+            }
             if (null != method) {
                 makeAccessible(method);
+            } else {
+                searchType = searchType.getSuperclass();
             }
-            return method;
-        } catch (NoSuchMethodException nsme) {
-            return null;
         }
+        return method;
     }
 
     /**
@@ -193,9 +223,9 @@ public class ReflectionHelper {
      * @param element annotated element
      * @param annotation annotation to find
      * @param <T> annotation type
-     * @return
+     * @return annotation
      */
-    public <T extends Annotation> List<T> getAnnotationWithMeta(AnnotatedElement element, Class<T> annotation) {
+    <T extends Annotation> List<T> getAnnotationWithMeta(AnnotatedElement element, Class<T> annotation) {
         return (List) Stream.of(element.getDeclaredAnnotations())
                 .flatMap(this::addMetaAnnotations)
                 .filter(a -> annotation.isAssignableFrom(a.annotationType()))

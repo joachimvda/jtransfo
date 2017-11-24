@@ -20,6 +20,10 @@ public class AbstractHumanTo implements Comparable {
         this.name = name;
     }
 
+    protected void setNameAlternate(String name) {
+        this.name = name;
+    }
+
     @Override
     public int compareTo(Object o) {
         if (!(o instanceof AbstractHumanTo)) {

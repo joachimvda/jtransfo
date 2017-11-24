@@ -3,7 +3,7 @@ package org.jtransfo.object;
 /**
  * Domain object which shows/verifies possible combinations of fields and accessor methods.
  */
-public class MixedMethodAndFieldDomain {
+public class MixedMethodAndFieldDomain implements ExtraGetterOnFieldAlternative {
 
     private String field;
     private String fieldWithPublicAccessors;

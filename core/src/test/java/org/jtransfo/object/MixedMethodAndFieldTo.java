@@ -1,6 +1,7 @@
 package org.jtransfo.object;
 
 import org.jtransfo.DomainClass;
+import org.jtransfo.ReadOnly;
 
 /**
  * Transfer object which shows/verifies possible combinations of fields and accessor methods.
@@ -13,6 +14,9 @@ public class MixedMethodAndFieldTo {
     private String fieldWithPrivateAccessors;
     private String fieldWithPublicGetter;
     private String fieldWithPrivateGetter;
+
+    @ReadOnly
+    private String fieldDouble;
 
     public MixedMethodAndFieldTo() {
     }
@@ -44,4 +48,9 @@ public class MixedMethodAndFieldTo {
     public String getFieldWithPrivateGetterAlternate() {
         return fieldWithPrivateGetter;
     }
+
+    public String getFieldDouble() {
+        return fieldDouble;
+    }
+    
 }

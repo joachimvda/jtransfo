@@ -11,6 +11,8 @@ package org.jtransfo.internal;
 import org.jtransfo.MappedBy;
 import org.jtransfo.NotMapped;
 import org.jtransfo.ReadOnly;
+import org.jtransfo.object.MaleHumanTo;
+import org.jtransfo.object.MixedMethodAndFieldDomain;
 import org.jtransfo.object.ReadOnlyAnnotationTo;
 import org.jtransfo.object.SimpleBaseTo;
 import org.jtransfo.object.SimpleClassDomain;
@@ -107,6 +109,27 @@ public class ReflectionHelperTest {
 
         method = reflectionHelper.getMethod(SimpleBaseTo.class, null, "bla");
         assertThat(method).isNull();
+    }
+
+    @Test
+    public void testGetMethod_extendedAndPrivate() throws Exception {
+        Method method;
+
+        // method declared in parent class
+        method = reflectionHelper.getMethod(MaleHumanTo.class, null, "setName", String.class);
+        assertThat(method.getName()).isEqualTo("setName");
+
+        // private in class
+        method = reflectionHelper.getMethod(MixedMethodAndFieldDomain.class, String.class, "getFieldWithPrivateAccessors");
+        assertThat(method.getName()).isEqualTo("getFieldWithPrivateAccessors");
+
+        // protected method declared in parent class
+        method = reflectionHelper.getMethod(MaleHumanTo.class, null, "setNameAlternate", String.class);
+        assertThat(method.getName()).isEqualTo("setNameAlternate");
+
+        // default method on interface
+        method = reflectionHelper.getMethod(MixedMethodAndFieldDomain.class, String.class, "getFieldDouble");
+        assertThat(method.getName()).isEqualTo("getFieldDouble");
     }
 
     @Test

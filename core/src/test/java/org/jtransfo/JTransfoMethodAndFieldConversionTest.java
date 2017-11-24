@@ -36,6 +36,7 @@ public class JTransfoMethodAndFieldConversionTest {
         assertThat(res.getFieldWithPrivateAccessorsAlternate()).isEqualTo("ccc");
         assertThat(res.getFieldWithPublicGetterAlternate()).isEqualTo("ddd");
         assertThat(res.getFieldWithPrivateGetterAlternate()).isEqualTo("eee");
+        assertThat(res.getFieldDouble()).isEqualTo("aaaaaa");
     }
 
     @Test

@@ -44,16 +44,15 @@ public class AccessorSyntheticField implements SyntheticField {
      * @param clazz clazz of which the field is part
      * @param field field (may be in a parent class of clazz)
      */
-    public AccessorSyntheticField(ReflectionHelper reflectionHelper, Class<?> clazz, Field field) {
+    AccessorSyntheticField(ReflectionHelper reflectionHelper, Class<?> clazz, Field field) {
         this.field = field;
-        getter = reflectionHelper.getMethod(clazz, field.getType(), getGetterName(field.getName(),
-                field.getType().getCanonicalName().equals(boolean.class.getCanonicalName())));
+        getter = findGetter(reflectionHelper, clazz, field.getType(), field.getName());
         setter = reflectionHelper.getMethod(clazz, null, getSetterName(field.getName()), field.getType());
         name = field.getName();
     }
 
     /**
-     * Constructor, there is no field, just use getter (and setter is not readOnly).
+     * Constructor, there is no field, just use getter (and setter if not readOnly).
      *
      * @param reflectionHelper reflection helper to use
      * @param clazz clazz of which the field is part
@@ -61,17 +60,11 @@ public class AccessorSyntheticField implements SyntheticField {
      * @param readOnlyField is a getter sufficient
      * @throws JTransfoException can not find getter for given name or
      */
-    public AccessorSyntheticField(ReflectionHelper reflectionHelper, Class<?> clazz, String name,
-            boolean readOnlyField) throws JTransfoException {
+    AccessorSyntheticField(
+            ReflectionHelper reflectionHelper, Class<?> clazz, String name, boolean readOnlyField)
+            throws JTransfoException {
         this.field = null;
-        getter = reflectionHelper.getMethod(clazz, null, getGetterName(name, false));
-        if (null == getter) {
-            for (String tryName : getGetterNameAlternatives(name)) {
-                if (null == getter) {
-                    getter = reflectionHelper.getMethod(clazz, null, tryName);
-                }
-            }
-        }
+        getter = findGetter(reflectionHelper, clazz, null, name);
         if (null == getter) {
             throw new JTransfoException("Cannot find getter from " + getGetterNameAlternatives(name) + " on class " +
                     clazz.getName() + ".");
@@ -85,6 +78,16 @@ public class AccessorSyntheticField implements SyntheticField {
             }
         }
         this.name = name;
+    }
+
+    private Method findGetter(ReflectionHelper reflectionHelper, Class<?> clazz, Class<?> returnType, String name) {
+        for (String tryName : getGetterNameAlternatives(name)) {
+            Method method = reflectionHelper.getMethod(clazz, null, tryName);
+            if (null != method) {
+                return method;
+            }
+        }
+        return null;
     }
 
     /**
@@ -180,10 +183,6 @@ public class AccessorSyntheticField implements SyntheticField {
         }
     }
 
-    private String getGetterName(String fieldName, boolean isBoolean) {
-        return (isBoolean ? "is" : "get") + capitalize(fieldName);
-    }
-
     /**
      * Get list of possible getter names for a field (without ability to assume type).
      * Method is protected to allow test access.
@@ -195,6 +194,7 @@ public class AccessorSyntheticField implements SyntheticField {
         String base = capitalize(fieldName);
         List<String> res = new ArrayList<>();
         res.add("get" + capitalize(fieldName));
+        res.add(fieldName);
         String alt = "is" + base;
         if (alt.startsWith("isIs")) {
             res.add("i" + alt.substring(3));

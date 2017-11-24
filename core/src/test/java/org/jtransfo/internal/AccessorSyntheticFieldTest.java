@@ -165,10 +165,10 @@ public class AccessorSyntheticFieldTest {
     @Test
     public void testGetGetterNameAlternatives() throws Exception {
         assertThat(accessorSyntheticField.getGetterNameAlternatives("bla")).
-                containsExactly("getBla", "isBla", "hasBla");
+                containsExactly("getBla", "bla", "isBla", "hasBla");
         assertThat(accessorSyntheticField.getGetterNameAlternatives("isBla")).
-                containsExactly("getIsBla", "isBla", "isIsBla");
+                containsExactly("getIsBla", "isBla", "isBla", "isIsBla");
         assertThat(accessorSyntheticField.getGetterNameAlternatives("hasBla")).
-                containsExactly("getHasBla", "isHasBla", "hasBla");
+                containsExactly("getHasBla", "hasBla", "isHasBla", "hasBla");
     }
 }
