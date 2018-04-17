@@ -10,6 +10,7 @@ package org.jtransfo.internal;
 
 import org.jtransfo.AutomaticListTypeConverter;
 import org.jtransfo.AutomaticSetTypeConverter;
+import org.jtransfo.ClassReplacer;
 import org.jtransfo.ConfigurableJTransfo;
 import org.jtransfo.ConvertInterceptor;
 import org.jtransfo.ConvertSourceTarget;
@@ -36,7 +37,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * jTransfo main access point standard implementation.
  */
-public class JTransfoImpl implements JTransfo, ConfigurableJTransfo, ConvertSourceTarget {
+public class JTransfoImpl implements JTransfo, ConfigurableJTransfo, ConvertSourceTarget, ClassReplacer {
 
     private static final String[] DEFAULT_TAGS_WHEN_NO_TAGS = {JTransfo.DEFAULT_TAG_WHEN_NO_TAGS};
 
@@ -53,7 +54,9 @@ public class JTransfoImpl implements JTransfo, ConfigurableJTransfo, ConvertSour
     private List<ConvertInterceptor> modifyableConvertInterceptors = new ArrayList<>();
     private ConvertSourceTarget convertInterceptorChain;
     private List<ObjectReplacer> modifyableObjectReplacers = new ArrayList<>();
+    private List<ClassReplacer> modifyableClassReplacers = new ArrayList<>();
     private LockableList<ObjectReplacer> objectReplacers = new LockableList<>();
+    private LockableList<ClassReplacer> classReplacers = new LockableList<>();
 
     /**
      * Constructor.
@@ -77,6 +80,8 @@ public class JTransfoImpl implements JTransfo, ConfigurableJTransfo, ConvertSour
         updateConvertInterceptors();
 
         updateObjectReplacers();
+
+        updateClassReplacers();
 
         // CHECKSTYLE EMPTY_BLOCK: OFF
         try {
@@ -223,6 +228,28 @@ public class JTransfoImpl implements JTransfo, ConfigurableJTransfo, ConvertSour
         objectReplacers = newList;
     }
 
+    @Override
+    public List<ClassReplacer> getClassReplacers() {
+        return modifyableClassReplacers;
+    }
+
+    @Override
+    public void updateClassReplacers() {
+        updateClassReplacers(null);
+    }
+
+    @Override
+    public void updateClassReplacers(List<ClassReplacer> newClassReplacers) {
+        if (null != newClassReplacers) {
+            modifyableClassReplacers.clear();
+            modifyableClassReplacers.addAll(newClassReplacers);
+        }
+        LockableList<ClassReplacer> newList = new LockableList<>();
+        newList.addAll(modifyableClassReplacers);
+        newList.lock();
+        classReplacers = newList;
+    }
+
     /**
      * Get the list of {@link ConvertInterceptor}s to allow customization.
      * <p>
@@ -325,15 +352,12 @@ public class JTransfoImpl implements JTransfo, ConfigurableJTransfo, ConvertSour
 
     @Override
     public <T> T convertTo(Object source, Class<T> targetClass, String... tags) {
-        Class<T> realTarget = targetClass;
         if (null == source) {
             return null;
         }
         source = replaceObject(source);
-        if (isToClass(targetClass)) {
-            realTarget = (Class<T>) getToSubType(targetClass, source);
-        }
-        return (T) convert(source, findTarget(source, realTarget, tags), tags);
+        Class<T> realTargetClass = replaceClass(targetClass);
+        return (T) convert(source, findTarget(source, realTargetClass, tags), tags);
     }
 
     @Override
@@ -356,11 +380,15 @@ public class JTransfoImpl implements JTransfo, ConfigurableJTransfo, ConvertSour
         source = replaceObject(source);
         int i = objectFinders.size() - 1;
         T target = null;
+        Class<T> realTargetClass = replaceClass(targetClass);
+        if (isToClass(realTargetClass)) {
+            realTargetClass = (Class<T>) getToSubType(realTargetClass, source);
+        }
         while (null == target && i >= 0) {
-            target = objectFinders.get(i--).getObject(targetClass, source, tags);
+            target = objectFinders.get(i--).getObject(realTargetClass, source, tags);
         }
         if (null == target) {
-            throw new JTransfoException("Cannot create instance of target class " + targetClass.getName() +
+            throw new JTransfoException("Cannot create instance of target class " + realTargetClass.getName() +
                     " for source object " + source + ".");
         }
         return target;
@@ -402,6 +430,15 @@ public class JTransfoImpl implements JTransfo, ConfigurableJTransfo, ConvertSour
         Object res = object;
         for (ObjectReplacer replacer : objectReplacers) {
             res = replacer.replaceObject(res);
+        }
+        return res;
+    }
+
+    @Override
+    public Class replaceClass(Class clazz) {
+        Class res = clazz;
+        for (ClassReplacer replacer : classReplacers) {
+            res = replacer.replaceClass(res);
         }
         return res;
     }

@@ -124,7 +124,7 @@ public interface ConfigurableJTransfo extends JTransfo {
     /**
      * Add the given object replacer to this JTransfo instance.
      * <p>
-     * This is a shorthand which adds the object finder to the {@link #getObjectFinders()} list and
+     * This is a shorthand which adds the object replacer to the {@link #getObjectReplacers()} list and
      * calls {@link #updateObjectFinders()}.
      * </p>
      *
@@ -150,9 +150,56 @@ public interface ConfigurableJTransfo extends JTransfo {
      * Alternatively, you can pass the new list explicitly.
      * </p>
      *
-     * @param newObjectReplacers new list of type converters
+     * @param newObjectReplacers new list of object replacers
      */
     void updateObjectReplacers(List<ObjectReplacer> newObjectReplacers);
+
+    /**
+     * Get the list of {@link ClassReplacer}s to allow customization.
+     * <p>
+     * The elements are tried in order (from start to end of list).
+     * </p><p>
+     * You are explicitly allowed to change this list, but beware to do this from one thread only.
+     * </p><p>
+     * Changes in the list are not used until you call {@link #updateClassReplacers()}.
+     * </p>
+     *
+     * @return list of object replacers
+     */
+    List<ClassReplacer> getClassReplacers();
+
+    /**
+     * Add the given class replacer to this JTransfo instance.
+     * <p>
+     * This is a shorthand which adds the class replacer to the {@link #getClassReplacers()} list and
+     * calls {@link #updateObjectFinders()}.
+     * </p>
+     *
+     * @param classReplacer class replacer
+     * @return this
+     */
+    default ConfigurableJTransfo with(ClassReplacer classReplacer) {
+        getClassReplacers().add(classReplacer);
+        updateClassReplacers();
+        return this;
+    }
+
+    /**
+     * Update the list of class replacers which is used based on the internal list
+     * (see {@link #getObjectReplacers()}.
+     */
+    void updateClassReplacers();
+
+    /**
+     * Update the list of class replacers which is used.
+     * <p>
+     * When null is passed, this updates the changes to the internal list (see {@link #getClassReplacers()}.
+     * Alternatively, you can pass the new list explicitly.
+     * </p>
+     *
+     * @param newClassReplacers new list of class replacers
+     */
+    void updateClassReplacers(List<ClassReplacer> newClassReplacers);
 
     /**
      * Get the list of {@link ConvertInterceptor}s to allow customization.

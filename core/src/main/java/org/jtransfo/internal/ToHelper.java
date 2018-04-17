@@ -8,6 +8,7 @@
 
 package org.jtransfo.internal;
 
+import org.jtransfo.ClassReplacer;
 import org.jtransfo.DomainClass;
 import org.jtransfo.DomainClassDelegate;
 import org.jtransfo.JTransfoException;
@@ -20,6 +21,16 @@ import java.util.List;
 public class ToHelper {
 
     private ReflectionHelper reflectionHelper = new ReflectionHelper();
+    private ClassReplacer classReplacer = c -> c;
+
+    /**
+     * Set the {@link ClassReplacer} which combines the configured class replacers for this jTransfo instance.
+     *
+     * @param classReplacer class replacer
+     */
+    public void setClassReplacer(ClassReplacer classReplacer) {
+        this.classReplacer = classReplacer;
+    }
 
     /**
      * Is the given object a transfer object?
@@ -55,6 +66,11 @@ public class ToHelper {
      * @return domain class as annotated on class
      */
     public Class<?> getDomainClass(Class<?> toClass) {
+        Class<?> declaredClass = getDeclaredDomainClass(toClass);
+        return classReplacer.replaceClass(declaredClass);
+    }
+
+    private Class<?> getDeclaredDomainClass(Class<?> toClass) {
         List<DomainClass> domainClasses = reflectionHelper.getAnnotationWithMeta(toClass, DomainClass.class);
         if (0 == domainClasses.size()) {
             throw new JTransfoException("Transfer object of type " + toClass.getName() +

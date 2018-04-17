@@ -26,6 +26,9 @@ import java.util.List;
  *     <li>{@link ReadOnlyDomain}</li>
  * </ul>
  * </p><p>
+ * You can also add {@link PreConvert} or {@link PostConvert} tags on the transfer object to define code to be executed
+ * before or after converting the fields.
+ * </p><p>
  * When converting, the fields on the transfer objects are always used directly (as the annotations are on the fields).
  * For domain objects, the getters and setters are used when they exist (even when private).
  * </p><p>
@@ -46,6 +49,13 @@ import java.util.List;
  *     <li>You may also want to provide a {@link ObjectReplacer}. This can replace objects just before they are
  *         converted. This can for example be useful to detect lazy objects and replace them with proper
  *         implementations. See {@link ObjectReplacer}.
+ *     </li>
+ *     <li>You may also want to provide a {@link ClassReplacer}. This can replace classes which are used as conversion
+ *         target. It affects both {@link DomainClass} target classes and {@link #convertTo(Object, Class, String...)}
+ *         target classes.
+ *         This is very useful to allow replacing interfaces to implementation classes for domain objects or replacing
+ *         transfer object classes to enhanced transfer objects (with more fields).
+ *         You should only replace classes by child classes. See {@link ClassReplacer}.
  *     </li>
  * </ul>
  * </p>
