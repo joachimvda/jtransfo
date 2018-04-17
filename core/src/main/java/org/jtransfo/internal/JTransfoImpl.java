@@ -37,7 +37,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * jTransfo main access point standard implementation.
  */
-public class JTransfoImpl implements JTransfo, ConfigurableJTransfo, ConvertSourceTarget, ClassReplacer {
+public class JTransfoImpl implements JTransfo, ConfigurableJTransfo, ConvertSourceTarget {
 
     private static final String[] DEFAULT_TAGS_WHEN_NO_TAGS = {JTransfo.DEFAULT_TAG_WHEN_NO_TAGS};
 
@@ -82,6 +82,7 @@ public class JTransfoImpl implements JTransfo, ConfigurableJTransfo, ConvertSour
         updateObjectReplacers();
 
         updateClassReplacers();
+        toHelper.setClassReplacer(this::replaceClass);
 
         // CHECKSTYLE EMPTY_BLOCK: OFF
         try {
@@ -434,8 +435,7 @@ public class JTransfoImpl implements JTransfo, ConfigurableJTransfo, ConvertSour
         return res;
     }
 
-    @Override
-    public Class replaceClass(Class clazz) {
+    private Class replaceClass(Class clazz) {
         Class res = clazz;
         for (ClassReplacer replacer : classReplacers) {
             res = replacer.replaceClass(res);

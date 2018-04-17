@@ -8,16 +8,12 @@
 
 package org.jtransfo;
 
-import org.jtransfo.object.AddressDomain;
-import org.jtransfo.object.PersonDomain;
 import org.jtransfo.object.PersonTo;
 import org.jtransfo.object.PersonWithAgeDomain;
 import org.jtransfo.object.PersonWithAgeDomainImpl;
 import org.jtransfo.object.PersonWithAgeTo;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -31,7 +27,7 @@ public class ClassReplacerTest {
     private JTransfo jTransfo;
 
     @Before
-    public void setup() throws Exception {
+    public void setup() {
         ConfigurableJTransfo impl = JTransfoFactory.get();
         impl.with(new StoriedHouseClassReplacer());
         jTransfo = impl;
@@ -62,6 +58,7 @@ public class ClassReplacerTest {
     public void testReplaceClassToTo() {
         PersonWithAgeDomain domain = new PersonWithAgeDomainImpl();
         domain.setName("Joske");
+        domain.setAge(18);
 
         PersonTo res = jTransfo.convertTo(domain, PersonTo.class);
 
@@ -73,25 +70,7 @@ public class ClassReplacerTest {
         assertThat(res).isInstanceOf(PersonWithAgeTo.class);
         assertThat(res.getName()).isEqualTo("Joske");
     }
-
-    @Test
-    public void testWithFinderAndConverterToTo() {
-        PersonDomain domain = new PersonDomain();
-        domain.setName(NAME);
-        Date now = new Date();
-        domain.setLastChanged(now);
-        AddressDomain address = new AddressDomain();
-        address.setId(7L);
-        address.setAddress("Kerkstraat");
-        domain.setAddress(address);
-
-        PersonTo to = jTransfo.convert(domain, new PersonTo());
-        assertThat(to.getName()).isEqualTo(NAME);
-        assertThat(to.getAddress()).isNotNull();
-        assertThat(to.getAddress().getId()).isEqualTo(7L);
-        assertThat(to.getLastChanged()).isEqualTo(now);
-    }
-
+    
     private class StoriedHouseClassReplacer implements ClassReplacer {
 
         @Override
