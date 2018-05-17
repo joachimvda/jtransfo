@@ -18,7 +18,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
@@ -50,6 +52,9 @@ public class ReadOnlyDomainAutomaticTypeConverterTest {
     @Mock
     private SyntheticField listField;
 
+    @Mock
+    private SyntheticField setField;
+
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
@@ -64,6 +69,9 @@ public class ReadOnlyDomainAutomaticTypeConverterTest {
 
         when(listField.getType()).thenReturn((Class) List.class);
         when(listField.getGenericType()).thenReturn(ReadOnlyDomainAutomaticListTypeConverterTest.AddressListContainer.class.getField("addressToList").getGenericType());
+
+        when(setField.getType()).thenReturn((Class) Set.class);
+        when(setField.getGenericType()).thenReturn(ReadOnlyDomainAutomaticSetTypeConverterTest.AddressSetContainer.class.getField("addressToSet").getGenericType());
 
         ReflectionTestUtils.setField(typeConverter, "reflectionHelper", reflectionHelper);
 
@@ -154,6 +162,11 @@ public class ReadOnlyDomainAutomaticTypeConverterTest {
     }
 
     @Test
+    public void testCanConvertSet() throws Exception {
+        assertThat(typeConverter.canConvert(Set.class, Set.class)).isFalse();
+    }
+
+    @Test
     public void testConvertList() throws Exception {
         AddressTo to1 = new AddressTo();
         to1.setId(1L);
@@ -172,10 +185,35 @@ public class ReadOnlyDomainAutomaticTypeConverterTest {
     }
 
     @Test
+    public void testConvertSet() throws Exception {
+        AddressTo to1 = new AddressTo();
+        to1.setId(1L);
+        AddressTo to2 = new AddressTo();
+        to2.setId(2L);
+        Set<AddressTo> addresses = new HashSet<>();
+        addresses.add(to1);
+        addresses.add(to2);
+
+        Set<AddressDomain> res = (Set) typeConverter.convert(addresses, setField, null);
+
+        assertThat(res).isNotNull();
+        assertThat(res).hasSize(1);
+        verify(jTransfo).findTarget(to1, AddressDomain.class);
+        verify(jTransfo).findTarget(to2, AddressDomain.class);
+    }
+
+    @Test
     public void testConvertNullList() throws Exception {
         assertThat((List) typeConverter.convert(null, listField, null)).isEmpty();
         typeConverter.setKeepNullList(true);
         assertThat(typeConverter.convert(null, listField, null)).isNull();
+    }
+
+    @Test
+    public void testConvertNullSet() throws Exception {
+        assertThat((Set) typeConverter.convert(null, setField, null)).isEmpty();
+        typeConverter.setKeepNullSet(true);
+        assertThat(typeConverter.convert(null, setField, null)).isNull();
     }
 
     @Test
@@ -195,6 +233,28 @@ public class ReadOnlyDomainAutomaticTypeConverterTest {
 
         assertThat(res).isNotNull();
         assertThat(res).hasSize(2);
+        verify(jTransfo).convertTo(ad1, AddressTo.class);
+        verify(jTransfo).convertTo(ad2, AddressTo.class);
+        assertThat(res).isEqualTo(resList);
+    }
+
+    @Test
+    public void testReverseSet() throws Exception {
+        AddressDomain ad1 = new AddressDomain();
+        ad1.setId(1L);
+        AddressDomain ad2 = new AddressDomain();
+        ad2.setId(2L);
+        Set<AddressDomain> addresses = new HashSet<>();
+        addresses.add(ad1);
+        addresses.add(ad2);
+        Set<AddressTo> resList = new HashSet<>();
+        Object to = new Object();
+        when(setField.get(to)).thenReturn(resList);
+
+        Set<AddressTo> res = (Set) typeConverter.reverse(addresses, setField, to);
+
+        assertThat(res).isNotNull();
+        assertThat(res).hasSize(1);
         verify(jTransfo).convertTo(ad1, AddressTo.class);
         verify(jTransfo).convertTo(ad2, AddressTo.class);
         assertThat(res).isEqualTo(resList);
@@ -225,14 +285,40 @@ public class ReadOnlyDomainAutomaticTypeConverterTest {
     }
 
     @Test
+    public void testReverseSet_new() throws Exception {
+        AddressDomain ad1 = new AddressDomain();
+        ad1.setId(1L);
+        AddressDomain ad2 = new AddressDomain();
+        ad2.setId(2L);
+        Set<AddressDomain> addresses = new HashSet<>();
+        addresses.add(ad1);
+        addresses.add(ad2);
+        Set<AddressTo> resList = new HashSet<>();
+        Object to = new Object();
+        when(setField.get(to)).thenReturn(resList);
+        typeConverter.setAlwaysNewSet(true);
+
+        Set<AddressTo> res = (Set) typeConverter.reverse(addresses, setField, to);
+
+        assertThat(res).isNotNull();
+        assertThat(res).hasSize(1);
+        verify(jTransfo).convertTo(ad1, AddressTo.class);
+        verify(jTransfo).convertTo(ad2, AddressTo.class);
+        assertThat(res).isNotEqualTo(resList);
+    }
+
+    @Test
     public void testReverseNullList() throws Exception {
         assertThat((List) typeConverter.reverse(null, listField, null)).isEmpty();
         typeConverter.setKeepNullList(true);
         assertThat(typeConverter.reverse(null, listField, null)).isNull();
     }
 
-    class AddressListContainer {
-        public List<AddressTo> addressToList;
+    @Test
+    public void testReverseNullSet() throws Exception {
+        assertThat((Set) typeConverter.reverse(null, setField, null)).isEmpty();
+        typeConverter.setKeepNullSet(true);
+        assertThat(typeConverter.reverse(null, setField, null)).isNull();
     }
 
 }
