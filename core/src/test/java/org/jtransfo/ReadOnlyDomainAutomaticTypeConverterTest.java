@@ -99,7 +99,7 @@ public class ReadOnlyDomainAutomaticTypeConverterTest {
         SimpleBaseTo source = new SimpleBaseTo();
         typeConverter.convert(source, domainField, null);
 
-        verify(jTransfo).findTarget(source, SimpleBaseDomain.class);
+        verify(jTransfo).findTarget(source, SimpleBaseDomain.class, JTransfo.TAG_WHEN_READ_ONLY_DOMAIN);
         verify(jTransfo).getDomainClass(SimpleBaseTo.class);
 
         assertThat(typeConverter.convert(source, domainField, null)).isNull();
@@ -180,8 +180,8 @@ public class ReadOnlyDomainAutomaticTypeConverterTest {
 
         assertThat(res).isNotNull();
         assertThat(res).hasSize(2);
-        verify(jTransfo).findTarget(to1, AddressDomain.class);
-        verify(jTransfo).findTarget(to2, AddressDomain.class);
+        verify(jTransfo).findTarget(to1, AddressDomain.class, JTransfo.TAG_WHEN_READ_ONLY_DOMAIN);
+        verify(jTransfo).findTarget(to2, AddressDomain.class, JTransfo.TAG_WHEN_READ_ONLY_DOMAIN);
     }
 
     @Test
@@ -198,8 +198,8 @@ public class ReadOnlyDomainAutomaticTypeConverterTest {
 
         assertThat(res).isNotNull();
         assertThat(res).hasSize(1);
-        verify(jTransfo).findTarget(to1, AddressDomain.class);
-        verify(jTransfo).findTarget(to2, AddressDomain.class);
+        verify(jTransfo).findTarget(to1, AddressDomain.class, JTransfo.TAG_WHEN_READ_ONLY_DOMAIN);
+        verify(jTransfo).findTarget(to2, AddressDomain.class, JTransfo.TAG_WHEN_READ_ONLY_DOMAIN);
     }
 
     @Test

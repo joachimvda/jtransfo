@@ -63,9 +63,15 @@ import java.util.List;
 public interface JTransfo {
 
     /**
-     * Default tag which is activated when not tags are specified in the convert call.
+     * Default tag which is activated when no tags are specified in the convert call.
      */
     String DEFAULT_TAG_WHEN_NO_TAGS = "§#noTags";
+
+    /**
+     * Default tag which is automatically added when calling {@link #findTarget(Object, Class, String...)}
+     * in the context of a ReadOnlyDomain type converter.
+     */
+    String TAG_WHEN_READ_ONLY_DOMAIN = "§#readOnlyDomain";
 
     /**
      * Fill the target object with the values from the source object.

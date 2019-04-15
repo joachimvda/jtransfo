@@ -77,7 +77,7 @@ public class ReadOnlyDomainTypeConverterTest {
         SimpleBaseTo source = new SimpleBaseTo();
         typeConverter.convert(source, domainField, null);
 
-        verify(jTransfo).findTarget(source, SimpleBaseDomain.class);
+        verify(jTransfo).findTarget(source, SimpleBaseDomain.class, JTransfo.TAG_WHEN_READ_ONLY_DOMAIN);
         verify(jTransfo).getDomainClass(SimpleBaseTo.class);
 
         assertThat(typeConverter.convert(source, domainField, null)).isNull();

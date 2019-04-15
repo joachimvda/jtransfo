@@ -44,7 +44,7 @@ public class ReadOnlyDomainAutomaticSetTypeConverter extends AutomaticSetTypeCon
     @Override
     public Object doConvertOne(JTransfo jTransfo, Object toObject, Class<?> domainObjectType, String... tags)
             throws JTransfoException {
-        return jTransfo.findTarget(toObject, domainObjectType, tags);
+        return jTransfo.findTarget(toObject, domainObjectType, TagsUtil.add(tags, JTransfo.TAG_WHEN_READ_ONLY_DOMAIN));
     }
 
 }

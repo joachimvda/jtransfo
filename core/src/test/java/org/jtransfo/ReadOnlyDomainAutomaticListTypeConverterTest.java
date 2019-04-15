@@ -69,8 +69,8 @@ public class ReadOnlyDomainAutomaticListTypeConverterTest {
 
         assertThat(res).isNotNull();
         assertThat(res).hasSize(2);
-        verify(jTransfo).findTarget(to1, AddressDomain.class);
-        verify(jTransfo).findTarget(to2, AddressDomain.class);
+        verify(jTransfo).findTarget(to1, AddressDomain.class, JTransfo.TAG_WHEN_READ_ONLY_DOMAIN);
+        verify(jTransfo).findTarget(to2, AddressDomain.class, JTransfo.TAG_WHEN_READ_ONLY_DOMAIN);
     }
 
     @Test
