@@ -222,7 +222,7 @@ mvn clean install -DargLine="++add-modules=java.xml.bind"
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
-                <version>1.16.22</version>
+                <version>1.18.22</version>
             </dependency>
 
             <dependency>
