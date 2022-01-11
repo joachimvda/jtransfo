@@ -12,13 +12,12 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -50,7 +49,7 @@ public class ToDomainTypeConverterTest {
         when(jTransfo.isToClass(SimpleExtendedTo.class)).thenReturn(true);
         when(jTransfo.getDomainClass(SimpleBaseTo.class)).thenReturn((Class) SimpleBaseDomain.class);
         when(jTransfo.getDomainClass(SimpleExtendedTo.class)).thenReturn((Class) SimpleExtendedDomain.class);
-        when(jTransfo.getToSubType(eq(SimpleBaseTo.class), anyObject())).thenReturn((Class) SimpleBaseTo.class);
+        when(jTransfo.getToSubType(eq(SimpleBaseTo.class), any())).thenReturn((Class) SimpleBaseTo.class);
     }
 
     @Test

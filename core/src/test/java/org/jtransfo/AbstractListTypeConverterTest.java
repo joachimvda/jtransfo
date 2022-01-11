@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -46,7 +46,7 @@ public class AbstractListTypeConverterTest {
         listTypeConverter = new TestListTypeConverter(NAME, AddressTo.class);
 
         when(jTransfo.getDomainClass(AddressTo.class)).thenReturn((Class) AddressDomain.class);
-        when(jTransfo.getToSubType(eq(AddressTo.class), anyObject())).thenReturn((Class) AddressTo.class);
+        when(jTransfo.getToSubType(eq(AddressTo.class), any())).thenReturn((Class) AddressTo.class);
 
         listTypeConverter.setJTransfo(jTransfo);
     }

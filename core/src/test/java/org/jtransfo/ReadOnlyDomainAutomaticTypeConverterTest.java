@@ -14,7 +14,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.ArrayList;
@@ -23,9 +23,8 @@ import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -65,7 +64,7 @@ public class ReadOnlyDomainAutomaticTypeConverterTest {
         typeConverter.setJTransfo(jTransfo);
 
         when(jTransfo.getDomainClass(AddressTo.class)).thenReturn((Class) AddressDomain.class);
-        when(jTransfo.getToSubType(eq(AddressTo.class), anyObject())).thenReturn((Class) AddressTo.class);
+        when(jTransfo.getToSubType(eq(AddressTo.class), any())).thenReturn((Class) AddressTo.class);
 
         when(listField.getType()).thenReturn((Class) List.class);
         when(listField.getGenericType()).thenReturn(ReadOnlyDomainAutomaticListTypeConverterTest.AddressListContainer.class.getField("addressToList").getGenericType());
@@ -79,7 +78,7 @@ public class ReadOnlyDomainAutomaticTypeConverterTest {
         when(jTransfo.isToClass(SimpleExtendedTo.class)).thenReturn(true);
         when(jTransfo.getDomainClass(SimpleBaseTo.class)).thenReturn((Class) SimpleBaseDomain.class);
         when(jTransfo.getDomainClass(SimpleExtendedTo.class)).thenReturn((Class) SimpleExtendedDomain.class);
-        when(jTransfo.getToSubType(eq(SimpleBaseTo.class), anyObject())).thenReturn((Class) SimpleBaseTo.class);
+        when(jTransfo.getToSubType(eq(SimpleBaseTo.class), any())).thenReturn((Class) SimpleBaseTo.class);
         when(domainField.getType()).thenReturn((Class) SimpleBaseDomain.class);
         when(toField.getType()).thenReturn((Class) SimpleBaseTo.class);
     }

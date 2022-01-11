@@ -12,8 +12,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -40,7 +40,7 @@ public class ReadOnlyDomainAutomaticSetTypeConverterTest {
         setTypeConverter.setJTransfo(jTransfo);
 
         when(jTransfo.getDomainClass(AddressTo.class)).thenReturn((Class) AddressDomain.class);
-        when(jTransfo.getToSubType(eq(AddressTo.class), anyObject())).thenReturn((Class) AddressTo.class);
+        when(jTransfo.getToSubType(eq(AddressTo.class), any())).thenReturn((Class) AddressTo.class);
 
         when(setField.getType()).thenReturn((Class) Set.class);
         when(setField.getGenericType()).thenReturn(AddressSetContainer.class.getField("addressToSet").getGenericType());
