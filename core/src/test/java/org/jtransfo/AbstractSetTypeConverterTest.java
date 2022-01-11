@@ -71,7 +71,15 @@ public class AbstractSetTypeConverterTest {
         addresses.add(to1);
         addresses.add(to2);
         Object domainObject = new Object();
-        Set resSet = spy(new HashSet());
+        Boolean[] resSetCleared = new Boolean[1];
+        resSetCleared[0] = false;
+        Set resSet = new HashSet() {
+            @Override
+            public void clear() {
+                resSetCleared[0] = true;
+                super.clear();
+            }
+        };
         when(field.get(domainObject)).thenReturn(resSet);
 
         Set<AddressDomain> res = setTypeConverter.convert(addresses, field, domainObject);
@@ -80,7 +88,7 @@ public class AbstractSetTypeConverterTest {
         assertThat(res).hasSize(2);
         assertThat(res).extracting("id").contains(1L, 2L);
         verify(field).get(domainObject);
-        verify(resSet).clear();
+        assertThat(resSetCleared[0]).isTrue();
     }
 
     @Test
@@ -148,7 +156,15 @@ public class AbstractSetTypeConverterTest {
         addresses.add(ad1);
         addresses.add(ad2);
         Object toObject = new Object();
-        Set resSet = spy(new HashSet());
+        Boolean[] resSetCleared = new Boolean[1];
+        resSetCleared[0] = false;
+        Set resSet = new HashSet() {
+            @Override
+            public void clear() {
+                resSetCleared[0] = true;
+                super.clear();
+            }
+        };
         when(field.get(toObject)).thenReturn(resSet);
 
         Set<AddressTo> res = setTypeConverter.reverse(addresses, field, toObject);
@@ -157,7 +173,7 @@ public class AbstractSetTypeConverterTest {
         assertThat(res).hasSize(2);
         assertThat(res).extracting("id").contains(1L, 2L);
         verify(field).get(toObject);
-        verify(resSet).clear();
+        assertThat(resSetCleared[0]).isTrue();
     }
 
     @Test

@@ -22,7 +22,6 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -71,7 +70,15 @@ public class AbstractListTypeConverterTest {
         addresses.add(to1);
         addresses.add(to2);
         Object domainObject = new Object();
-        List resList = spy(new ArrayList());
+        Boolean[] resListCleared = new Boolean[1];
+        resListCleared[0] = false;
+        List resList = new ArrayList() {
+            @Override
+            public void clear() {
+                resListCleared[0] = true;
+                super.clear();
+            }
+        };
         when(field.get(domainObject)).thenReturn(resList);
 
         List<AddressDomain> res = listTypeConverter.convert(addresses, field, domainObject);
@@ -81,7 +88,7 @@ public class AbstractListTypeConverterTest {
         assertThat(res.get(0).getId()).isEqualTo(2L);
         assertThat(res.get(1).getId()).isEqualTo(1L);
         verify(field).get(domainObject);
-        verify(resList).clear();
+        assertThat(resListCleared[0]).isTrue();
     }
 
     @Test
@@ -94,7 +101,6 @@ public class AbstractListTypeConverterTest {
         addresses.add(to1);
         addresses.add(to2);
         Object domainObject = new Object();
-        List resList = spy(new ArrayList());
         when(field.get(domainObject)).thenThrow(new NullPointerException());
 
         List<AddressDomain> res = listTypeConverter.convert(addresses, field, domainObject);
@@ -194,7 +200,15 @@ public class AbstractListTypeConverterTest {
         addresses.add(ad1);
         addresses.add(ad2);
         Object toObject = new Object();
-        List resList = spy(new ArrayList());
+        Boolean[] resListCleared = new Boolean[1];
+        resListCleared[0] = false;
+        List resList = new ArrayList() {
+            @Override
+            public void clear() {
+                resListCleared[0] = true;
+                super.clear();
+            }
+        };
         when(field.get(toObject)).thenReturn(resList);
 
         List<AddressTo> res = listTypeConverter.reverse(addresses, field, toObject);
@@ -204,7 +218,7 @@ public class AbstractListTypeConverterTest {
         verify(jTransfo).convertTo(ad1, AddressTo.class);
         verify(jTransfo).convertTo(ad2, AddressTo.class);
         verify(field).get(toObject);
-        verify(resList).clear();
+        assertThat(resListCleared[0]).isTrue();
     }
 
     @Test
@@ -239,7 +253,16 @@ public class AbstractListTypeConverterTest {
         addresses.add(ad1);
         addresses.add(ad2);
         Object toObject = new Object();
-        List resList = spy(new ArrayList());
+
+        Boolean[] resListCleared = new Boolean[1];
+        resListCleared[0] = false;
+        List resList = new ArrayList() {
+            @Override
+            public void clear() {
+                resListCleared[0] = true;
+                super.clear();
+            }
+        };
         when(field.get(toObject)).thenReturn(resList);
         when(jTransfo.convertTo(ad1, AddressTo.class)).thenReturn(new AddressTo(2L));
         when(jTransfo.convertTo(ad2, AddressTo.class)).thenReturn(new AddressTo(1L));
@@ -251,7 +274,7 @@ public class AbstractListTypeConverterTest {
         assertThat(res.get(0).getId()).isEqualTo(2L);
         assertThat(res.get(1).getId()).isEqualTo(1L);
         verify(field).get(toObject);
-        verify(resList).clear();
+        assertThat(resListCleared[0]).isTrue();
     }
 
     @Test
@@ -265,7 +288,15 @@ public class AbstractListTypeConverterTest {
         addresses.add(ad1);
         addresses.add(ad2);
         Object toObject = new Object();
-        List resList = spy(new ArrayList());
+        Boolean[] resListCleared = new Boolean[1];
+        resListCleared[0] = false;
+        List resList = new ArrayList() {
+            @Override
+            public void clear() {
+                resListCleared[0] = true;
+                super.clear();
+            }
+        };
         when(field.get(toObject)).thenReturn(resList);
         when(jTransfo.convertTo(ad1, AddressTo.class)).thenReturn(new ComparableAddressTo(2L));
         when(jTransfo.convertTo(ad2, AddressTo.class)).thenReturn(new ComparableAddressTo(1L));
@@ -277,7 +308,7 @@ public class AbstractListTypeConverterTest {
         assertThat(res.get(0).getId()).isEqualTo(1L);
         assertThat(res.get(1).getId()).isEqualTo(2L);
         verify(field).get(toObject);
-        verify(resList).clear();
+        assertThat(resListCleared[0]).isTrue();
     }
 
     @Test
