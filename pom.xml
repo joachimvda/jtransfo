@@ -28,9 +28,9 @@ mvn clean install -DargLine="++add-modules=java.xml.bind"
     <url>http://jtransfo.org/</url>
 
     <scm>
-        <connection>scm:git:git@github.com:joachimvda/jtransfo.git</connection>
-        <developerConnection>scm:git:git@github.com:joachimvda/jtransfo.git</developerConnection>
-        <url>git@github.com:joachimvda/jtransfo.git</url>
+        <connection>scm:git:https://github.com/joachimvda/jtransfo.git</connection>
+        <developerConnection>scm:git:https://github.com/joachimvda/jtransfo.git</developerConnection>
+        <url>https://github.com/joachimvda/jtransfo.git</url>
     </scm>
 
     <licenses>
