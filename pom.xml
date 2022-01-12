@@ -28,9 +28,9 @@ mvn clean install -DargLine="++add-modules=java.xml.bind"
     <url>http://jtransfo.org/</url>
 
     <scm>
-        <connection>scm:git:https://github.com/joachimvda/jtransfo.git</connection>
-        <developerConnection>scm:git:https://github.com/joachimvda/jtransfo.git</developerConnection>
-        <url>https://github.com/joachimvda/jtransfo.git</url>
+        <connection>scm:git:git@github.com:joachimvda/jtransfo.git</connection>
+        <developerConnection>scm:git:git@github.com:joachimvda/jtransfo.git</developerConnection>
+        <url>git@github.com:joachimvda/jtransfo.git</url>
     </scm>
 
     <licenses>
@@ -355,7 +355,7 @@ mvn clean install -DargLine="++add-modules=java.xml.bind"
                     <!-- Plugins defaults to "target/staging" and since the distributionManagement section is a pain in the ass for site docs, this is easier -->
                     <content>${project.reporting.outputDirectory}/apidocs</content>
                     <skipDeletedFiles>true</skipDeletedFiles>
-                    <pubScmUrl>scm:git:https://github.com/joachimvda/jtransfo.git</pubScmUrl>
+                    <pubScmUrl>scm:git:git@github.com:joachimvda/jtransfo.git</pubScmUrl>
                     <scmBranch>gh-pages</scmBranch> <!-- branch with static site -->
                 </configuration>
             </plugin>
@@ -385,6 +385,20 @@ mvn clean install -DargLine="++add-modules=java.xml.bind"
                         <groupId>org.junit.platform</groupId>
                         <artifactId>junit-platform-surefire-provider</artifactId>
                         <version>1.0.2</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
+            <!-- Appengine deploy at end of mvn release:perform -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.2.2</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-scm-plugin</artifactId>
+                        <version>1.8.1</version>
                     </dependency>
                 </dependencies>
             </plugin>
