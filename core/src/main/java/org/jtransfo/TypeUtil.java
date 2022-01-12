@@ -22,7 +22,7 @@ public final class TypeUtil {
     }
 
     /**
-     * Get the main class (raw type) for a {@łink Type}.
+     * Get the main class (raw type) for a {@link Type}.
      *
      * @param type type to get class for
      * @return class
