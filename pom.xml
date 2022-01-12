@@ -20,7 +20,7 @@ mvn clean install -DargLine="++add-modules=java.xml.bind"
 
     <groupId>org.jtransfo</groupId>
     <artifactId>jtransfo</artifactId>
-    <version>2.10-SNAPSHOT</version>
+    <version>2.10</version>
     <packaging>pom</packaging>
 
     <name>jTransfo</name>
@@ -31,7 +31,8 @@ mvn clean install -DargLine="++add-modules=java.xml.bind"
         <connection>scm:git:git@github.com:joachimvda/jtransfo.git</connection>
         <developerConnection>scm:git:git@github.com:joachimvda/jtransfo.git</developerConnection>
         <url>git@github.com:joachimvda/jtransfo.git</url>
-    </scm>
+      <tag>jtransfo-2.10</tag>
+  </scm>
 
     <licenses>
         <license>
