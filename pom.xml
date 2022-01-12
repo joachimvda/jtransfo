@@ -355,7 +355,7 @@ mvn clean install -DargLine="++add-modules=java.xml.bind"
                     <!-- Plugins defaults to "target/staging" and since the distributionManagement section is a pain in the ass for site docs, this is easier -->
                     <content>${project.reporting.outputDirectory}/apidocs</content>
                     <skipDeletedFiles>true</skipDeletedFiles>
-                    <pubScmUrl>scm:git:git@github.com:joachimvda/jtransfo.git</pubScmUrl>
+                    <pubScmUrl>scm:git:https://github.com/joachimvda/jtransfo.git</pubScmUrl>
                     <scmBranch>gh-pages</scmBranch> <!-- branch with static site -->
                 </configuration>
             </plugin>
