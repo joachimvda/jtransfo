@@ -10,6 +10,7 @@ package org.jtransfo.internal;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
+import java.util.Optional;
 
 /**
  * Simple synthetic field which just exposes the field itself.
@@ -50,5 +51,10 @@ public class SimpleSyntheticField implements SyntheticField {
     @Override
     public Type getGenericType() {
         return field.getGenericType();
+    }
+
+    @Override
+    public Optional<Field> getField() {
+        return Optional.ofNullable(field);
     }
 }

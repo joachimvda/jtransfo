@@ -121,10 +121,14 @@ public class ConverterHelper {
 
     private void buildConverters(Field field, List<SyntheticField> domainFields, Class domainClass,
             ToConverter converter, MappedBy mappedBy) {
+        reflectionHelper.makeAccessible(field);
         SyntheticField sField = new SimpleSyntheticField(field);
         List<MapOnly> mapOnlies = getMapOnlies(field);
         if (null == mapOnlies) {
             SyntheticField[] domainField = getDomainField(field, domainFields, domainClass, mappedBy);
+            for (SyntheticField sf: domainField) {
+                reflectionHelper.makeAccessible(sf);
+            }
             TypeConverter typeConverter = getDeclaredTypeConverter(mappedBy);
             if (null == typeConverter) {
                 typeConverter = getDefaultTypeConverter(field.getGenericType(),
@@ -151,6 +155,9 @@ public class ConverterHelper {
                 }
                 if (null == mapOnlyDomainField) {
                     mapOnlyDomainField = getDomainField(field, domainFields, domainClass, mappedBy);
+                }
+                for (SyntheticField sf: mapOnlyDomainField) {
+                    reflectionHelper.makeAccessible(sf);
                 }
                 TypeConverter typeConverter = getDeclaredTypeConverter(mappedBy);
                 if (null == typeConverter) {

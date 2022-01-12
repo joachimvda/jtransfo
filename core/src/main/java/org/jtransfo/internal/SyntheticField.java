@@ -8,7 +8,9 @@
 
 package org.jtransfo.internal;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Type;
+import java.util.Optional;
 
 /**
  * Abstraction of a {@link java.lang.reflect.Field} which allows different handling of the field accessors.
@@ -55,4 +57,11 @@ public interface SyntheticField {
      * @return field generic type
      */
     Type getGenericType();
+
+    /**
+     * Get underlying field.
+     *
+     * @return underlying field (if any)
+     */
+    Optional<Field> getField();
 }

@@ -95,7 +95,6 @@ public class ReflectionHelper {
             for (Field field : fields) {
                 if (!fieldNames.contains(field.getName())) {
                     fieldNames.add(field.getName());
-                    makeAccessible(field);
                     result.add(field);
                 }
             }
@@ -145,6 +144,21 @@ public class ReflectionHelper {
                 Modifier.isFinal(field.getModifiers())) && !field.isAccessible()) {
             field.setAccessible(true);
         }
+    }
+
+    /**
+     * Make the field inside the given synthetic field accessible, explicitly setting it accessible if necessary.
+     * The <code>setAccessible(true)</code> method is only called when actually necessary, to avoid unnecessary
+     * conflicts with a JVM SecurityManager (if active).
+     * <p>
+     * This method is borrowed from Spring's ReflectionUtil class.
+     * </p>
+     *
+     * @param syntheticField the synthetic field to make accessible
+     * @see java.lang.reflect.Field#setAccessible
+     */
+    void makeAccessible(SyntheticField syntheticField) {
+        syntheticField.getField().ifPresent(this::makeAccessible);
     }
 
     /**

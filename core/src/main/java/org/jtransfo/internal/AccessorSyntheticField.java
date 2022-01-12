@@ -19,6 +19,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 /**
  * Abstraction of a {@link Field} which uses the getter and setter if they exist.
@@ -112,7 +113,7 @@ public class AccessorSyntheticField implements SyntheticField {
         } else {
             if (!getUsingFieldLogged) {
                 log.warn("Cannot find getter (not public, wrong name or wrong type), "
-                                + "using field to access field {} of {}.", name, field.getType().getName());
+                        + "using field to access field {} of {}.", name, field.getType().getName());
                 getUsingFieldLogged = true;
             }
             return field.get(object);
@@ -141,7 +142,7 @@ public class AccessorSyntheticField implements SyntheticField {
         } else {
             if (!setUsingFieldLogged) {
                 log.warn("Cannot find setter (not public, wrong name or wrong type), "
-                                + "using field to access field {} of {}.", name, field.getType().getName());
+                        + "using field to access field {} of {}.", name, field.getType().getName());
                 setUsingFieldLogged = true;
             }
             field.set(object, value);
@@ -172,7 +173,7 @@ public class AccessorSyntheticField implements SyntheticField {
 
     /**
      * Get field generic type.
-     * 
+     *
      * @return field generic type
      */
     public Type getGenericType() {
@@ -181,6 +182,11 @@ public class AccessorSyntheticField implements SyntheticField {
         } else {
             return getter.getGenericReturnType();
         }
+    }
+
+    @Override
+    public Optional<Field> getField() {
+        return Optional.ofNullable(field);
     }
 
     /**
